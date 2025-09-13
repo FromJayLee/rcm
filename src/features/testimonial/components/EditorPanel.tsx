@@ -1,0 +1,371 @@
+'use client';
+
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Textarea } from '@/components/ui/textarea';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { Separator } from '@/components/ui/separator';
+import { Switch } from '@/components/ui/switch';
+import { Slider } from '@/components/ui/slider';
+import { 
+  Upload, 
+  Palette, 
+  Download, 
+  Star, 
+  User, 
+  Building, 
+  Image as ImageIcon,
+  FileText,
+  Settings
+} from 'lucide-react';
+import { CardConfig } from '../types';
+
+interface EditorPanelProps {
+  currentStep: number;
+  cardConfig: CardConfig;
+  onConfigChange: (config: CardConfig) => void;
+}
+
+export function EditorPanel({ currentStep, cardConfig, onConfigChange }: EditorPanelProps) {
+  const handleTemplateChange = (templateId: CardConfig['templateId']) => {
+    onConfigChange({
+      ...cardConfig,
+      templateId
+    });
+  };
+
+  const handleContentChange = (field: keyof CardConfig['content'], value: any) => {
+    onConfigChange({
+      ...cardConfig,
+      content: {
+        ...cardConfig.content,
+        [field]: value
+      }
+    });
+  };
+
+  const handleStyleChange = (field: keyof CardConfig['style'], value: any) => {
+    onConfigChange({
+      ...cardConfig,
+      style: {
+        ...cardConfig.style,
+        [field]: value
+      }
+    });
+  };
+
+  return (
+    <div className="h-full overflow-y-auto">
+      <Tabs value={currentStep.toString()} className="h-full">
+        <TabsList className="grid w-full grid-cols-3">
+          <TabsTrigger value="1" className="text-xs">
+            <FileText className="w-3 h-3 mr-1" />
+            Content
+          </TabsTrigger>
+          <TabsTrigger value="2" className="text-xs">
+            <Palette className="w-3 h-3 mr-1" />
+            Background
+          </TabsTrigger>
+          <TabsTrigger value="3" className="text-xs">
+            <Download className="w-3 h-3 mr-1" />
+            Export
+          </TabsTrigger>
+        </TabsList>
+
+        {/* Step 1: Content */}
+        <TabsContent value="1" className="h-full p-4 space-y-6">
+          {/* Templates Tab */}
+          <Card>
+            <CardHeader className="pb-3">
+              <CardTitle className="text-sm flex items-center">
+                <FileText className="w-4 h-4 mr-2" />
+                Templates
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="grid grid-cols-2 gap-2">
+                {['T1', 'T2', 'T3', 'T4', 'T5'].map((template) => (
+                  <Button
+                    key={template}
+                    variant={cardConfig.templateId === template ? "default" : "outline"}
+                    size="sm"
+                    className="h-16 text-xs"
+                    onClick={() => handleTemplateChange(template as CardConfig['templateId'])}
+                  >
+                    {template}
+                  </Button>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Content Tab */}
+          <Card>
+            <CardHeader className="pb-3">
+              <CardTitle className="text-sm flex items-center">
+                <User className="w-4 h-4 mr-2" />
+                Content
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              {/* Rating */}
+              <div className="space-y-2">
+                <Label className="text-sm font-medium">Rating: {cardConfig.content.rating}</Label>
+                <Slider
+                  value={[cardConfig.content.rating]}
+                  onValueChange={([value]) => handleContentChange('rating', value)}
+                  max={5}
+                  min={1}
+                  step={1}
+                  className="w-full"
+                />
+                <div className="flex justify-between text-xs text-muted-foreground">
+                  <span>1</span>
+                  <span>5</span>
+                </div>
+              </div>
+
+              {/* Quote Text */}
+              <div className="space-y-2">
+                <Label htmlFor="quote" className="text-sm font-medium">
+                  Quote Text
+                </Label>
+                <Textarea
+                  id="quote"
+                  placeholder="Enter testimonial quote..."
+                  className="min-h-[100px] text-sm"
+                  value={cardConfig.content.quote}
+                  onChange={(e) => handleContentChange('quote', e.target.value)}
+                />
+              </div>
+
+              {/* Author Name */}
+              <div className="space-y-2">
+                <Label htmlFor="author" className="text-sm font-medium">
+                  Author Name
+                </Label>
+                <Input
+                  id="author"
+                  placeholder="John Doe"
+                  className="text-sm"
+                  value={cardConfig.content.authorName}
+                  onChange={(e) => handleContentChange('authorName', e.target.value)}
+                />
+              </div>
+
+              {/* Role/Company */}
+              <div className="space-y-2">
+                <Label htmlFor="role" className="text-sm font-medium">
+                  Role & Company
+                </Label>
+                <Input
+                  id="role"
+                  placeholder="CEO, TechStart"
+                  className="text-sm"
+                  value={cardConfig.content.authorRole}
+                  onChange={(e) => handleContentChange('authorRole', e.target.value)}
+                />
+              </div>
+
+              {/* Avatar Upload */}
+              <div className="space-y-2">
+                <Label className="text-sm font-medium">Avatar</Label>
+                <Button variant="outline" className="w-full h-20 border-dashed">
+                  <div className="flex flex-col items-center space-y-1">
+                    <Upload className="w-4 h-4" />
+                    <span className="text-xs">Upload Image</span>
+                  </div>
+                </Button>
+              </div>
+
+              {/* Anonymous Toggle */}
+              <div className="flex items-center justify-between">
+                <Label htmlFor="anonymous" className="text-sm">
+                  Anonymous testimonial
+                </Label>
+                <Switch
+                  id="anonymous"
+                  checked={cardConfig.content.isAnonymous}
+                  onCheckedChange={(checked) => handleContentChange('isAnonymous', checked)}
+                />
+              </div>
+
+              {/* Light/Dark Mode Toggle */}
+              <div className="flex items-center justify-between">
+                <Label htmlFor="mode" className="text-sm">
+                  Dark mode
+                </Label>
+                <Switch
+                  id="mode"
+                  checked={cardConfig.style.mode === 'dark'}
+                  onCheckedChange={(checked) => handleStyleChange('mode', checked ? 'dark' : 'light')}
+                />
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        {/* Step 2: Background */}
+        <TabsContent value="2" className="h-full p-4 space-y-6">
+          <Card>
+            <CardHeader className="pb-3">
+              <CardTitle className="text-sm flex items-center">
+                <Palette className="w-4 h-4 mr-2" />
+                Background Styling
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              {/* Background Type */}
+              <div className="space-y-2">
+                <Label className="text-sm font-medium">Background Type</Label>
+                <Select defaultValue="solid">
+                  <SelectTrigger className="text-sm">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="solid">Solid Color</SelectItem>
+                    <SelectItem value="gradient">Gradient</SelectItem>
+                    <SelectItem value="image">Image</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+
+              {/* Color Picker */}
+              <div className="space-y-2">
+                <Label className="text-sm font-medium">Color</Label>
+                <div className="flex space-x-2">
+                  <div className="w-8 h-8 rounded border bg-blue-500"></div>
+                  <div className="w-8 h-8 rounded border bg-purple-500"></div>
+                  <div className="w-8 h-8 rounded border bg-green-500"></div>
+                  <div className="w-8 h-8 rounded border bg-orange-500"></div>
+                  <Button variant="outline" size="sm" className="text-xs">
+                    Custom
+                  </Button>
+                </div>
+              </div>
+
+              {/* Image Upload */}
+              <div className="space-y-2">
+                <Label className="text-sm font-medium">Background Image</Label>
+                <Button variant="outline" className="w-full h-20 border-dashed">
+                  <div className="flex flex-col items-center space-y-1">
+                    <ImageIcon className="w-4 h-4" />
+                    <span className="text-xs">Upload Background</span>
+                  </div>
+                </Button>
+              </div>
+
+              {/* Opacity Slider */}
+              <div className="space-y-2">
+                <Label className="text-sm font-medium">Opacity</Label>
+                <div className="space-y-1">
+                  <input
+                    type="range"
+                    min="0"
+                    max="100"
+                    defaultValue="80"
+                    className="w-full"
+                  />
+                  <div className="flex justify-between text-xs text-muted-foreground">
+                    <span>0%</span>
+                    <span>80%</span>
+                    <span>100%</span>
+                  </div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        {/* Step 3: Export */}
+        <TabsContent value="3" className="h-full p-4 space-y-6">
+          <Card>
+            <CardHeader className="pb-3">
+              <CardTitle className="text-sm flex items-center">
+                <Download className="w-4 h-4 mr-2" />
+                Export Settings
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              {/* Resolution */}
+              <div className="space-y-2">
+                <Label className="text-sm font-medium">Resolution</Label>
+                <Select defaultValue="1x">
+                  <SelectTrigger className="text-sm">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="1x">1x (Standard)</SelectItem>
+                    <SelectItem value="2x">2x (High DPI)</SelectItem>
+                    <SelectItem value="custom">Custom</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+
+              {/* Format */}
+              <div className="space-y-2">
+                <Label className="text-sm font-medium">Format</Label>
+                <div className="grid grid-cols-2 gap-2">
+                  <Button variant="outline" size="sm" className="text-xs">
+                    PNG
+                  </Button>
+                  <Button variant="outline" size="sm" className="text-xs">
+                    JPG
+                  </Button>
+                </div>
+              </div>
+
+              {/* File Name */}
+              <div className="space-y-2">
+                <Label htmlFor="filename" className="text-sm font-medium">
+                  File Name
+                </Label>
+                <Input
+                  id="filename"
+                  placeholder="testimonial-card"
+                  defaultValue="testimonial-card"
+                  className="text-sm"
+                />
+              </div>
+
+              {/* Options */}
+              <div className="space-y-3">
+                <div className="flex items-center space-x-2">
+                  <input type="checkbox" id="include-bg" className="rounded" defaultChecked />
+                  <Label htmlFor="include-bg" className="text-sm">
+                    Include background
+                  </Label>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <input type="checkbox" id="watermark" className="rounded" />
+                  <Label htmlFor="watermark" className="text-sm">
+                    Add watermark (free tier)
+                  </Label>
+                </div>
+              </div>
+
+              <Separator />
+
+              {/* Export Button */}
+              <Button className="w-full" size="lg">
+                <Download className="w-4 h-4 mr-2" />
+                Export Testimonial
+              </Button>
+
+              {/* Token Cost */}
+              <div className="text-center">
+                <Badge variant="secondary" className="text-xs">
+                  Cost: 1 Token
+                </Badge>
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+      </Tabs>
+    </div>
+  );
+}

@@ -1,0 +1,91 @@
+---
+description:
+globs:
+alwaysApply: true
+---
+# Product Requirement Document (PRD)
+
+## 1. Product Overview
+Web-based generator that lets small SaaS founders create high-quality testimonial image cards for their landing pages in under one minute through a fixed 3-step workflow: 1) choose template & edit content, 2) style background, 3) export at desired resolution. The app guarantees aspect-ratio lock and pixel-perfect alignment from edit to export.
+
+## 2. Goals & Success Metrics
+| Goal | Metric | Target for MVP |
+| ---- | ------ | -------------- |
+| Reduce creation time | Avg. time from landing to export | < 60 seconds |
+| Validate willingness to pay | Free-to-paid conversion rate | ≥ 10% within 30 days |
+| User activation | Card export completion rate | ≥ 60% of sign-ups |
+| Market traction | Product Hunt upvotes | 250+ on launch day |
+
+## 3. Target Users
+Primary: English-speaking solo/ small-team SaaS developers who manage their own marketing assets.
+Secondary: Growth marketers in startups (1-50 employees).
+
+## 4. Core Pain Points
+1. Wasting time configuring design tools for simple testimonial graphics.
+2. Maintaining brand consistency across multiple ratios/ resolutions.
+3. Switching between tools to resize exports for different placements.
+
+## 5. Key Use Case
+A SaaS founder needs five testimonial images for a pricing-page A/B test tonight. She lands on our site, signs in, completes the 3-step flow, downloads square and landscape versions in under a minute, and embeds them into Webflow.
+
+## 6. Product Features (MVP)
+### Must-Have
+1. Template Gallery (5 preset templates T1–T5 with dummy data)
+2. Content Editor Panel (rating, quote text, author name, role/company, avatar upload, anonymous toggle, light/dark)
+3. Canvas with locked aspect-ratio presets (1:1, 4:5, 16:9, 1.91:1, 3:2, 9:16)
+4. Background Styler (solid, gradient, image upload)
+5. Export Step: resolution presets + custom, PNG/JPG, 1×/2×, background include toggle, file naming
+6. Responsive web UI
+7. Dark-mode card option (template variant)
+8. Landing page with marketing funnel & token purchase CTA
+
+### Nice-to-Have (Post-MVP)
+1. Drag-and-drop uploads
+2. Undo/Redo history
+3. Team collaboration & brand kits
+4. API / bulk generation endpoint
+
+## 7. Non-Functional Requirements
+• Performance: first meaningful paint < 2.5 s on 4G
+• Accessibility: contrast ≥ 4.5:1, keyboard navigable
+• Consistency: exported image layout matches editor 1:1 at any resolution
+• Security: GDPR compliant, token payments via Stripe
+• Availability: 99.5% uptime
+
+## 8. Pricing & Monetisation
+Pay-as-you-go: users purchase token packs (e.g., 20 exports for $10). Landing page promotes free tier with watermark or low-res download, upgrade via Stripe checkout.
+
+## 9. Technical Approach
+• Stack: Next.js 15, TypeScript, TailwindCSS, shadcn/ui, lucide-react, supabase (auth + storage), @tanstack/react-query, date-fns.
+• Image rendering via canvas & html-to-png library (es-toolkit) on client; fallback SSR for 2× exports via serverless function.
+• Supabase Storage for uploaded avatars/backgrounds.
+
+## 10. Assumptions
+1. English-only UI is acceptable to initial user base.
+2. SaaS founders are willing to pay ~$0.50 per export if value is proven.
+3. 3-step workflow is intuitive without onboarding videos.
+
+## 11. Risks & Mitigations
+| Risk | Probability | Impact | Mitigation |
+| ---- | ----------- | ------ | ---------- |
+| Canva releases similar SaaS templates | High | High | Focus on speed, API roadmap, community engagement |
+| Free competitors saturate SEO | Med | Med | Offer generous free tier but watermark, optimise Product Hunt launch |
+| Image rendering glitches across ratios | Med | High | Automated regression tests across all presets |
+
+## 12. Timeline (MVP)
+| Phase | Duration | Milestones |
+| ----- | -------- | ---------- |
+| Design & Spec | 1 wk | Finalise PRD, wireframes |
+| Sprint 1 | 2 wks | Template gallery, content editor |
+| Sprint 2 | 2 wks | Background styler, canvas ratio lock |
+| Sprint 3 | 2 wks | Export flow, image rendering accuracy tests |
+| Launch Prep | 1 wk | Landing page, Stripe tokens, analytics |
+| Public Launch | Day 0 | Product Hunt & Indie Hackers |
+
+## 13. Out of Scope (MVP)
+• Drag-and-drop uploads, undo/redo, team collaboration, multilanguage UI, AI copy suggestions
+
+## 14. Approval
+PM: __________   Date: ____
+Engineering Lead: __________   Date: ____
+Design Lead: __________   Date: ____

@@ -1,0 +1,109 @@
+---
+description:
+globs:
+alwaysApply: true
+---
+Here is the refined Technical Requirements Document (TRD).
+
+---
+
+# **Technical Requirements Document (TRD)**
+
+## 1. Overview
+This document outlines the technical implementation plan for the Testimonial Card Generator MVP. The primary technical goal is to build a fast, reliable, client-centric web application using a modern serverless stack. The architecture prioritizes speed of development and user experience, focusing on a streamlined 3-step workflow.
+
+## 2. System Architecture & Technology Stack
+
+### 2.1. High-Level Architecture
+The system is a client-rendered Next.js application backed by Supabase for authentication, storage, and database services. The core image generation logic runs entirely in the user's browser for immediate feedback and low server overhead.
+
+```mermaid
+graph TD
+    subgraph Browser
+        A[Client: Next.js/React]
+        B[Canvas Rendering Engine]
+    end
+
+    subgraph Supabase
+        C[Auth]
+        D[Storage: Avatars, BGs]
+        E[Database: Users, Tokens]
+    end
+
+    subgraph Stripe
+        F[Checkout & Payments API]
+    end
+
+    A --> B;
+    A -- Auth/Data --> C;
+    A -- File Uploads --> D;
+    A -- User Data/Tokens --> E;
+    A -- Initiate Purchase --> F;
+    F -- Webhook --> G[Next.js API Route];
+    G -- Update Tokens --> E;
+```
+
+### 2.2. Technology Stack
+
+| Category | Technology | Rationale for MVP |
+| :--- | :--- | :--- |
+| **Framework** | Next.js 15 (App Router) | Fast setup, file-based routing, and optimized static landing page. |
+| **Language** | TypeScript | Ensures type safety for component props and data models. |
+| **UI** | TailwindCSS & shadcn/ui | Rapid, consistent UI development with accessible components. |
+| **Backend** | Supabase (Auth, DB, Storage) | Integrated BaaS for fast development. Handles user management, file uploads, and data persistence without custom backend code. |
+| **Payments** | Stripe Checkout | Secure, simple integration for pay-as-you-go token purchases. |
+| **Image Generation** | `html-to-image` (or similar) | Client-side library to convert styled DOM elements into a PNG/JPG on the canvas, ensuring the editor view matches the export perfectly. |
+| **Data Fetching** | TanStack Query (`react-query`) | Manages server state, caching, and simplifies data fetching from Supabase. |
+
+## 3. Core Component Implementation
+
+### 3.1. User Flow & State Management
+The application state will be managed primarily with React's built-in hooks (`useState`, `useContext`). TanStack Query will handle server state (user data, token balance). The user's design choices (template, content, styles) will be held in a single state object that is passed down through the 3-step workflow.
+
+1.  **Step 1: Template & Content**
+    *   **Templates:** 5 templates (T1-T5) will be stored as static React components with predefined layouts and styles.
+    *   **Content Editor:** A simple form whose state is directly mapped to the preview canvas. Avatar uploads will use Supabase Storage, generating a public URL to be stored in the user's design state.
+
+2.  **Step 2: Background Styling**
+    *   The styler updates CSS properties (e.g., `background`, `background-image`) on the canvas container element. Image uploads use the same Supabase Storage flow as avatars.
+
+3.  **Step 3: Export**
+    *   The `html-to-image` library will target the DOM node representing the styled testimonial card.
+    *   It will generate a canvas element, which is then converted to a PNG or JPG data URL for download.
+    *   Resolution scaling (1x/2x) will be handled by setting the `pixelRatio` option in the library.
+    *   On successful export, a user's token balance is decremented via an API call to a Next.js API Route that communicates with the Supabase database.
+
+### 3.2. Data Model (Supabase/PostgreSQL)
+A minimal data model is required for the MVP.
+
+*   **`profiles`**
+    *   `id` (uuid, foreign key to `auth.users.id`)
+    *   `email` (text)
+    *   `token_balance` (integer, default: 3)
+    *   `stripe_customer_id` (text, nullable)
+*   **`user_uploads`** (Optional, for managing user media)
+    *   `id` (uuid)
+    *   `user_id` (uuid, foreign key to `auth.users.id`)
+    *   `file_path` (text)
+    *   `created_at` (timestampz)
+
+Row Level Security (RLS) policies must be enabled to ensure users can only access and manage their own data.
+
+## 4. Key Non-Functional Requirements
+
+*   **Performance (FMP < 2.5s):**
+    *   The marketing landing page will be statically generated (SSG) by Next.js.
+    *   The main application will be client-side rendered. Code-splitting will be managed automatically by the Next.js App Router.
+    *   Limit initial bundle size by lazy-loading non-critical components.
+
+*   **Pixel-Perfect Consistency:**
+    *   The single-source-of-truth is the DOM. The `html-to-image` library directly captures this DOM structure, guaranteeing the export matches the preview.
+    *   Automated visual regression testing (e.g., using Playwright) is required for all templates and aspect ratios to prevent rendering glitches.
+
+*   **Security:**
+    *   All user-uploaded content will be served from Supabase Storage via its CDN, not from the primary application domain.
+    *   Implement strict RLS policies on all Supabase tables.
+    *   Stripe Checkout will be used to handle all payment information client-side, minimizing PCI compliance scope. A Next.js API route will securely handle the Stripe webhook for fulfillment.
+
+*   **Availability (99.5%):**
+    *   The architecture is serverless, relying on the high availability of Vercel (for Next.js hosting) and Supabase. This meets the requirement without custom infrastructure management.

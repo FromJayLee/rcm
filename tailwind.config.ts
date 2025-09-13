@@ -12,8 +12,15 @@ const config = {
         '2xl': '1400px',
       },
     },
+    fontFamily: {
+      sans: ['Inter', 'sans-serif'],
+    },
     extend: {
       colors: {
+        // Brand colors
+        ivory: '#F8F8F4',
+        charcoal: '#222222',
+        // Legacy shadcn colors
         border: 'hsl(var(--border))',
         input: 'hsl(var(--input))',
         ring: 'hsl(var(--ring))',

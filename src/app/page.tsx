@@ -46,16 +46,26 @@ export default function Home() {
       <div className="min-h-screen flex bg-gray-100">
         <div className="flex flex-col p-5 md:p-8 space-y-4">
           <h1 className="text-3xl md:text-5xl font-semibold tracking-tighter !leading-tight text-left">
-            Easiest way to start
-            <br /> Next.js project
-            <br /> with Cursor
+            Create High-Quality
+            <br /> Testimonial Cards
+            <br /> in Under 60 Seconds
           </h1>
 
           <p className="text-lg text-muted-foreground">
-            Get Pro-created Next.js bootstrap just in seconds
+            Perfect for SaaS founders who need professional marketing materials fast
           </p>
 
           <div className="flex items-center gap-2">
+            <Button
+              asChild
+              size="lg"
+              className="gap-2 w-fit rounded-full px-4 py-2"
+            >
+              <a href="/app/editor">
+                <Sparkles className="w-4 h-4" />
+                Launch App
+              </a>
+            </Button>
             <Button
               asChild
               size="lg"
@@ -65,17 +75,6 @@ export default function Home() {
               <a href="https://github.com/easynextjs/easynext" target="_blank">
                 <Github className="w-4 h-4" />
                 GitHub
-              </a>
-            </Button>
-            <Button
-              asChild
-              size="lg"
-              variant="secondary"
-              className="gap-2 w-fit rounded-full px-4 py-2 bg-yellow-600 hover:bg-yellow-700 text-white"
-            >
-              <a href="https://easynext.org/premium" target="_blank">
-                <Sparkles className="w-4 h-4" />
-                Premium
               </a>
             </Button>
           </div>
