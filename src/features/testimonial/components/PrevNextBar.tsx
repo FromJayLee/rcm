@@ -34,11 +34,11 @@ export function PrevNextBar() {
 
   return (
     <div 
-      className="sticky bottom-0 inset-x-0 bg-ivory/95 backdrop-blur border-t border-charcoal/20 p-1 flex justify-center safe-area-pb"
+      className="sticky bottom-0 inset-x-0 bg-ivory/95 backdrop-blur border-t border-charcoal/20 py-0.5 px-1 flex justify-center safe-area-pb"
       onKeyDown={handleKeyDown}
       tabIndex={0}
     >
-      <div className="flex gap-2">
+      <div className="flex gap-2" style={{ transform: 'scale(0.8)' }}>
         <Button
           variant="outline"
           disabled={!canPrev}
@@ -51,9 +51,10 @@ export function PrevNextBar() {
         </Button>
         
         <Button
+          variant="outline"
           disabled={!canNext}
           onClick={handleNext}
-          className="inline-flex items-center gap-1 px-2 py-1 bg-charcoal text-ivory disabled:opacity-40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-charcoal hover:bg-black transition-all duration-200 text-xs"
+          className="inline-flex items-center gap-1 px-2 py-1 bg-ivory border-charcoal/40 text-charcoal disabled:opacity-40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-charcoal hover:bg-charcoal/5 hover:border-charcoal/60 transition-all duration-200 text-xs"
         >
           <span className="hidden sm:inline font-medium">Next</span>
           <span className="sm:hidden font-medium">Next</span>

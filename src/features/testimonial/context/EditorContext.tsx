@@ -13,15 +13,22 @@ function editorReducer(state: EditorState, action: Action): EditorState {
     case "SET_ASPECT_RATIO":
       return { ...state, aspectRatio: action.ratio };
     case "SET_TEMPLATE":
-      return { ...state, templateId: action.templateId };
+      // T4 템플릿 선택 시 자동으로 2:1 비율 설정
+      const aspectRatio = action.templateId === 'T4' ? '2:1' : state.aspectRatio;
+      return { ...state, templateId: action.templateId, aspectRatio };
     case "SET_CONTENT":
       return { ...state, content: { ...state.content, ...action.patch } };
     case "SET_BACKGROUND":
       return { ...state, background: { ...state.background, ...action.patch } };
     case "SET_CARD_SCALE": {
-      const value = Math.min(0.95, Math.max(0.6, action.value));
+      const value = Math.min(1.5, Math.max(0.6, action.value));
       return { ...state, cardConfig: { ...state.cardConfig, scale: value } };
     }
+    case "SET_CARD_SHADOW": {
+      return { ...state, cardConfig: { ...state.cardConfig, shadow: { ...state.cardConfig.shadow, ...action.patch } } };
+    }
+    case "RESET_EDITOR":
+      return initialState;
     default:
       return state;
   }
@@ -29,23 +36,40 @@ function editorReducer(state: EditorState, action: Action): EditorState {
 
 const initialState: EditorState = {
   step: 1,
-  aspectRatio: "4:3", // 4:3 고정
+  aspectRatio: "1:1", // 기본 비율
   templateId: "T1",
   content: {
-    quote: "This tool has completely transformed how we create marketing materials. The quality is outstanding and it saves us hours every week.",
-    authorName: "John Doe",
-    authorRole: "CEO, TechStart",
+    quote: "Wind-ui, is probably one of the best libraries I've came across. Good looking, easy to use and above all super accessible.",
+    authorName: "BILL GATES",
+    authorRole: "UI designer, Apple",
     rating: 5,
     avatarUrl: null,
     isAnonymous: false,
     theme: "light",
+    // 새 필드들
+    company: "Apple Inc.",
+    sourceName: "Google Reviews",
+    sourceLogoUrl: null,
+    dateISO: new Date().toISOString(),
+    verified: true,
+    badges: ["Top Reviewer"],
+    align: "center",
+    accentColor: "#3b82f6",
   },
   background: {
     kind: "solid",
-    value: "#000000",
+    value: "#F3F4F6",
   },
   cardConfig: {
-    scale: 0.8,
+    scale: 1.0,
+    shadow: {
+      enabled: true,
+      blur: 10,
+      offsetX: 0,
+      offsetY: 4,
+      color: '#000000',
+      opacity: 50,
+    },
   },
 };
 
@@ -63,17 +87,17 @@ export function EditorProvider({ children }: { children: ReactNode }) {
         dispatch({ type: "SET_STEP", step: stepNumber as 1 | 2 | 3 | 4 });
       }
     }
-  }, [searchParams, state.step]);
+  }, [searchParams.toString()]);
 
   // 상태 변경 시 URL 업데이트
   useEffect(() => {
-    const currentStep = searchParams.get('step');
+    const url = new URL(window.location.href);
+    const currentStep = url.searchParams.get('step');
     if (currentStep !== state.step.toString()) {
-      const url = new URL(window.location.href);
       url.searchParams.set('step', state.step.toString());
       router.replace(url.pathname + url.search, { scroll: false });
     }
-  }, [state.step, router, searchParams]);
+  }, [state.step, router]);
 
   return (
     <EditorContext.Provider value={{ state, dispatch }}>

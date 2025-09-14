@@ -6,40 +6,135 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { useEditor } from '../../context/EditorContext';
-import { Download } from 'lucide-react';
+import { Download, Loader2 } from 'lucide-react';
+import { useState } from 'react';
+import { 
+  exportCardImage, 
+  downloadBlob, 
+  generateFileName, 
+  type ExportOptions, 
+  type ExportState 
+} from '../../lib/export';
 
 export function Step4Export() {
   const { state } = useEditor();
+  const [selectedFormat, setSelectedFormat] = useState<'PNG' | 'JPG'>('PNG');
+  const [selectedResolution, setSelectedResolution] = useState({ width: 1200, height: 900 });
+  const [isCustomResolution, setIsCustomResolution] = useState(false);
+  const [exportState, setExportState] = useState<ExportState>({
+    isExporting: false,
+    progress: 0,
+    error: null
+  });
+  
+  // 카드 크기 제한 설정
+  const MIN_WIDTH = 800;
+  const MAX_WIDTH = 2000;
 
   const resolutionPresets = [
+    { label: '800×600', width: 800, height: 600 },
     { label: '1200×900', width: 1200, height: 900 },
-    { label: '1400×1050', width: 1400, height: 1050 },
     { label: '1600×1200', width: 1600, height: 1200 },
-    { label: '1800×1350', width: 1800, height: 1350 },
     { label: '2000×1500', width: 2000, height: 1500 },
   ];
 
+  const handleDownload = async () => {
+    const canvasElement = document.getElementById('testimonial-canvas');
+    if (!canvasElement) {
+      setExportState(prev => ({ ...prev, error: '카드를 찾을 수 없습니다.' }));
+      return;
+    }
+
+    // 크기 제한 적용
+    const width = Math.min(MAX_WIDTH, Math.max(MIN_WIDTH, selectedResolution.width));
+    const height = Math.round(width * 3 / 4);
+
+    const exportOptions: ExportOptions = {
+      width,
+      height,
+      format: selectedFormat,
+      scale: 1, // 고정으로 1× 사용
+      fileName: generateFileName(),
+      quality: selectedFormat === 'JPG' ? 0.92 : undefined
+    };
+
+    setExportState({
+      isExporting: true,
+      progress: 0,
+      error: null
+    });
+
+    try {
+      // 진행률 시뮬레이션
+      const progressInterval = setInterval(() => {
+        setExportState(prev => ({
+          ...prev,
+          progress: Math.min(prev.progress + 10, 90)
+        }));
+      }, 100);
+
+      // Export 실행
+      const blob = await exportCardImage(canvasElement, exportOptions);
+      
+      clearInterval(progressInterval);
+      
+      setExportState(prev => ({
+        ...prev,
+        progress: 100
+      }));
+
+      // 다운로드 실행
+      const fileExtension = selectedFormat === 'PNG' ? 'png' : 'jpg';
+      downloadBlob(blob, `${exportOptions.fileName}.${fileExtension}`);
+
+      // 성공 상태로 리셋
+      setTimeout(() => {
+        setExportState({
+          isExporting: false,
+          progress: 0,
+          error: null
+        });
+      }, 1000);
+
+    } catch (error) {
+      console.error('Export 실패:', error);
+      setExportState({
+        isExporting: false,
+        progress: 0,
+        error: error instanceof Error ? error.message : 'Export에 실패했습니다.'
+      });
+    }
+  };
+
   return (
-    <div className="space-y-6">
+    <div className="space-y-2">
       <div className="text-center">
-        <h2 className="text-lg font-semibold text-charcoal mb-2">Export Your Card</h2>
-        <p className="text-sm text-charcoal/60">Download your testimonial card in 4:3 ratio</p>
+        <h2 className="text-sm font-semibold text-black mb-0.5">Export Your Card</h2>
+        <p className="text-xs text-black">Download your testimonial card</p>
       </div>
       
       {/* Resolution Presets */}
       <Card className="bg-ivory border-charcoal/20">
-        <CardHeader className="pb-3">
-          <CardTitle className="text-sm text-charcoal">Resolution Presets</CardTitle>
+        <CardHeader className="pb-1 px-2 pt-2">
+          <CardTitle className="text-xs text-black">Resolution Presets</CardTitle>
         </CardHeader>
-        <CardContent className="space-y-4">
-          <div className="grid grid-cols-1 gap-2">
+        <CardContent className="space-y-2 px-2 pb-2">
+          <div className="grid grid-cols-4 gap-1">
             {resolutionPresets.map((preset) => (
               <Button
                 key={preset.label}
                 variant="outline"
-                className="justify-start text-sm border-charcoal/30 text-charcoal hover:bg-charcoal/5"
+                onClick={() => {
+                  setSelectedResolution({ width: preset.width, height: preset.height });
+                  setIsCustomResolution(false);
+                }}
+                className={`justify-center text-xs border-charcoal/30 text-black h-8 ${
+                  !isCustomResolution && selectedResolution.width === preset.width && selectedResolution.height === preset.height
+                    ? 'bg-charcoal text-ivory'
+                    : 'bg-ivory hover:bg-charcoal/5'
+                }`}
               >
-                {preset.label} (4:3)
+                {preset.label}
               </Button>
             ))}
           </div>
@@ -48,72 +143,114 @@ export function Step4Export() {
 
       {/* Custom Resolution */}
       <Card className="bg-ivory border-charcoal/20">
-        <CardHeader className="pb-3">
-          <CardTitle className="text-sm text-charcoal">Custom Resolution</CardTitle>
+        <CardHeader className="pb-1 px-2 pt-2">
+          <CardTitle className="text-xs text-black">Custom Resolution</CardTitle>
         </CardHeader>
-        <CardContent className="space-y-4">
-          <div className="space-y-2">
-            <Label className="text-sm font-medium">Width (Height auto-calculated)</Label>
+        <CardContent className="space-y-2 px-2 pb-2">
+          <div className="space-y-1">
             <div className="flex items-center space-x-2">
               <input
                 type="number"
                 placeholder="1600"
-                className="flex-1 px-3 py-2 border border-charcoal/30 rounded-md text-sm bg-ivory text-charcoal"
+                min={MIN_WIDTH}
+                max={MAX_WIDTH}
+                value={selectedResolution.width || ''}
+                onChange={(e) => {
+                  const inputValue = parseInt(e.target.value);
+                  if (isNaN(inputValue)) return;
+                  
+                  const width = Math.min(MAX_WIDTH, Math.max(MIN_WIDTH, inputValue));
+                  const height = Math.round(width * 3 / 4);
+                  setSelectedResolution({ width, height });
+                  setIsCustomResolution(true);
+                }}
+                onFocus={() => setIsCustomResolution(true)}
+                className="flex-1 px-2 py-1 border border-charcoal/30 rounded-md text-xs bg-ivory text-black h-8"
               />
-              <span className="text-sm text-charcoal/60">×</span>
-              <span className="text-sm text-charcoal/60">800</span>
+              <span className="text-xs text-black">×</span>
+              <span className="text-xs text-black">{selectedResolution.height}</span>
             </div>
-            <p className="text-xs text-charcoal/60">Height will be automatically calculated as width × 3 ÷ 4</p>
+            <p className="text-xs text-gray-600">Height will be automatically calculated.</p>
+            <p className="text-xs text-gray-500">Size range: {MIN_WIDTH}px - {MAX_WIDTH}px</p>
           </div>
         </CardContent>
       </Card>
 
       {/* Export Options */}
       <Card className="bg-ivory border-charcoal/20">
-        <CardHeader className="pb-3">
-          <CardTitle className="text-sm text-charcoal">Export Options</CardTitle>
+        <CardHeader className="pb-1 px-2 pt-2">
+          <CardTitle className="text-xs text-black">Export Options</CardTitle>
         </CardHeader>
-        <CardContent className="space-y-4">
-          <div className="space-y-3">
-            <div className="flex items-center space-x-2">
-              <input type="radio" id="png" name="format" defaultChecked className="text-charcoal" />
-              <Label htmlFor="png" className="text-sm">PNG (Recommended)</Label>
-            </div>
-            <div className="flex items-center space-x-2">
-              <input type="radio" id="jpg" name="format" className="text-charcoal" />
-              <Label htmlFor="jpg" className="text-sm">JPG</Label>
-            </div>
-            <div className="flex items-center space-x-2">
-              <input type="checkbox" id="2x" className="text-charcoal" />
-              <Label htmlFor="2x" className="text-sm">2× Resolution (Retina)</Label>
-            </div>
-            <div className="flex items-center space-x-2">
-              <input type="checkbox" id="background" defaultChecked className="text-charcoal" />
-              <Label htmlFor="background" className="text-sm">Include Background</Label>
+        <CardContent className="space-y-2 px-2 pb-2">
+          {/* Format Selection */}
+          <div className="space-y-1">
+            <Label className="text-xs font-medium text-black">Format</Label>
+            <div className="grid grid-cols-2 gap-1">
+              <Button
+                variant="outline"
+                onClick={() => setSelectedFormat('PNG')}
+                className={`justify-center text-xs border-charcoal/30 h-8 ${
+                  selectedFormat === 'PNG'
+                    ? 'bg-charcoal text-ivory'
+                    : 'bg-ivory text-black hover:bg-charcoal/5'
+                }`}
+              >
+                PNG
+              </Button>
+              <Button
+                variant="outline"
+                onClick={() => setSelectedFormat('JPG')}
+                className={`justify-center text-xs border-charcoal/30 h-8 ${
+                  selectedFormat === 'JPG'
+                    ? 'bg-charcoal text-ivory'
+                    : 'bg-ivory text-black hover:bg-charcoal/5'
+                }`}
+              >
+                JPG
+              </Button>
             </div>
           </div>
+
         </CardContent>
       </Card>
 
-      {/* File Name */}
-      <Card className="bg-ivory border-charcoal/20">
-        <CardHeader className="pb-3">
-          <CardTitle className="text-sm text-charcoal">File Name</CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <input
-            type="text"
-            placeholder="testimonial-card"
-            className="w-full px-3 py-2 border border-charcoal/30 rounded-md text-sm bg-ivory text-charcoal"
-          />
-        </CardContent>
-      </Card>
 
       {/* Export Button */}
-      <Button className="w-full bg-charcoal text-ivory hover:bg-black">
-        <Download className="w-4 h-4 mr-2" />
-        Export Card
+      <Button 
+        onClick={handleDownload}
+        disabled={exportState.isExporting}
+        className="w-full bg-charcoal text-ivory hover:bg-black h-7 text-xs disabled:opacity-50"
+        aria-label={exportState.isExporting ? 'Exporting...' : 'Export testimonial card'}
+      >
+        {exportState.isExporting ? (
+          <>
+            <Loader2 className="w-3 h-3 mr-1 animate-spin" />
+            Exporting... {exportState.progress}%
+          </>
+        ) : (
+          <>
+            <Download className="w-3 h-3 mr-1" />
+            Export Card
+          </>
+        )}
       </Button>
+
+      {/* Progress Bar */}
+      {exportState.isExporting && (
+        <div className="w-full bg-gray-200 rounded-full h-1">
+          <div 
+            className="bg-charcoal h-1 rounded-full transition-all duration-300"
+            style={{ width: `${exportState.progress}%` }}
+          />
+        </div>
+      )}
+
+      {/* Error Message */}
+      {exportState.error && (
+        <div className="text-xs text-red-600 bg-red-50 p-2 rounded border border-red-200">
+          {exportState.error}
+        </div>
+      )}
 
       {/* Token Cost */}
       <div className="text-center">

@@ -33,7 +33,7 @@ const steps = [
 export function StepNavigator({ currentStep, onStepChange }: StepNavigatorProps) {
   return (
     <div className="h-full p-4 space-y-2">
-      <h2 className="text-sm font-semibold text-muted-foreground mb-4">
+      <h2 className="text-sm font-semibold text-charcoal/60 mb-4">
         Create Testimonial
       </h2>
       
@@ -50,7 +50,7 @@ export function StepNavigator({ currentStep, onStepChange }: StepNavigatorProps)
               className={cn(
                 'w-full justify-start h-auto p-3 text-left',
                 isCurrent && 'bg-primary text-primary-foreground',
-                isCompleted && !isCurrent && 'text-muted-foreground'
+                isCompleted && !isCurrent && 'text-charcoal/60'
               )}
               onClick={() => onStepChange(step.id)}
             >
@@ -59,7 +59,7 @@ export function StepNavigator({ currentStep, onStepChange }: StepNavigatorProps)
                   'w-6 h-6 rounded-full flex items-center justify-center text-xs font-medium',
                   isCompleted && 'bg-primary-foreground text-primary',
                   isCurrent && 'bg-primary-foreground text-primary',
-                  !isCompleted && !isCurrent && 'bg-muted text-muted-foreground'
+                  !isCompleted && !isCurrent && 'bg-charcoal/10 text-charcoal/60'
                 )}>
                   {isCompleted ? (
                     <Check className="w-3 h-3" />
@@ -69,7 +69,7 @@ export function StepNavigator({ currentStep, onStepChange }: StepNavigatorProps)
                 </div>
                 <div className="flex-1 min-w-0">
                   <div className="text-sm font-medium">{step.title}</div>
-                  <div className="text-xs text-muted-foreground mt-1">
+                  <div className="text-xs text-charcoal/60 mt-1">
                     {step.description}
                   </div>
                 </div>

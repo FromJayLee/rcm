@@ -26,7 +26,7 @@ export function CanvasContainer({ currentStep, cardConfig }: CanvasContainerProp
 
   const renderTemplate = () => {
     if (!cardConfig) {
-      return <div className="w-full h-full flex items-center justify-center text-muted-foreground">
+      return <div className="w-full h-full flex items-center justify-center text-charcoal/60">
         Loading...
       </div>;
     }

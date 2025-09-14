@@ -22,40 +22,25 @@ import {
   FileText,
   Settings
 } from 'lucide-react';
-import { CardConfig } from '../types';
+import { useEditor } from '../context/EditorContext';
 
 interface EditorPanelProps {
   currentStep: number;
-  cardConfig: CardConfig;
-  onConfigChange: (config: CardConfig) => void;
 }
 
-export function EditorPanel({ currentStep, cardConfig, onConfigChange }: EditorPanelProps) {
-  const handleTemplateChange = (templateId: CardConfig['templateId']) => {
-    onConfigChange({
-      ...cardConfig,
-      templateId
-    });
+export function EditorPanel({ currentStep }: EditorPanelProps) {
+  const { state, dispatch } = useEditor();
+
+  const handleTemplateChange = (templateId: 'T1' | 'T2' | 'T3' | 'T4' | 'T5' | 'T6' | 'T7' | 'T8' | 'T9') => {
+    dispatch({ type: "SET_TEMPLATE", templateId });
   };
 
-  const handleContentChange = (field: keyof CardConfig['content'], value: any) => {
-    onConfigChange({
-      ...cardConfig,
-      content: {
-        ...cardConfig.content,
-        [field]: value
-      }
-    });
+  const handleContentChange = (field: keyof typeof state.content, value: any) => {
+    dispatch({ type: "SET_CONTENT", patch: { [field]: value } });
   };
 
-  const handleStyleChange = (field: keyof CardConfig['style'], value: any) => {
-    onConfigChange({
-      ...cardConfig,
-      style: {
-        ...cardConfig.style,
-        [field]: value
-      }
-    });
+  const handleBackgroundChange = (field: keyof typeof state.background, value: any) => {
+    dispatch({ type: "SET_BACKGROUND", patch: { [field]: value } });
   };
 
   return (
@@ -114,16 +99,16 @@ export function EditorPanel({ currentStep, cardConfig, onConfigChange }: EditorP
             <CardContent className="space-y-4">
               {/* Rating */}
               <div className="space-y-2">
-                <Label className="text-sm font-medium">Rating: {cardConfig.content.rating}</Label>
+                <Label className="text-sm font-medium">Rating: {state.content.rating}</Label>
                 <Slider
-                  value={[cardConfig.content.rating]}
+                  value={[state.content.rating]}
                   onValueChange={([value]) => handleContentChange('rating', value)}
                   max={5}
                   min={1}
                   step={1}
-                  className="w-full"
+                  className="w-full [&_.slider-track]:h-0.5 [&_.slider-track]:bg-charcoal/10 [&_.slider-range]:h-0.5 [&_.slider-range]:bg-charcoal/60 [&_.slider-thumb]:h-2 [&_.slider-thumb]:w-2 [&_.slider-thumb]:border-0 [&_.slider-thumb]:bg-charcoal [&_.slider-thumb]:shadow-none"
                 />
-                <div className="flex justify-between text-xs text-muted-foreground">
+                <div className="flex justify-between text-xs text-charcoal/60">
                   <span>1</span>
                   <span>5</span>
                 </div>
@@ -267,13 +252,56 @@ export function EditorPanel({ currentStep, cardConfig, onConfigChange }: EditorP
                     type="range"
                     min="0"
                     max="100"
-                    defaultValue="80"
-                    className="w-full"
+                    value={state.cardConfig.shadow.opacity}
+                    onChange={(e) => dispatch({ type: "SET_CARD_SHADOW", patch: { opacity: parseInt(e.target.value) } })}
+                    className="w-full h-1 bg-charcoal/10 appearance-none [&::-webkit-slider-track]:h-1 [&::-webkit-slider-track]:bg-charcoal/10 [&::-webkit-slider-track]:rounded-full [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:h-3 [&::-webkit-slider-thumb]:w-3 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-charcoal [&::-webkit-slider-thumb]:border-0 [&::-webkit-slider-thumb]:shadow-none [&::-webkit-slider-thumb]:cursor-pointer [&::-webkit-slider-thumb]:-mt-1 [&::-moz-range-track]:h-1 [&::-moz-range-track]:bg-charcoal/10 [&::-moz-range-track]:rounded-full [&::-moz-range-thumb]:h-3 [&::-moz-range-thumb]:w-3 [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:bg-charcoal [&::-moz-range-thumb]:border-0 [&::-moz-range-thumb]:shadow-none [&::-moz-range-thumb]:cursor-pointer"
                   />
-                  <div className="flex justify-between text-xs text-muted-foreground">
+                  <div className="flex justify-between text-xs text-charcoal/60 mb-2">
                     <span>0%</span>
-                    <span>80%</span>
+                    <span>{state.cardConfig.shadow.opacity}%</span>
                     <span>100%</span>
+                  </div>
+                  <div className="mt-4">
+                    <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => {
+                      // 전체 설정 초기화
+                      dispatch({ type: "SET_TEMPLATE", templateId: "T1" });
+                      dispatch({ type: "SET_CONTENT", patch: {
+                        quote: "Wind-ui, is probably one of the best libraries I've came across. Good looking, easy to use and above all super accessible.",
+                        authorName: "BILL GATES",
+                        authorRole: "UI designer, Apple",
+                        rating: 5,
+                        avatarUrl: null,
+                        isAnonymous: false,
+                        theme: "light",
+                        company: "Apple Inc.",
+                        sourceName: "Google Reviews",
+                        sourceLogoUrl: null,
+                        dateISO: "2024-01-15",
+                        verified: true,
+                        badges: ["Verified"],
+                        align: "left",
+                        accentColor: "#3B82F6"
+                      }});
+                      dispatch({ type: "SET_BACKGROUND", patch: {
+                        kind: "solid",
+                        value: "#000000"
+                      }});
+                      dispatch({ type: "SET_CARD_SCALE", value: 1.0 });
+                      dispatch({ type: "SET_CARD_SHADOW", patch: {
+                        enabled: true,
+                        blur: 10,
+                        offsetX: 0,
+                        offsetY: 4,
+                        opacity: 50
+                      }});
+                    }}
+                    className="w-full text-xs bg-ivory text-charcoal border-charcoal/20 hover:bg-charcoal/5"
+                  >
+                    Reset All Settings
+                  </Button>
                   </div>
                 </div>
               </div>

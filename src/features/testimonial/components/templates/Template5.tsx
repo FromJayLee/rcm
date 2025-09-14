@@ -1,7 +1,7 @@
 'use client';
 
 import { Star } from 'lucide-react';
-import { TemplateProps } from '../types';
+import { TemplateProps } from '../../types';
 
 export function Template5({ content, style }: TemplateProps) {
   const { quote, authorName, authorRole, rating, avatarUrl, isAnonymous } = content;
@@ -9,17 +9,21 @@ export function Template5({ content, style }: TemplateProps) {
 
   return (
     <div className="flex items-center justify-center w-full h-full">
-      <div className={`flex flex-col justify-between p-8 bg-white rounded-lg shadow-lg ${
+      <div className={`flex flex-col justify-between p-8 rounded-lg shadow-lg ${
         mode === 'dark' 
-          ? 'text-charcoal' 
-          : 'text-charcoal'
+          ? 'bg-charcoal text-ivory' 
+          : 'bg-white text-charcoal'
       }`} style={{ 
         width: '340px',
         height: '320px'
       }}>
         {/* 상단 타이틀 */}
         <div className="text-center mb-6">
-          <h3 className="text-lg font-semibold text-black">Customer reviews</h3>
+          <h3 className={`text-lg font-semibold ${
+            mode === 'dark' ? 'text-ivory' : 'text-black'
+          }`}>
+            Customer reviews
+          </h3>
         </div>
         
         {/* 평균 별점 배지 */}
@@ -29,19 +33,27 @@ export function Template5({ content, style }: TemplateProps) {
               <Star 
                 key={star} 
                 className={`w-5 h-5 ${
-                  star <= rating 
+                  star <= 5 
                     ? 'text-yellow-400 fill-yellow-400' 
                     : 'text-gray-300'
                 }`} 
               />
             ))}
           </div>
-          <span className="text-xl font-bold text-black">{rating}</span>
-          <span className="text-black">out of 5</span>
+          <span className={`text-xl font-bold ${
+            mode === 'dark' ? 'text-ivory' : 'text-black'
+          }`}>
+            {rating}
+          </span>
+          <span className={mode === 'dark' ? 'text-ivory' : 'text-black'}>
+            out of 5
+          </span>
         </div>
         
         {/* 총 리뷰 수 */}
-        <div className="text-center text-black mb-6">
+        <div className={`text-center mb-6 ${
+          mode === 'dark' ? 'text-ivory/80' : 'text-black'
+        }`}>
           40 customer ratings
         </div>
         
@@ -51,14 +63,26 @@ export function Template5({ content, style }: TemplateProps) {
             const percentage = star === 5 ? 84 : star === 4 ? 9 : star === 3 ? 4 : star === 2 ? 2 : 1;
             return (
               <div key={star} className="flex items-center space-x-2">
-                <span className="text-sm w-12 text-black">{star} star</span>
-                <div className="flex-1 bg-gray-200 rounded-full h-2">
+                <span className={`text-sm w-12 ${
+                  mode === 'dark' ? 'text-ivory' : 'text-black'
+                }`}>
+                  {star} star
+                </span>
+                <div className={`flex-1 rounded-full h-2 ${
+                  mode === 'dark' ? 'bg-ivory/20' : 'bg-gray-200'
+                }`}>
                   <div 
-                    className="bg-yellow-400 h-2 rounded-full" 
+                    className={`h-2 rounded-full ${
+                      mode === 'dark' ? 'bg-ivory/60' : 'bg-gray-600'
+                    }`}
                     style={{ width: `${percentage}%` }}
                   />
                 </div>
-                <span className="text-sm w-8 text-right text-black">{percentage}%</span>
+                <span className={`text-sm w-8 text-right ${
+                  mode === 'dark' ? 'text-ivory' : 'text-black'
+                }`}>
+                  {percentage}%
+                </span>
               </div>
             );
           })}

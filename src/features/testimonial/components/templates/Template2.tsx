@@ -1,7 +1,7 @@
 'use client';
 
 import { Star } from 'lucide-react';
-import { TemplateProps } from '../types';
+import { TemplateProps } from '../../types';
 
 export function Template2({ content, style }: TemplateProps) {
   const { quote, authorName, authorRole, rating, avatarUrl, isAnonymous } = content;
@@ -9,10 +9,10 @@ export function Template2({ content, style }: TemplateProps) {
 
   return (
     <div className="flex items-center justify-center w-full h-full">
-      <div className={`flex flex-col justify-between p-6 bg-white rounded-lg shadow-lg ${
+      <div className={`flex flex-col justify-between p-6 rounded-lg shadow-lg ${
         mode === 'dark' 
-          ? 'text-charcoal' 
-          : 'text-charcoal'
+          ? 'bg-charcoal text-ivory' 
+          : 'bg-white text-charcoal'
       }`} style={{ 
         width: '320px',
         height: '280px'
@@ -26,17 +26,21 @@ export function Template2({ content, style }: TemplateProps) {
               className="w-10 h-10 rounded-full object-cover"
             />
           ) : (
-            <div className={`w-10 h-10 rounded-full flex items-center justify-center text-white font-semibold ${
-              mode === 'dark' ? 'bg-gray-600' : 'bg-gray-600'
+            <div className={`w-10 h-10 rounded-full flex items-center justify-center font-semibold ${
+              mode === 'dark' ? 'bg-ivory text-charcoal' : 'bg-gray-600 text-white'
             }`}>
               {isAnonymous ? 'A' : authorName.charAt(0)}
             </div>
           )}
           <div>
-            <div className="font-semibold text-gray-800">
+            <div className={`font-semibold ${
+              mode === 'dark' ? 'text-ivory' : 'text-gray-800'
+            }`}>
               {isAnonymous ? 'Anonymous' : authorName}
             </div>
-            <div className="text-sm text-gray-600">
+            <div className={`text-sm ${
+              mode === 'dark' ? 'text-ivory/70' : 'text-gray-600'
+            }`}>
               {authorRole}
             </div>
           </div>
@@ -44,7 +48,9 @@ export function Template2({ content, style }: TemplateProps) {
         
         {/* 본문 */}
         <div className="flex-1 mb-6">
-          <p className="text-gray-600 italic leading-relaxed text-left">
+          <p className={`italic leading-relaxed text-left ${
+            mode === 'dark' ? 'text-ivory/80' : 'text-gray-600'
+          }`}>
             "{quote}"
           </p>
         </div>
@@ -55,7 +61,7 @@ export function Template2({ content, style }: TemplateProps) {
             <Star 
               key={star} 
               className={`w-5 h-5 ${
-                star <= rating 
+                star <= 5 
                   ? 'text-yellow-400 fill-yellow-400' 
                   : 'text-gray-400'
               }`} 
