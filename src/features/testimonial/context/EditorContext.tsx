@@ -50,7 +50,7 @@ const initialState: EditorState = {
     company: "Apple Inc.",
     sourceName: "Google Reviews",
     sourceLogoUrl: null,
-    dateISO: new Date().toISOString(),
+    dateISO: "2024-01-01T00:00:00.000Z", // 정적 초기값으로 hydration mismatch 방지
     verified: true,
     badges: ["Top Reviewer"],
     align: "center",
@@ -77,6 +77,14 @@ export function EditorProvider({ children }: { children: ReactNode }) {
   const [state, dispatch] = useReducer(editorReducer, initialState);
   const router = useRouter();
   const searchParams = useSearchParams();
+
+  // 실제 날짜 설정 (hydration mismatch 방지)
+  useEffect(() => {
+    dispatch({ 
+      type: "SET_CONTENT", 
+      patch: { dateISO: new Date().toISOString() } 
+    });
+  }, []);
 
   // URL 동기화: step 쿼리 파라미터 반영
   useEffect(() => {

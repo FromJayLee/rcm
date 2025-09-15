@@ -69,6 +69,7 @@ export function Template9({
               src={source.logoUrl} 
               alt={source.name || 'Source'}
               className="h-8 w-auto"
+              crossOrigin="anonymous"
             />
           )}
         </div>
@@ -125,6 +126,7 @@ export function Template9({
                 src={author.avatarUrl} 
                 alt={author.name}
                 className="w-14 h-14 rounded-full object-cover"
+                crossOrigin="anonymous"
               />
             ) : (
               <div 

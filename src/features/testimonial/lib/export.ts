@@ -154,9 +154,6 @@ export async function exportCardImage(root: HTMLElement, options: ExportOptions)
     // 2. 전체 카드 캡처 (배경 포함)
     const targetElement = root;
     
-    // 정확한 크롭핑을 위한 좌표 계산
-    const rect = targetElement.getBoundingClientRect();
-    
     const cardOptions = {
       width: options.width,
       height: options.height,
@@ -167,26 +164,36 @@ export async function exportCardImage(root: HTMLElement, options: ExportOptions)
       logging: false,
       foreignObjectRendering: false, // foreignObjectRendering 비활성화
       removeContainer: false,
-      cacheBust: true,
-      x: rect.left, // 정확한 크롭핑을 위한 x 좌표
-      y: rect.top   // 정확한 크롭핑을 위한 y 좌표
-      // style 속성 완전 제거 - transform을 보존하기 위해
+      cacheBust: true
+      // x, y 좌표 제거 - html2canvas가 자동으로 요소 바운딩 계산
     };
     
     console.log('카드 캡처 시작:', { options, targetElement });
     const cardCanvas = await html2canvas(targetElement, cardOptions);
     console.log('카드 캡처 완료:', { canvasWidth: cardCanvas.width, canvasHeight: cardCanvas.height });
     
-    // 3. 배경 채우기 (투명한 캔버스 방지)
-    const computedStyle = window.getComputedStyle(targetElement);
-    const backgroundColor = computedStyle.backgroundColor;
-    
-    if (backgroundColor && backgroundColor !== 'rgba(0, 0, 0, 0)' && backgroundColor !== 'transparent') {
-      ctx.fillStyle = backgroundColor;
-      ctx.fillRect(0, 0, finalCanvas.width, finalCanvas.height);
+    // 3. 배경 채우기 (data-layer="bg" 요소의 배경 스타일 사용)
+    const backgroundLayer = root.querySelector('[data-layer="bg"]') as HTMLElement;
+    if (backgroundLayer) {
+      const computedStyle = window.getComputedStyle(backgroundLayer);
+      const backgroundColor = computedStyle.backgroundColor;
+      const backgroundImage = computedStyle.backgroundImage;
+      
+      if (backgroundImage && backgroundImage !== 'none') {
+        // 배경 이미지가 있는 경우 - html2canvas가 이미 캡처했으므로 추가 처리 불필요
+        ctx.fillStyle = backgroundColor || '#FFFFFF';
+        ctx.fillRect(0, 0, finalCanvas.width, finalCanvas.height);
+      } else if (backgroundColor && backgroundColor !== 'rgba(0, 0, 0, 0)' && backgroundColor !== 'transparent') {
+        ctx.fillStyle = backgroundColor;
+        ctx.fillRect(0, 0, finalCanvas.width, finalCanvas.height);
+      } else {
+        // fallback: 기본 흰색 배경
+        ctx.fillStyle = '#FFFFFF';
+        ctx.fillRect(0, 0, finalCanvas.width, finalCanvas.height);
+      }
     } else {
-      // 기본 배경색 설정 (아이보리)
-      ctx.fillStyle = '#F8F8F4';
+      // fallback: 기본 흰색 배경
+      ctx.fillStyle = '#FFFFFF';
       ctx.fillRect(0, 0, finalCanvas.width, finalCanvas.height);
     }
     

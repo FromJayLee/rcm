@@ -79,6 +79,7 @@ export function Template6({
                       src={author.avatarUrl} 
                       alt={author.name}
                       className="w-12 h-12 rounded-full object-cover"
+                      crossOrigin="anonymous"
                     />
                   ) : (
                     <div 

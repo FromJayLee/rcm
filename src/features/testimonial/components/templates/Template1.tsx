@@ -47,6 +47,7 @@ export function Template1({ content, style }: TemplateProps) {
               src={avatarUrl} 
               alt={authorName}
               className="w-12 h-12 rounded-full object-cover"
+              crossOrigin="anonymous"
             />
           ) : (
             <div className={`w-12 h-12 rounded-full flex items-center justify-center font-semibold ${

@@ -64,11 +64,12 @@ export function Template7({
           {/* 아바타 */}
           <div className="flex justify-center mb-6">
             {author.avatarUrl ? (
-              <img 
-                src={author.avatarUrl} 
-                alt={author.name}
-                className="w-24 h-24 rounded-full object-cover border-4 border-white shadow-lg"
-              />
+            <img 
+              src={author.avatarUrl} 
+              alt={author.name}
+              className="w-24 h-24 rounded-full object-cover border-4 border-white shadow-lg"
+              crossOrigin="anonymous"
+            />
             ) : (
               <div 
                 className="w-24 h-24 rounded-full flex items-center justify-center text-white font-bold text-2xl border-4 border-white shadow-lg"
@@ -155,11 +156,12 @@ export function Template7({
 
             {/* 소스 로고 */}
             {source?.logoUrl && (
-              <img 
-                src={source.logoUrl} 
-                alt={source.name || 'Source'}
-                className="h-6 w-auto opacity-60"
-              />
+            <img 
+              src={source.logoUrl} 
+              alt={source.name || 'Source'}
+              className="h-6 w-auto opacity-60"
+              crossOrigin="anonymous"
+            />
             )}
           </div>
         </div>

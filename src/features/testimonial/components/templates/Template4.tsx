@@ -60,6 +60,7 @@ export function Template4({ content, style }: TemplateProps) {
                   src={avatarUrl} 
                   alt={isAnonymous ? 'Anonymous' : authorName}
                   className="w-12 h-12 rounded-full object-cover"
+                  crossOrigin="anonymous"
                 />
               ) : (
                 <div 
