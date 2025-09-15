@@ -75,7 +75,12 @@ export function Template7({
                 className="w-24 h-24 rounded-full flex items-center justify-center text-white border-4 border-white shadow-lg"
                 style={{ backgroundColor: currentColors.accent }}
               >
-                <User size={32} />
+                <img 
+                  src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop&crop=face&auto=format&q=80"
+                  alt="Default avatar"
+                  className="w-8 h-8 rounded-full object-cover"
+                  crossOrigin="anonymous"
+                />
               </div>
             )}
           </div>

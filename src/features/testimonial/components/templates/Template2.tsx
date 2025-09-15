@@ -30,7 +30,12 @@ export function Template2({ content, style }: TemplateProps) {
             <div className={`w-10 h-10 rounded-full flex items-center justify-center ${
               mode === 'dark' ? 'bg-ivory text-charcoal' : 'bg-gray-600 text-white'
             }`}>
-              <User size={20} />
+              <img 
+                src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop&crop=face&auto=format&q=80"
+                alt="Default avatar"
+                className="w-5 h-5 rounded-full object-cover"
+                crossOrigin="anonymous"
+              />
             </div>
           )}
           <div>

@@ -145,7 +145,12 @@ export function Step2Content() {
                   onClick={() => document.getElementById('avatar-upload')?.click()}
                   title="Click to upload avatar"
                 >
-                  <User className="w-6 h-6 text-charcoal/40" />
+                  <img 
+                    src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop&crop=face&auto=format&q=80"
+                    alt="Default avatar"
+                    className="w-full h-full object-cover rounded-full"
+                    crossOrigin="anonymous"
+                  />
                 </div>
               )}
             </div>
