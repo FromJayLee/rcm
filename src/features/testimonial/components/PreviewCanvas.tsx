@@ -99,8 +99,8 @@ export function PreviewCanvas() {
             className="h-full w-full border border-gray-300 rounded-lg shadow-sm overflow-hidden relative"
             style={{
               backgroundColor: '#FFFFFF', // 카드 자체는 흰색 배경
-              minHeight: '400px', // 최소 높이 보장
-              minWidth: '300px', // 최소 너비 보장
+              width: '350px', // Template1 고정 너비
+              height: '250px', // Template1 고정 높이
               // html2canvas가 배경을 제대로 캡처할 수 있도록 명시적 설정
               background: '#FFFFFF',
             }}

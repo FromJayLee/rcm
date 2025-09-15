@@ -45,10 +45,9 @@ export function Step4Export() {
       return;
     }
 
-    // 실제 캔버스 크기 측정 (getBoundingClientRect 사용)
-    const rect = canvasElement.getBoundingClientRect();
-    const renderedWidth = rect.width;
-    const renderedHeight = rect.height;
+    // 실제 템플릿 크기 측정 (offsetWidth/offsetHeight 사용)
+    const templateWidth = canvasElement.offsetWidth;
+    const templateHeight = canvasElement.offsetHeight;
     
     // 크기 제한 적용
     const desiredWidth = Math.min(MAX_WIDTH, Math.max(MIN_WIDTH, selectedResolution.width));
@@ -56,11 +55,11 @@ export function Step4Export() {
     
     // export scale 계산 및 검증 (devicePixelRatio 고려)
     const devicePixelRatio = window.devicePixelRatio || 1;
-    const exportScale = Math.max(0.5, Math.min(4, (desiredWidth / renderedWidth) * devicePixelRatio)); // 0.5-4 범위로 제한
+    const exportScale = Math.max(0.5, Math.min(4, (desiredWidth / templateWidth) * devicePixelRatio)); // 0.5-4 범위로 제한
 
     const exportOptions: ExportOptions = {
-      width: renderedWidth,
-      height: renderedHeight,
+      width: templateWidth,
+      height: templateHeight,
       format: selectedFormat,
       scale: exportScale, // 계산된 scale 사용
       fileName: generateFileName(),
