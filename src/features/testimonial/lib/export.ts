@@ -33,22 +33,58 @@ export async function waitForFonts(): Promise<void> {
 export async function waitForImages(root: HTMLElement): Promise<void> {
   const imgs = Array.from(root.querySelectorAll('img')) as HTMLImageElement[];
   
-  await Promise.all(imgs.map(async (img) => {
-    try {
-      if ('decode' in img) {
-        await img.decode();
-      } else if (!img.complete) {
+  // CSS background-image URL 수집
+  const backgroundImages: string[] = [];
+  const allElements = root.querySelectorAll('*');
+  
+  allElements.forEach((element) => {
+    const computedStyle = window.getComputedStyle(element);
+    const backgroundImage = computedStyle.backgroundImage;
+    
+    if (backgroundImage && backgroundImage !== 'none') {
+      // url("...") 형태에서 URL 추출
+      const urlMatch = backgroundImage.match(/url\(['"]?([^'"]+)['"]?\)/);
+      if (urlMatch && urlMatch[1]) {
+        backgroundImages.push(urlMatch[1]);
+      }
+    }
+  });
+  
+  // img 태그와 CSS background-image 모두 로딩 대기
+  const imagePromises = [
+    ...imgs.map(async (img) => {
+      try {
+        if ('decode' in img) {
+          await img.decode();
+        } else if (!img.complete) {
+          await new Promise<void>((resolve, reject) => {
+            img.onload = () => resolve();
+            img.onerror = () => resolve(); // 에러가 발생해도 계속 진행
+            // 타임아웃 설정
+            setTimeout(() => resolve(), 5000);
+          });
+        }
+      } catch (error) {
+        console.warn('이미지 로딩 실패:', img.src, error);
+      }
+    }),
+    ...backgroundImages.map(async (url) => {
+      try {
+        const img = new Image();
+        img.crossOrigin = 'anonymous';
+        img.src = url; // URL 설정
         await new Promise<void>((resolve, reject) => {
           img.onload = () => resolve();
           img.onerror = () => resolve(); // 에러가 발생해도 계속 진행
-          // 타임아웃 설정
-          setTimeout(() => resolve(), 5000);
+          setTimeout(() => resolve(), 5000); // 타임아웃 설정
         });
+      } catch (error) {
+        console.warn('CSS background 이미지 로딩 실패:', url, error);
       }
-    } catch (error) {
-      console.warn('이미지 로딩 실패:', img.src, error);
-    }
-  }));
+    })
+  ];
+  
+  await Promise.all(imagePromises);
 }
 
 
@@ -111,25 +147,8 @@ export async function exportCardImage(root: HTMLElement, options: ExportOptions)
       throw new Error('Canvas context를 가져올 수 없습니다.');
     }
     
-    // 2. 배경 먼저 생성 (항상 아이보리 배경)
-    ctx.fillStyle = '#F8F8F4';
-    ctx.fillRect(0, 0, finalCanvas.width, finalCanvas.height);
-    
-    // 3. 카드 내용만 캡처 (배경 레이어 제외)
-    // 카드의 실제 내용 영역을 찾기 (배경 레이어 제외)
-    let targetElement = root;
-    
-    // 배경 레이어를 제외한 카드 내용 영역 찾기
-    const cardContentArea = root.querySelector('.absolute.inset-0.flex.items-center.justify-center');
-    if (cardContentArea) {
-      targetElement = cardContentArea as HTMLElement;
-    } else {
-      // 대안: CardContent 영역 찾기
-      const cardContent = root.querySelector('[class*="CardContent"]');
-      if (cardContent) {
-        targetElement = cardContent as HTMLElement;
-      }
-    }
+    // 2. 전체 카드 캡처 (배경 포함)
+    const targetElement = root;
     
     const cardOptions = {
       width: options.width,
@@ -145,18 +164,15 @@ export async function exportCardImage(root: HTMLElement, options: ExportOptions)
       scrollX: 0,
       scrollY: 0,
       windowWidth: options.width,
-      windowHeight: options.height,
-      style: {
-        transform: 'none',
-        zoom: '1'
-      }
+      windowHeight: options.height
+      // style 속성 완전 제거 - transform을 보존하기 위해
     };
     
     console.log('카드 캡처 시작:', { options, targetElement });
     const cardCanvas = await html2canvas(targetElement, cardOptions);
     console.log('카드 캡처 완료:', { canvasWidth: cardCanvas.width, canvasHeight: cardCanvas.height });
     
-    // 4. 카드를 배경 위에 그리기
+    // 3. 전체 카드를 최종 캔버스에 그리기 (배경 포함)
     ctx.drawImage(cardCanvas, 0, 0, finalCanvas.width, finalCanvas.height);
     
     // 5. Blob 생성

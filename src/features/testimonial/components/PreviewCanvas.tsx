@@ -104,6 +104,10 @@ export function PreviewCanvas() {
               // html2canvas가 배경을 제대로 캡처할 수 있도록 명시적 설정
               background: '#FFFFFF',
             }}
+            data-template-id={state.templateId}
+            data-content={JSON.stringify(state.content)}
+            data-background={JSON.stringify(state.background)}
+            data-card-config={JSON.stringify(state.cardConfig)}
           >
             <CardContent 
               className="h-full p-0 relative"

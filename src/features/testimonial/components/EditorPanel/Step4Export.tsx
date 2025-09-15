@@ -45,15 +45,22 @@ export function Step4Export() {
       return;
     }
 
+    // 실제 캔버스 크기 측정
+    const offsetWidth = canvasElement.offsetWidth;
+    const offsetHeight = canvasElement.offsetHeight;
+    
     // 크기 제한 적용
-    const width = Math.min(MAX_WIDTH, Math.max(MIN_WIDTH, selectedResolution.width));
-    const height = Math.round(width * 3 / 4);
+    const desiredWidth = Math.min(MAX_WIDTH, Math.max(MIN_WIDTH, selectedResolution.width));
+    const desiredHeight = Math.round(desiredWidth * 3 / 4);
+    
+    // export scale 계산
+    const exportScale = desiredWidth / offsetWidth;
 
     const exportOptions: ExportOptions = {
-      width,
-      height,
+      width: offsetWidth,
+      height: offsetHeight,
       format: selectedFormat,
-      scale: 1, // 고정으로 1× 사용
+      scale: exportScale, // 계산된 scale 사용
       fileName: generateFileName(),
       quality: selectedFormat === 'JPG' ? 0.92 : undefined
     };
@@ -64,19 +71,17 @@ export function Step4Export() {
       error: null
     });
 
-    try {
-      // 진행률 시뮬레이션
-      const progressInterval = setInterval(() => {
-        setExportState(prev => ({
-          ...prev,
-          progress: Math.min(prev.progress + 10, 90)
-        }));
-      }, 100);
+    // 진행률 시뮬레이션 (try 블록 밖으로 이동)
+    const progressInterval = setInterval(() => {
+      setExportState(prev => ({
+        ...prev,
+        progress: Math.min(prev.progress + 10, 90)
+      }));
+    }, 100);
 
+    try {
       // Export 실행
       const blob = await exportCardImage(canvasElement, exportOptions);
-      
-      clearInterval(progressInterval);
       
       setExportState(prev => ({
         ...prev,
@@ -103,6 +108,9 @@ export function Step4Export() {
         progress: 0,
         error: error instanceof Error ? error.message : 'Export에 실패했습니다.'
       });
+    } finally {
+      // 모든 경우에 진행률 타이머 정리
+      clearInterval(progressInterval);
     }
   };
 
