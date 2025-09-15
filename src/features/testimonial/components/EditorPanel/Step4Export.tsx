@@ -53,8 +53,8 @@ export function Step4Export() {
     const desiredWidth = Math.min(MAX_WIDTH, Math.max(MIN_WIDTH, selectedResolution.width));
     const desiredHeight = Math.round(desiredWidth * 3 / 4);
     
-    // export scale 계산
-    const exportScale = desiredWidth / offsetWidth;
+    // export scale 계산 및 검증
+    const exportScale = Math.max(0.5, Math.min(4, desiredWidth / offsetWidth)); // 0.5-4 범위로 제한
 
     const exportOptions: ExportOptions = {
       width: offsetWidth,

@@ -7,7 +7,7 @@ export interface ExportOptions {
   width: number; // px
   height: number; // px
   format: ExportFormat;
-  scale: 1 | 2; // 1x or 2x
+  scale: number; // any positive number
   fileName: string; // without extension
   quality?: number; // 0..1 for JPG
 }
@@ -72,11 +72,15 @@ export async function waitForImages(root: HTMLElement): Promise<void> {
       try {
         const img = new Image();
         img.crossOrigin = 'anonymous';
-        img.src = url; // URL 설정
+        
+        // 이벤트 핸들러를 src 설정 전에 등록
         await new Promise<void>((resolve, reject) => {
           img.onload = () => resolve();
           img.onerror = () => resolve(); // 에러가 발생해도 계속 진행
           setTimeout(() => resolve(), 5000); // 타임아웃 설정
+          
+          // 이벤트 핸들러 등록 후 src 설정
+          img.src = url;
         });
       } catch (error) {
         console.warn('CSS background 이미지 로딩 실패:', url, error);
@@ -156,9 +160,9 @@ export async function exportCardImage(root: HTMLElement, options: ExportOptions)
       scale: options.scale,
       useCORS: true,
       backgroundColor: null, // 투명 배경으로 캡처
-      allowTaint: true,
+      allowTaint: false, // allowTaint 제거
       logging: false,
-      foreignObjectRendering: true,
+      foreignObjectRendering: false, // foreignObjectRendering 비활성화
       removeContainer: false,
       cacheBust: true,
       scrollX: 0,
@@ -172,7 +176,20 @@ export async function exportCardImage(root: HTMLElement, options: ExportOptions)
     const cardCanvas = await html2canvas(targetElement, cardOptions);
     console.log('카드 캡처 완료:', { canvasWidth: cardCanvas.width, canvasHeight: cardCanvas.height });
     
-    // 3. 전체 카드를 최종 캔버스에 그리기 (배경 포함)
+    // 3. 배경 채우기 (투명한 캔버스 방지)
+    const computedStyle = window.getComputedStyle(targetElement);
+    const backgroundColor = computedStyle.backgroundColor;
+    
+    if (backgroundColor && backgroundColor !== 'rgba(0, 0, 0, 0)' && backgroundColor !== 'transparent') {
+      ctx.fillStyle = backgroundColor;
+      ctx.fillRect(0, 0, finalCanvas.width, finalCanvas.height);
+    } else {
+      // 기본 배경색 설정 (아이보리)
+      ctx.fillStyle = '#F8F8F4';
+      ctx.fillRect(0, 0, finalCanvas.width, finalCanvas.height);
+    }
+    
+    // 4. 전체 카드를 최종 캔버스에 그리기 (배경 포함)
     ctx.drawImage(cardCanvas, 0, 0, finalCanvas.width, finalCanvas.height);
     
     // 5. Blob 생성
