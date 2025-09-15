@@ -9,7 +9,7 @@ export function Template1({ content, style }: TemplateProps) {
 
   return (
     <div className="flex items-center justify-center w-full h-full">
-      <div className={`flex flex-col gap-4 p-6 rounded-lg shadow-lg overflow-hidden ${
+      <div className={`flex flex-col justify-between p-6 rounded-lg shadow-lg overflow-hidden ${
         mode === 'dark' 
           ? 'bg-charcoal text-ivory' 
           : 'bg-white text-charcoal'
@@ -18,7 +18,7 @@ export function Template1({ content, style }: TemplateProps) {
         height: '250px'
       }}>
         {/* 상단 별점 */}
-        <div className="flex justify-center space-x-1">
+        <div className="flex justify-center space-x-1 mb-4">
           {[1, 2, 3, 4, 5].map((star) => (
             <Star 
               key={star} 
@@ -32,7 +32,7 @@ export function Template1({ content, style }: TemplateProps) {
         </div>
         
         {/* 본문 - 남는 높이에서 세로 중앙 정렬 */}
-        <div className="flex-1 flex items-center justify-center">
+        <div className="flex-1 flex items-center justify-center mb-4">
           <p className={`italic leading-relaxed text-center ${
             mode === 'dark' ? 'text-ivory/80' : 'text-gray-600'
           }`}>
