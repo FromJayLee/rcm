@@ -154,6 +154,9 @@ export async function exportCardImage(root: HTMLElement, options: ExportOptions)
     // 2. 전체 카드 캡처 (배경 포함)
     const targetElement = root;
     
+    // 정확한 크롭핑을 위한 좌표 계산
+    const rect = targetElement.getBoundingClientRect();
+    
     const cardOptions = {
       width: options.width,
       height: options.height,
@@ -165,10 +168,8 @@ export async function exportCardImage(root: HTMLElement, options: ExportOptions)
       foreignObjectRendering: false, // foreignObjectRendering 비활성화
       removeContainer: false,
       cacheBust: true,
-      scrollX: 0,
-      scrollY: 0,
-      windowWidth: options.width,
-      windowHeight: options.height
+      x: rect.left, // 정확한 크롭핑을 위한 x 좌표
+      y: rect.top   // 정확한 크롭핑을 위한 y 좌표
       // style 속성 완전 제거 - transform을 보존하기 위해
     };
     
