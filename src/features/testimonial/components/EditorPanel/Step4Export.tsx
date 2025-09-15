@@ -39,7 +39,7 @@ export function Step4Export() {
   ];
 
   const handleDownload = async () => {
-    const canvasElement = document.getElementById('testimonial-canvas');
+    const canvasElement = document.getElementById('testimonial-preview');
     if (!canvasElement) {
       setExportState(prev => ({ ...prev, error: '카드를 찾을 수 없습니다.' }));
       return;
@@ -53,13 +53,14 @@ export function Step4Export() {
     const desiredWidth = Math.min(MAX_WIDTH, Math.max(MIN_WIDTH, selectedResolution.width));
     const desiredHeight = Math.round(desiredWidth * 3 / 4);
     
-    // export scale 계산 및 검증 (devicePixelRatio 고려)
-    const devicePixelRatio = window.devicePixelRatio || 1;
-    const exportScale = Math.max(0.5, Math.min(4, (desiredWidth / templateWidth) * devicePixelRatio)); // 0.5-4 범위로 제한
+    // export scale 계산 및 검증 (가로/세로 모두 고려)
+    const scaleX = desiredWidth / templateWidth;
+    const scaleY = desiredHeight / templateHeight;
+    const exportScale = Math.max(0.5, Math.min(4, Math.min(scaleX, scaleY))); // 0.5-4 범위로 제한
 
     const exportOptions: ExportOptions = {
-      width: templateWidth,
-      height: templateHeight,
+      width: desiredWidth, // 선택한 해상도 사용
+      height: desiredHeight, // 선택한 해상도 사용
       format: selectedFormat,
       scale: exportScale, // 계산된 scale 사용
       fileName: generateFileName(),

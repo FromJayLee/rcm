@@ -93,14 +93,18 @@ export function PreviewCanvas() {
     <div className="h-full flex flex-col bg-ivory">
       {/* Canvas Area */}
       <div className="flex-1 flex items-center justify-center p-4">
-        <div className={`w-full max-w-lg ${CANVAS_CLASS}`} style={currentRatioStyle}>
+        <div 
+          id="testimonial-preview"
+          className={`w-full max-w-lg ${CANVAS_CLASS}`} 
+          style={currentRatioStyle}
+        >
           <Card 
             id="testimonial-canvas" 
             className="h-full w-full border border-gray-300 rounded-lg shadow-sm overflow-hidden relative"
             style={{
               backgroundColor: '#FFFFFF', // 카드 자체는 흰색 배경
-              width: '350px', // Template1 고정 너비
-              height: '250px', // Template1 고정 높이
+              width: '100%', // 부모 컨테이너에 맞춤
+              height: '100%', // 부모 컨테이너에 맞춤
               // html2canvas가 배경을 제대로 캡처할 수 있도록 명시적 설정
               background: '#FFFFFF',
             }}
