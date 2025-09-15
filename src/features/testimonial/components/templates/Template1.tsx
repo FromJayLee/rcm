@@ -2,9 +2,10 @@
 
 import { Star } from 'lucide-react';
 import { TemplateProps } from '../../types';
+import { DefaultAvatar } from '@/components/ui/default-avatar';
 
 export function Template1({ content, style }: TemplateProps) {
-  const { quote, authorName, authorRole, rating, avatarUrl, isAnonymous } = content;
+  const { quote, authorName, authorRole, avatarUrl } = content;
   const { mode } = style;
 
   return (
@@ -15,24 +16,11 @@ export function Template1({ content, style }: TemplateProps) {
           : 'bg-white text-charcoal'
       }`} style={{ 
         width: '350px',
-        height: '250px'
+        height: '220px'
       }}>
-        {/* 상단 별점 */}
-        <div className="flex justify-center mb-4" style={{ gap: '4px' }}>
-          {[1, 2, 3, 4, 5].map((star) => (
-            <Star 
-              key={star} 
-              className={`w-5 h-5 ${
-                star <= 5 
-                  ? 'text-yellow-400 fill-yellow-400' 
-                  : 'text-gray-300'
-              }`} 
-            />
-          ))}
-        </div>
         
         {/* 본문 - 명시적 높이 사용 */}
-        <div className="flex items-center justify-center mb-4" style={{ height: '100px' }}>
+        <div className="flex items-center justify-center mb-4" style={{ height: '80px' }}>
           <p className={`italic leading-relaxed text-center ${
             mode === 'dark' ? 'text-ivory/80' : 'text-gray-600'
           }`}>
@@ -50,17 +38,17 @@ export function Template1({ content, style }: TemplateProps) {
               crossOrigin="anonymous"
             />
           ) : (
-            <div className={`w-12 h-12 rounded-full flex items-center justify-center font-semibold ${
-              mode === 'dark' ? 'bg-ivory text-charcoal' : 'bg-charcoal text-white'
-            }`}>
-              {isAnonymous ? 'A' : authorName.charAt(0)}
-            </div>
+            <DefaultAvatar 
+              size="md" 
+              isAnonymous={false}
+              name={authorName}
+            />
           )}
           <div className="text-center">
             <div className={`font-bold ${
               mode === 'dark' ? 'text-ivory' : 'text-black'
             }`}>
-              {isAnonymous ? 'Anonymous' : authorName}
+              {authorName}
             </div>
             <div className={`text-sm ${
               mode === 'dark' ? 'text-ivory/70' : 'text-gray-600'

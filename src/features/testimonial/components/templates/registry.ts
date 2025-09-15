@@ -5,15 +5,14 @@ import {
   Template6, Template7, Template8, Template9 
 } from './index';
 
-// 기본 데이터 정의
+// 기본 데이터 정의 - 익명성이 보장되는 가상의 이름과 회사
 const defaultData1: ExtendedTemplateProps = {
-  quote: "This product has completely transformed our workflow. Highly recommended!",
+  quote: "This product transformed our workflow. Highly recommended!",
   author: {
-    name: "Sarah Johnson",
+    name: "Alex Chen",
     role: "Product Manager",
-    company: "TechCorp"
+    company: "TechFlow"
   },
-  rating: 5,
   verified: true,
   badges: ["Top Reviewer"],
   align: 'center',
@@ -22,13 +21,12 @@ const defaultData1: ExtendedTemplateProps = {
 };
 
 const defaultData2: ExtendedTemplateProps = {
-  quote: "Exceptional quality and outstanding customer service. Will definitely order again.",
+  quote: "Great quality and service. Will order again!",
   author: {
-    name: "Michael Chen",
+    name: "Jordan Smith",
     role: "CEO",
-    company: "StartupXYZ"
+    company: "InnovateCorp"
   },
-  rating: 4.5,
   verified: false,
   badges: ["Verified Buyer"],
   align: 'left',
@@ -37,13 +35,12 @@ const defaultData2: ExtendedTemplateProps = {
 };
 
 const defaultData3: ExtendedTemplateProps = {
-  quote: "The best investment we've made this year. ROI is incredible.",
+  quote: "Best investment this year. Amazing ROI!",
   author: {
-    name: "Emily Rodriguez",
+    name: "Taylor Johnson",
     role: "Marketing Director",
-    company: "GrowthCo"
+    company: "GrowthHub"
   },
-  rating: 5,
   verified: true,
   badges: ["Premium User", "Early Adopter"],
   align: 'center',
@@ -52,13 +49,12 @@ const defaultData3: ExtendedTemplateProps = {
 };
 
 const defaultData4: ExtendedTemplateProps = {
-  quote: "Outstanding support team and seamless integration process.",
+  quote: "Great support and seamless integration!",
   author: {
-    name: "David Kim",
+    name: "Casey Kim",
     role: "CTO",
-    company: "InnovateLab"
+    company: "DataFlow Inc"
   },
-  rating: 4,
   verified: true,
   badges: ["Enterprise Customer"],
   align: 'left',
@@ -67,13 +63,12 @@ const defaultData4: ExtendedTemplateProps = {
 };
 
 const defaultData5: ExtendedTemplateProps = {
-  quote: "Game-changing solution that saved us countless hours every week.",
+  quote: "Game-changing solution! Saves hours weekly.",
   author: {
-    name: "Lisa Wang",
+    name: "Riley Wang",
     role: "Operations Manager",
-    company: "EfficiencyPro"
+    company: "EfficiencyPlus"
   },
-  rating: 5,
   verified: false,
   badges: ["Power User"],
   align: 'center',
@@ -82,13 +77,12 @@ const defaultData5: ExtendedTemplateProps = {
 };
 
 const defaultData6: ExtendedTemplateProps = {
-  quote: "Incredible value for money. The features are exactly what we needed.",
+  quote: "Great value! Features are exactly what we need.",
   author: {
-    name: "James Wilson",
+    name: "Morgan Wilson",
     role: "Founder",
-    company: "ScaleUp"
+    company: "ScaleTech"
   },
-  rating: 4.5,
   verified: true,
   badges: ["Verified Purchase", "Top Contributor"],
   align: 'left',
@@ -97,13 +91,12 @@ const defaultData6: ExtendedTemplateProps = {
 };
 
 const defaultData7: ExtendedTemplateProps = {
-  quote: "Professional, reliable, and always delivers on promises.",
+  quote: "Professional and reliable. Always delivers!",
   author: {
-    name: "Anna Thompson",
+    name: "Avery Thompson",
     role: "VP of Sales",
     company: "RevenueMax"
   },
-  rating: 5,
   verified: true,
   badges: ["VIP Customer"],
   align: 'center',
@@ -112,13 +105,12 @@ const defaultData7: ExtendedTemplateProps = {
 };
 
 const defaultData8: ExtendedTemplateProps = {
-  quote: "The team behind this product truly understands our needs.",
+  quote: "Team understands our needs. Perfect fit!",
   author: {
-    name: "Robert Garcia",
+    name: "Quinn Garcia",
     role: "Head of Engineering",
-    company: "DevTools Inc"
+    company: "DevTools Pro"
   },
-  rating: 4,
   verified: false,
   badges: ["Beta Tester", "Community Leader"],
   align: 'left',
@@ -127,13 +119,12 @@ const defaultData8: ExtendedTemplateProps = {
 };
 
 const defaultData9: ExtendedTemplateProps = {
-  quote: "Outstanding user experience and incredible attention to detail.",
+  quote: "Outstanding UX and incredible attention to detail!",
   author: {
-    name: "Maria Santos",
+    name: "Sage Santos",
     role: "Design Lead",
-    company: "CreativeStudio"
+    company: "CreativeFlow"
   },
-  rating: 5,
   verified: true,
   badges: ["Design Expert", "Influencer"],
   align: 'center',

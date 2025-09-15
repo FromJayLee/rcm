@@ -20,6 +20,9 @@ const config = {
         // Brand colors
         ivory: '#F8F8F4',
         charcoal: '#222222',
+        'brand-ivory': '#F8F8F4',
+        'brand-black': '#000000',
+        'brand-charcoal': '#222222',
         // Legacy shadcn colors
         border: 'hsl(var(--border))',
         input: 'hsl(var(--input))',

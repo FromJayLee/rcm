@@ -2,9 +2,10 @@
 
 import { Star } from 'lucide-react';
 import { TemplateProps } from '../../types';
+import { DefaultAvatar } from '@/components/ui/default-avatar';
 
 export function Template2({ content, style }: TemplateProps) {
-  const { quote, authorName, authorRole, rating, avatarUrl, isAnonymous } = content;
+  const { quote, authorName, authorRole, avatarUrl } = content;
   const { mode } = style;
 
   return (
@@ -27,17 +28,17 @@ export function Template2({ content, style }: TemplateProps) {
               crossOrigin="anonymous"
             />
           ) : (
-            <div className={`w-10 h-10 rounded-full flex items-center justify-center font-semibold ${
-              mode === 'dark' ? 'bg-ivory text-charcoal' : 'bg-gray-600 text-white'
-            }`}>
-              {isAnonymous ? 'A' : authorName.charAt(0)}
-            </div>
+            <DefaultAvatar 
+              size="sm" 
+              isAnonymous={false}
+              name={authorName}
+            />
           )}
           <div>
             <div className={`font-semibold ${
               mode === 'dark' ? 'text-ivory' : 'text-gray-800'
             }`}>
-              {isAnonymous ? 'Anonymous' : authorName}
+              {authorName}
             </div>
             <div className={`text-sm ${
               mode === 'dark' ? 'text-ivory/70' : 'text-gray-600'

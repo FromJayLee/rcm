@@ -2,9 +2,10 @@
 
 import { Star } from 'lucide-react';
 import { TemplateProps } from '../../types';
+import { DefaultAvatar } from '@/components/ui/default-avatar';
 
 export function Template5({ content, style }: TemplateProps) {
-  const { quote, authorName, authorRole, rating, avatarUrl, isAnonymous } = content;
+  const { quote, authorName, authorRole, avatarUrl } = content;
   const { mode } = style;
 
   return (
@@ -43,7 +44,7 @@ export function Template5({ content, style }: TemplateProps) {
           <span className={`text-xl font-bold ${
             mode === 'dark' ? 'text-ivory' : 'text-black'
           }`}>
-            {rating}
+            5.0
           </span>
           <span className={mode === 'dark' ? 'text-ivory' : 'text-black'}>
             out of 5
@@ -51,7 +52,7 @@ export function Template5({ content, style }: TemplateProps) {
         </div>
         
         {/* 총 리뷰 수 */}
-        <div className={`text-center mb-6 ${
+        <div className={`text-center mb-3 ${
           mode === 'dark' ? 'text-ivory/80' : 'text-black'
         }`}>
           40 customer ratings

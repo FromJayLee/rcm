@@ -1,19 +1,17 @@
 'use client';
 
 import { Star, CheckCircle } from 'lucide-react';
-import { ExtendedTemplateProps, formatRating } from '../../types';
+import { ExtendedTemplateProps } from '../../types';
 
 export function Template6({ 
   quote, 
   author, 
-  rating = 5, 
   verified = false, 
   badges = [], 
   align = 'left',
   accentColor = '#374151',
   dark = false 
 }: ExtendedTemplateProps) {
-  const roundedRating = formatRating(rating);
   const colors = {
     light: {
       card: '#FFFFFF',
@@ -38,7 +36,7 @@ export function Template6({
         style={{
           backgroundColor: currentColors.card,
           width: '400px',
-          height: '220px',
+          height: '200px',
           padding: '16px',
         }}
       >
@@ -72,7 +70,7 @@ export function Template6({
                 className="text-2xl font-bold"
                 style={{ color: currentColors.accent }}
               >
-                {roundedRating}
+                5.0
               </div>
               <div 
                 className="text-xs"

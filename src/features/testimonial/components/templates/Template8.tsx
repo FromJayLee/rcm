@@ -1,19 +1,18 @@
 'use client';
 
 import { Star, Shield, Award } from 'lucide-react';
-import { ExtendedTemplateProps, formatRating } from '../../types';
+import { ExtendedTemplateProps } from '../../types';
+import { DefaultAvatar } from '@/components/ui/default-avatar';
 
 export function Template8({ 
   quote, 
   author, 
-  rating = 5, 
   verified = false, 
   badges = [],
   align = 'left',
   accentColor = '#374151',
   dark = false 
 }: ExtendedTemplateProps) {
-  const roundedRating = formatRating(rating);
   
   const colors = {
     light: {
@@ -60,12 +59,11 @@ export function Template8({
                   crossOrigin="anonymous"
                 />
               ) : (
-                <div 
-                  className="w-14 h-14 rounded-full flex items-center justify-center text-white font-bold text-lg"
-                  style={{ backgroundColor: currentColors.accent }}
-                >
-                  {author.name.charAt(0)}
-                </div>
+                <DefaultAvatar 
+                  size="lg" 
+                  isAnonymous={false}
+                  name={author.name}
+                />
               )}
               
               <div>
@@ -134,7 +132,7 @@ export function Template8({
                 className="text-sm font-bold"
                 style={{ color: currentColors.accent }}
               >
-                {roundedRating}
+                5.0
               </div>
             </div>
 

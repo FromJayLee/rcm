@@ -27,7 +27,7 @@ export const metadata: Metadata = {
   },
 };
 
-export default function Home() {
+export default function MarketingPage() {
   return (
     <main className="min-h-screen bg-brand-ivory text-brand-black">
       <Header variant="marketing" />

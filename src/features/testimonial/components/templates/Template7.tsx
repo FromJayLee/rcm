@@ -1,19 +1,18 @@
 'use client';
 
 import { Star, Calendar, MapPin } from 'lucide-react';
-import { ExtendedTemplateProps, formatRating } from '../../types';
+import { ExtendedTemplateProps } from '../../types';
+import { DefaultAvatar } from '@/components/ui/default-avatar';
 
 export function Template7({ 
   quote, 
   author, 
-  rating = 5, 
   source,
   dateISO,
   align = 'center',
   accentColor = '#374151',
   dark = false 
 }: ExtendedTemplateProps) {
-  const roundedRating = formatRating(rating);
   
   const colors = {
     light: {
@@ -51,16 +50,8 @@ export function Template7({
           height: '280px',
         }}
       >
-        {/* 상단 그라데이션 배경 */}
-        <div 
-          className="h-16 w-full"
-          style={{
-            background: `linear-gradient(135deg, ${currentColors.accent}20, ${currentColors.accent}40)`,
-          }}
-        />
-
         {/* 메인 콘텐츠 */}
-        <div className="relative -mt-8 px-6 pb-4" style={{ height: '200px', overflow: 'hidden' }}>
+        <div className="px-6 py-6" style={{ height: '280px', overflow: 'hidden' }}>
           {/* 아바타 */}
           <div className="flex justify-center mb-4">
             {author.avatarUrl ? (
@@ -71,12 +62,12 @@ export function Template7({
               crossOrigin="anonymous"
             />
             ) : (
-              <div 
-                className="w-16 h-16 rounded-full flex items-center justify-center text-white font-bold text-xl border-2 border-white shadow-lg"
-                style={{ backgroundColor: currentColors.accent }}
-              >
-                {author.name.charAt(0)}
-              </div>
+              <DefaultAvatar 
+                size="lg" 
+                isAnonymous={false}
+                name={author.name}
+                className="border-2 border-white shadow-lg"
+              />
             )}
           </div>
 
@@ -115,7 +106,7 @@ export function Template7({
                 className="text-lg font-bold ml-1"
                 style={{ color: currentColors.accent }}
               >
-                {roundedRating}
+                5.0
               </span>
             </div>
           </div>
@@ -123,13 +114,18 @@ export function Template7({
           {/* 리뷰 텍스트 */}
           <div className="mb-4" style={{ height: '60px', display: 'flex', alignItems: 'center' }}>
             <p 
-              className="text-sm leading-relaxed text-center italic"
+              className="text-sm leading-tight text-center italic"
               style={{ 
                 color: currentColors.text,
-                textAlign: align
+                textAlign: align,
+                display: '-webkit-box',
+                WebkitLineClamp: 3,
+                WebkitBoxOrient: 'vertical',
+                overflow: 'hidden',
+                textOverflow: 'ellipsis'
               }}
             >
-              "{quote}"
+              "{quote.length > 80 ? quote.substring(0, 80) + '...' : quote}"
             </p>
           </div>
 

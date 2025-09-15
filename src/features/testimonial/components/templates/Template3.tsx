@@ -2,9 +2,10 @@
 
 import { Star } from 'lucide-react';
 import { TemplateProps } from '../../types';
+import { DefaultAvatar } from '@/components/ui/default-avatar';
 
 export function Template3({ content, style }: TemplateProps) {
-  const { quote, authorName, authorRole, rating, avatarUrl, isAnonymous } = content;
+  const { quote, authorName, authorRole, avatarUrl } = content;
   const { mode } = style;
 
   // 다크/라이트 모드 색상 정의
@@ -39,7 +40,7 @@ export function Template3({ content, style }: TemplateProps) {
           backgroundColor: currentColors.card,
           borderColor: currentColors.border,
           width: '380px',
-          height: '280px',
+          height: '240px',
           padding: '0',
           display: 'flex',
           flexDirection: 'column',
@@ -63,12 +64,11 @@ export function Template3({ content, style }: TemplateProps) {
                 crossOrigin="anonymous"
               />
             ) : (
-              <div 
-                className="w-12 h-12 rounded-full flex items-center justify-center text-white font-bold text-lg"
-                style={{ backgroundColor: currentColors.accent }}
-              >
-                {isAnonymous ? 'A' : authorName.charAt(0)}
-              </div>
+            <DefaultAvatar 
+              size="md" 
+              isAnonymous={false}
+              name={authorName}
+            />
             )}
             
             <div className="flex-1">
@@ -79,7 +79,7 @@ export function Template3({ content, style }: TemplateProps) {
                   marginBottom: '2px',
                 }}
               >
-                {isAnonymous ? 'Anonymous' : authorName}
+                {authorName}
               </div>
               {authorRole && (
                 <div 

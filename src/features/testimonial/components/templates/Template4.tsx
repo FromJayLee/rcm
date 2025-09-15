@@ -2,9 +2,10 @@
 
 import { Star, CheckCircle, Calendar, MapPin } from 'lucide-react';
 import { TemplateProps } from '../../types';
+import { DefaultAvatar } from '@/components/ui/default-avatar';
 
 export function Template4({ content, style }: TemplateProps) {
-  const { quote, authorName, authorRole, avatarUrl, isAnonymous, rating } = content;
+  const { quote, authorName, authorRole, avatarUrl } = content;
   const { mode } = style;
 
   // 다크/라이트 모드 색상 정의
@@ -40,8 +41,8 @@ export function Template4({ content, style }: TemplateProps) {
         style={{
           backgroundColor: currentColors.card,
           borderColor: currentColors.border,
-          width: '400px',
-          height: '300px',
+          width: 'clamp(350px, 60%, 500px)',
+          height: 'clamp(200px, 55%, 280px)',
         }}
       >
         {/* 상단 헤더 영역 */}
@@ -58,29 +59,28 @@ export function Template4({ content, style }: TemplateProps) {
               {avatarUrl ? (
                 <img 
                   src={avatarUrl} 
-                  alt={isAnonymous ? 'Anonymous' : authorName}
-                  className="w-12 h-12 rounded-full object-cover"
+                  alt={authorName}
+                  className="w-10 h-10 rounded-full object-cover"
                   crossOrigin="anonymous"
                 />
               ) : (
-                <div 
-                  className="w-12 h-12 rounded-full flex items-center justify-center text-white font-bold text-lg"
-                  style={{ backgroundColor: currentColors.accent }}
-                >
-                  {isAnonymous ? 'A' : authorName.charAt(0)}
-                </div>
+                <DefaultAvatar 
+                  size="sm" 
+                  isAnonymous={false}
+                  name={authorName}
+                />
               )}
               
               {/* 작성자 정보 */}
               <div>
                 <div 
-                  className="font-bold text-lg"
+                  className="font-bold text-sm"
                   style={{ color: currentColors.text }}
                 >
-                  {isAnonymous ? 'Anonymous' : authorName}
+                  {authorName}
                 </div>
                 <div 
-                  className="text-sm flex items-center"
+                  className="text-xs flex items-center"
                   style={{ color: currentColors.secondary, gap: '8px' }}
                 >
                   <span>{authorRole}</span>
@@ -102,7 +102,7 @@ export function Template4({ content, style }: TemplateProps) {
         </div>
 
         {/* 메인 콘텐츠 영역 */}
-        <div className="px-6 py-4" style={{ height: 'auto' }}>
+        <div className="px-6 py-6">
           {/* 별점과 날짜 */}
           <div className="flex items-center mb-4" style={{ justifyContent: 'space-between' }}>
             <div className="flex items-center" style={{ gap: '8px' }}>
@@ -126,17 +126,10 @@ export function Template4({ content, style }: TemplateProps) {
               </span>
             </div>
             
-            <div 
-              className="text-sm flex items-center space-x-1"
-              style={{ color: currentColors.secondary }}
-            >
-              <Calendar size={14} />
-              <span>2 days ago</span>
-            </div>
           </div>
 
           {/* 리뷰 텍스트 */}
-          <div>
+          <div className="mb-4" style={{ height: '80px', overflow: 'hidden' }}>
             <p 
               className="text-sm leading-tight"
               style={{ 

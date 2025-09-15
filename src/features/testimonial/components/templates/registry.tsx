@@ -11,9 +11,7 @@ const Template1Wrapper = (props: ExtendedTemplateProps) => {
     quote: props.quote,
     authorName: props.author.name,
     authorRole: props.author.role || '',
-    rating: 5,
     avatarUrl: props.author.avatarUrl || null,
-    isAnonymous: false,
   };
   const style = {
     mode: (props.dark ? 'dark' : 'light') as 'light' | 'dark',
@@ -26,9 +24,7 @@ const Template2Wrapper = (props: ExtendedTemplateProps) => {
     quote: props.quote,
     authorName: props.author.name,
     authorRole: props.author.role || '',
-    rating: 5,
     avatarUrl: props.author.avatarUrl || null,
-    isAnonymous: false,
   };
   const style = {
     mode: (props.dark ? 'dark' : 'light') as 'light' | 'dark',
@@ -41,9 +37,7 @@ const Template3Wrapper = (props: ExtendedTemplateProps) => {
     quote: props.quote,
     authorName: props.author.name,
     authorRole: props.author.role || '',
-    rating: 5,
     avatarUrl: props.author.avatarUrl || null,
-    isAnonymous: false,
   };
   const style = {
     mode: (props.dark ? 'dark' : 'light') as 'light' | 'dark',
@@ -56,9 +50,7 @@ const Template4Wrapper = (props: ExtendedTemplateProps) => {
     quote: props.quote,
     authorName: props.author.name,
     authorRole: props.author.role || '',
-    rating: 5,
     avatarUrl: props.author.avatarUrl || null,
-    isAnonymous: false,
   };
   const style = {
     mode: (props.dark ? 'dark' : 'light') as 'light' | 'dark',
@@ -71,9 +63,7 @@ const Template5Wrapper = (props: ExtendedTemplateProps) => {
     quote: props.quote,
     authorName: props.author.name,
     authorRole: props.author.role || '',
-    rating: 5,
     avatarUrl: props.author.avatarUrl || null,
-    isAnonymous: false,
   };
   const style = {
     mode: (props.dark ? 'dark' : 'light') as 'light' | 'dark',
@@ -89,7 +79,6 @@ const defaultData1: ExtendedTemplateProps = {
     role: "Product Manager",
     company: "TechCorp"
   },
-  rating: 5,
   verified: true,
   badges: ["Top Reviewer"],
   align: 'center',
@@ -104,7 +93,6 @@ const defaultData2: ExtendedTemplateProps = {
     role: "CEO",
     company: "StartupXYZ"
   },
-  rating: 4.5,
   verified: false,
   badges: ["Verified Buyer"],
   align: 'left',
@@ -119,7 +107,6 @@ const defaultData3: ExtendedTemplateProps = {
     role: "Marketing Director",
     company: "GrowthCo"
   },
-  rating: 5,
   verified: true,
   badges: ["Premium User", "Early Adopter"],
   align: 'center',
@@ -134,7 +121,6 @@ const defaultData4: ExtendedTemplateProps = {
     role: "CTO",
     company: "InnovateLab"
   },
-  rating: 4,
   verified: true,
   badges: ["Enterprise Customer"],
   align: 'left',
@@ -149,7 +135,6 @@ const defaultData5: ExtendedTemplateProps = {
     role: "Operations Manager",
     company: "EfficiencyPro"
   },
-  rating: 5,
   verified: false,
   badges: ["Power User"],
   align: 'center',
@@ -164,7 +149,6 @@ const defaultData6: ExtendedTemplateProps = {
     role: "Founder",
     company: "ScaleUp"
   },
-  rating: 4.5,
   verified: true,
   badges: ["Verified Purchase", "Top Contributor"],
   align: 'left',
@@ -179,7 +163,6 @@ const defaultData7: ExtendedTemplateProps = {
     role: "VP of Sales",
     company: "RevenueMax"
   },
-  rating: 5,
   verified: true,
   badges: ["VIP Customer"],
   align: 'center',
@@ -194,7 +177,6 @@ const defaultData8: ExtendedTemplateProps = {
     role: "Head of Engineering",
     company: "DevTools Inc"
   },
-  rating: 4,
   verified: false,
   badges: ["Beta Tester", "Community Leader"],
   align: 'left',
@@ -209,7 +191,6 @@ const defaultData9: ExtendedTemplateProps = {
     role: "Design Lead",
     company: "CreativeStudio"
   },
-  rating: 5,
   verified: true,
   badges: ["Design Expert", "Influencer"],
   align: 'center',
