@@ -7,8 +7,9 @@ import { Switch } from '@/components/ui/switch';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { useEditor } from '../../context/EditorContext';
-import { User, Upload, Building, Calendar, CheckCircle, MessageCircle } from 'lucide-react';
+import { User, Upload, Building, Calendar, CheckCircle, MessageCircle, X } from 'lucide-react';
 import { useState } from 'react';
+import { TEMPLATE_QUOTE_LIMITS, TEMPLATE_DEFAULT_QUOTES } from '../../constants';
 
 export function Step2Content() {
   const { state, dispatch } = useEditor();
@@ -33,6 +34,10 @@ export function Step2Content() {
     } finally {
       setIsUploading(false);
     }
+  };
+
+  const handleAvatarDelete = () => {
+    handleContentChange('avatarUrl', null);
   };
 
   // 템플릿별 필드 정의
@@ -74,28 +79,13 @@ export function Step2Content() {
 
   // 템플릿별 글자수 제한
   const getCharacterLimits = (templateId: string) => {
-    switch (templateId) {
-      case 'T1': // Classic Center - 중앙 정렬, 간단한 레이아웃
-        return { quote: 120, authorName: 20, authorRole: 30 };
-      case 'T2': // Modern Left - 좌측 정렬, 모던한 스타일
-        return { quote: 100, authorName: 18, authorRole: 25 };
-      case 'T3': // Card Style - 카드 형태, 중간 크기
-        return { quote: 80, authorName: 15, authorRole: 20 };
-      case 'T4': // Review Card - 리뷰 형태, 많은 정보
-        return { quote: 150, authorName: 25, authorRole: 35, company: 30 };
-      case 'T5': // Progress Style - 진행률 표시, 간단한 텍스트
-        return { quote: 60, authorName: 12, authorRole: 18 };
-      case 'T6': // Split Layout - 분할 레이아웃, 중간 크기
-        return { quote: 100, authorName: 18, authorRole: 25 };
-      case 'T7': // Quote Style - 인용문 중심, 긴 텍스트
-        return { quote: 200, authorName: 20, authorRole: 30 };
-      case 'T8': // Profile Centric - 프로필 중심, 중간 크기
-        return { quote: 80, authorName: 15, authorRole: 20 };
-      case 'T9': // Minimal - 미니멀, 짧은 텍스트
-        return { quote: 50, authorName: 10, authorRole: 15 };
-      default:
-        return { quote: 100, authorName: 20, authorRole: 30 };
-    }
+    const quoteLimit = TEMPLATE_QUOTE_LIMITS[templateId as keyof typeof TEMPLATE_QUOTE_LIMITS] || 100;
+    return { 
+      quote: quoteLimit, 
+      authorName: 20, 
+      authorRole: 30,
+      company: 30
+    };
   };
 
   const templateFields = getTemplateFields(state.templateId);
@@ -115,7 +105,7 @@ export function Step2Content() {
         <CardContent className="p-4 space-y-4">
           {/* Avatar Section */}
           <div className="flex items-center space-x-4">
-            <div className="flex-shrink-0">
+            <div className="flex-shrink-0 relative">
               <input
                 type="file"
                 id="avatar-upload"
@@ -125,16 +115,29 @@ export function Step2Content() {
                 disabled={isUploading}
               />
               {state.content.avatarUrl ? (
-                <div 
-                  className="w-12 h-12 rounded-full overflow-hidden border-2 border-charcoal/20 cursor-pointer hover:border-charcoal/40 transition-colors"
-                  onClick={() => document.getElementById('avatar-upload')?.click()}
-                  title="Click to change avatar"
-                >
-                  <img 
-                    src={state.content.avatarUrl} 
-                    alt="Avatar" 
-                    className="w-full h-full object-cover"
-                  />
+                <div className="relative group">
+                  <div 
+                    className="w-12 h-12 rounded-full overflow-hidden border-2 border-charcoal/20 cursor-pointer hover:border-charcoal/40 transition-colors"
+                    onClick={() => document.getElementById('avatar-upload')?.click()}
+                    title="Click to change avatar"
+                  >
+                    <img 
+                      src={state.content.avatarUrl} 
+                      alt="Avatar" 
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                  {/* 삭제 버튼 */}
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleAvatarDelete();
+                    }}
+                    className="absolute -top-1 -right-1 w-5 h-5 bg-red-500 text-white rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-200 hover:bg-red-600"
+                    title="Delete avatar"
+                  >
+                    <X className="w-3 h-3" />
+                  </button>
                 </div>
               ) : (
                 <div 
@@ -148,7 +151,7 @@ export function Step2Content() {
             </div>
             <div className="flex-1">
               <p className="text-sm text-charcoal/60">
-                {isUploading ? 'Uploading...' : 'Click avatar to upload image'}
+                {isUploading ? 'Uploading...' : state.content.avatarUrl ? 'Click to change or hover to delete' : 'Click avatar to upload image'}
               </p>
             </div>
           </div>

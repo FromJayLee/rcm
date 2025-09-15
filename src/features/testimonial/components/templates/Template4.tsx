@@ -1,6 +1,6 @@
 'use client';
 
-import { Star, CheckCircle, Calendar, MapPin } from 'lucide-react';
+import { Star, CheckCircle, Calendar, MapPin, User } from 'lucide-react';
 import { TemplateProps } from '../../types';
 
 export function Template4({ content, style }: TemplateProps) {
@@ -36,7 +36,7 @@ export function Template4({ content, style }: TemplateProps) {
       className="flex items-center justify-center w-full h-full"
     >
       <div 
-        className="relative rounded-3xl shadow-lg border overflow-hidden"
+        className="relative rounded-3xl shadow-lg border"
         style={{
           backgroundColor: currentColors.card,
           borderColor: currentColors.border,
@@ -52,8 +52,8 @@ export function Template4({ content, style }: TemplateProps) {
             borderColor: currentColors.border 
           }}
         >
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-3">
+          <div className="flex items-center" style={{ justifyContent: 'space-between' }}>
+            <div className="flex items-center" style={{ gap: '12px' }}>
               {/* 아바타 */}
               {avatarUrl ? (
                 <img 
@@ -64,10 +64,10 @@ export function Template4({ content, style }: TemplateProps) {
                 />
               ) : (
                 <div 
-                  className="w-12 h-12 rounded-full flex items-center justify-center text-white font-semibold"
+                  className="w-12 h-12 rounded-full flex items-center justify-center text-white"
                   style={{ backgroundColor: currentColors.accent }}
                 >
-                  {isAnonymous ? 'A' : authorName.charAt(0)}
+                  <User size={24} />
                 </div>
               )}
               
@@ -80,8 +80,8 @@ export function Template4({ content, style }: TemplateProps) {
                   {isAnonymous ? 'Anonymous' : authorName}
                 </div>
                 <div 
-                  className="text-sm flex items-center space-x-2"
-                  style={{ color: currentColors.secondary }}
+                  className="text-sm flex items-center"
+                  style={{ color: currentColors.secondary, gap: '8px' }}
                 >
                   <span>{authorRole}</span>
                 </div>
@@ -104,9 +104,9 @@ export function Template4({ content, style }: TemplateProps) {
         {/* 메인 콘텐츠 영역 */}
         <div className="px-12 py-10">
           {/* 별점과 날짜 */}
-          <div className="flex items-center justify-between mb-6">
-            <div className="flex items-center space-x-2">
-              <div className="flex space-x-1">
+          <div className="flex items-center mb-6" style={{ justifyContent: 'space-between' }}>
+            <div className="flex items-center" style={{ gap: '8px' }}>
+              <div className="flex" style={{ gap: '4px' }}>
                 {[1, 2, 3, 4, 5].map((star) => (
                   <Star
                     key={star}
@@ -149,7 +149,7 @@ export function Template4({ content, style }: TemplateProps) {
           </div>
 
           {/* 하단 액션 영역 */}
-          <div className="flex items-center justify-between pt-8 border-t px-12" style={{ borderColor: currentColors.border }}>
+          <div className="flex items-center pt-8 border-t px-12" style={{ borderColor: currentColors.border, justifyContent: 'space-between' }}>
             <div className="flex items-center space-x-4">
               <button 
                 className="flex items-center space-x-1 px-3 py-1 rounded-full text-sm font-medium transition-colors"

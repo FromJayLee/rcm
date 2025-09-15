@@ -9,7 +9,7 @@ export function Template5({ content, style }: TemplateProps) {
 
   return (
     <div className="flex items-center justify-center w-full h-full">
-      <div className={`flex flex-col justify-between p-8 rounded-lg shadow-lg ${
+      <div className={`flex flex-col p-8 rounded-lg shadow-lg ${
         mode === 'dark' 
           ? 'bg-charcoal text-ivory' 
           : 'bg-white text-charcoal'
@@ -27,8 +27,8 @@ export function Template5({ content, style }: TemplateProps) {
         </div>
         
         {/* 평균 별점 배지 */}
-        <div className="flex justify-center items-center space-x-2 mb-4">
-          <div className="flex space-x-1">
+        <div className="flex justify-center items-center mb-4" style={{ gap: '8px' }}>
+          <div className="flex" style={{ gap: '4px' }}>
             {[1, 2, 3, 4, 5].map((star) => (
               <Star 
                 key={star} 
@@ -62,15 +62,15 @@ export function Template5({ content, style }: TemplateProps) {
           {[5, 4, 3, 2, 1].map((star) => {
             const percentage = star === 5 ? 84 : star === 4 ? 9 : star === 3 ? 4 : star === 2 ? 2 : 1;
             return (
-              <div key={star} className="flex items-center space-x-2">
+              <div key={star} className="flex items-center" style={{ gap: '8px' }}>
                 <span className={`text-sm w-12 ${
                   mode === 'dark' ? 'text-ivory' : 'text-black'
                 }`}>
                   {star} star
                 </span>
-                <div className={`flex-1 rounded-full h-2 ${
+                <div className={`rounded-full h-2 ${
                   mode === 'dark' ? 'bg-ivory/20' : 'bg-gray-200'
-                }`}>
+                }`} style={{ width: '200px' }}>
                   <div 
                     className={`h-2 rounded-full ${
                       mode === 'dark' ? 'bg-ivory/60' : 'bg-gray-600'

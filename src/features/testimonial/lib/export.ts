@@ -141,7 +141,7 @@ export async function exportCardImage(root: HTMLElement, options: ExportOptions)
     // 추가 안정화 대기
     await new Promise(resolve => setTimeout(resolve, 100));
     
-    // 1. 최종 캔버스 생성
+    // 1. 최종 캔버스 생성 (선택한 해상도 크기)
     const finalCanvas = document.createElement('canvas');
     finalCanvas.width = options.width * options.scale;
     finalCanvas.height = options.height * options.scale;

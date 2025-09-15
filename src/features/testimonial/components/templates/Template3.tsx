@@ -55,15 +55,16 @@ export function Template3({ content, style }: TemplateProps) {
           textAlign: 'center',
         }}
       >
-        {/* 리뷰 텍스트 (중앙) */}
+        {/* 리뷰 텍스트 (중앙) - 명시적 높이 사용 */}
         <div 
-          className="flex-1 flex items-center justify-center"
+          className="flex items-center justify-center"
           style={{
             marginTop: '8px',
             marginBottom: '16px',
             paddingLeft: '20px',
             paddingRight: '20px',
             paddingTop: '8px',
+            height: '120px', // 명시적 높이 설정
           }}
         >
           <p 

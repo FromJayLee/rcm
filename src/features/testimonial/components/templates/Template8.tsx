@@ -1,6 +1,6 @@
 'use client';
 
-import { Star, Shield, Award } from 'lucide-react';
+import { Star, Shield, Award, User } from 'lucide-react';
 import { ExtendedTemplateProps, formatRating } from '../../types';
 
 export function Template8({ 
@@ -37,7 +37,7 @@ export function Template8({
   return (
     <div className="flex items-center justify-center w-full h-full">
       <div 
-        className="relative rounded-3xl shadow-xl overflow-hidden"
+        className="relative rounded-3xl shadow-xl"
         style={{
           backgroundColor: currentColors.card,
           width: 'clamp(450px, 80%, 650px)',
@@ -54,7 +54,7 @@ export function Template8({
         <div className="p-6 h-full flex flex-col">
           {/* 상단 헤더 */}
           <div className="flex items-center justify-between mb-4">
-            <div className="flex items-center space-x-3">
+            <div className="flex items-center" style={{ gap: '12px' }}>
               {/* 아바타 */}
               {author.avatarUrl ? (
                 <img 
@@ -65,10 +65,10 @@ export function Template8({
                 />
               ) : (
                 <div 
-                  className="w-14 h-14 rounded-full flex items-center justify-center text-white font-bold text-lg"
+                  className="w-14 h-14 rounded-full flex items-center justify-center text-white"
                   style={{ backgroundColor: currentColors.accent }}
                 >
-                  {author.name.charAt(0)}
+                  <User size={28} />
                 </div>
               )}
               
@@ -90,7 +90,8 @@ export function Template8({
             
             {/* 인증 배지 */}
             {verified && (
-              <div className="flex items-center space-x-1 px-2 py-1 rounded-full"
+              <div className="flex items-center px-2 py-1 rounded-full"
+                style={{ gap: '4px' }}
                 style={{ backgroundColor: `${currentColors.accent}15` }}>
                 <Shield size={14} style={{ color: currentColors.accent }} />
                 <span 
@@ -104,7 +105,7 @@ export function Template8({
           </div>
 
           {/* 리뷰 텍스트 */}
-          <div className="flex-1 flex items-center mb-4">
+          <div className="flex items-center mb-4" style={{ height: '120px' }}>
             <p 
               className="text-lg leading-relaxed italic"
               style={{ 
@@ -120,8 +121,8 @@ export function Template8({
           {/* 하단 영역 */}
           <div className="flex items-center justify-between">
             {/* 별점 */}
-            <div className="flex items-center space-x-2">
-              <div className="flex space-x-1">
+            <div className="flex items-center" style={{ gap: '8px' }}>
+              <div className="flex" style={{ gap: '4px' }}>
                 {[1, 2, 3, 4, 5].map((star) => (
                   <Star
                     key={star}
@@ -147,7 +148,8 @@ export function Template8({
                 {badges.slice(0, 2).map((badge, index) => (
                   <div
                     key={index}
-                    className="flex items-center space-x-1 px-2 py-1 rounded-full"
+                    className="flex items-center px-2 py-1 rounded-full"
+                    style={{ gap: '4px' }}
                     style={{
                       backgroundColor: `${currentColors.accent}15`,
                       border: `1px solid ${currentColors.accent}30`,

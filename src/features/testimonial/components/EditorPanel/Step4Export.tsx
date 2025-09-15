@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { useEditor } from '../../context/EditorContext';
 import { Download, Loader2 } from 'lucide-react';
+import { CANVAS_RATIO, MIN_WIDTH, MAX_WIDTH } from '../../constants';
 import { useState } from 'react';
 import { 
   exportCardImage, 
@@ -28,8 +29,7 @@ export function Step4Export() {
   });
   
   // 카드 크기 제한 설정
-  const MIN_WIDTH = 800;
-  const MAX_WIDTH = 2000;
+  // 상수는 constants에서 가져옴
 
   const resolutionPresets = [
     { label: '800×600', width: 800, height: 600 },
@@ -39,30 +39,28 @@ export function Step4Export() {
   ];
 
   const handleDownload = async () => {
-    const canvasElement = document.getElementById('testimonial-preview');
+    const canvasElement = document.getElementById('testimonial-canvas');
     if (!canvasElement) {
       setExportState(prev => ({ ...prev, error: '카드를 찾을 수 없습니다.' }));
       return;
     }
 
-    // 실제 템플릿 크기 측정 (offsetWidth/offsetHeight 사용)
-    const templateWidth = canvasElement.offsetWidth;
-    const templateHeight = canvasElement.offsetHeight;
+    // 실제 렌더링된 카드 크기 측정
+    const actualWidth = canvasElement.offsetWidth;
+    const actualHeight = canvasElement.offsetHeight;
     
     // 크기 제한 적용
     const desiredWidth = Math.min(MAX_WIDTH, Math.max(MIN_WIDTH, selectedResolution.width));
-    const desiredHeight = Math.round(desiredWidth * 3 / 4);
+    const desiredHeight = Math.round(desiredWidth / CANVAS_RATIO);
     
-    // export scale 계산 및 검증 (가로/세로 모두 고려)
-    const scaleX = desiredWidth / templateWidth;
-    const scaleY = desiredHeight / templateHeight;
-    const exportScale = Math.max(0.5, Math.min(4, Math.min(scaleX, scaleY))); // 0.5-4 범위로 제한
+    // scale 계산: 선택한 해상도 / 실제 렌더링 크기
+    const exportScale = Math.max(0.5, Math.min(4, desiredWidth / actualWidth)); // 0.5-4 범위로 제한
 
     const exportOptions: ExportOptions = {
-      width: desiredWidth, // 선택한 해상도 사용
-      height: desiredHeight, // 선택한 해상도 사용
+      width: actualWidth, // 실제 렌더링된 크기
+      height: actualHeight, // 실제 렌더링된 크기
       format: selectedFormat,
-      scale: exportScale, // 계산된 scale 사용
+      scale: exportScale, // 선택한 해상도로 스케일링
       fileName: generateFileName(),
       quality: selectedFormat === 'JPG' ? 0.92 : undefined
     };

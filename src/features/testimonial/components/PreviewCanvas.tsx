@@ -7,10 +7,7 @@ import { Badge } from '@/components/ui/badge';
 import { useEditor } from '../context/EditorContext';
 import { Template1, Template2, Template3, Template4, Template5 } from './templates';
 import { TemplateRenderer, mapEditorStateToTemplateProps } from './templates/registry';
-
-// 4:3 고정 비율만 사용
-const CANVAS_RATIO = '4:3';
-const CANVAS_CLASS = 'aspect-[4/3]';
+import { CANVAS_RATIO, CANVAS_CLASS } from '../constants';
 
 export function PreviewCanvas() {
   const { state } = useEditor();
@@ -87,7 +84,7 @@ export function PreviewCanvas() {
   };
 
   // 4:3 고정 비율 사용
-  const currentRatioStyle = { aspectRatio: '4 / 3' };
+  const currentRatioStyle = { aspectRatio: CANVAS_RATIO };
 
   return (
     <div className="h-full flex flex-col bg-ivory">

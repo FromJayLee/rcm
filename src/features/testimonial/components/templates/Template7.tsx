@@ -1,6 +1,6 @@
 'use client';
 
-import { Star, Calendar, MapPin } from 'lucide-react';
+import { Star, Calendar, MapPin, User } from 'lucide-react';
 import { ExtendedTemplateProps, formatRating } from '../../types';
 
 export function Template7({ 
@@ -44,7 +44,7 @@ export function Template7({
   return (
     <div className="flex items-center justify-center w-full h-full">
       <div 
-        className="relative rounded-3xl overflow-hidden shadow-xl"
+        className="relative rounded-3xl shadow-xl"
         style={{
           backgroundColor: currentColors.card,
           width: 'clamp(400px, 70%, 600px)',
@@ -72,10 +72,10 @@ export function Template7({
             />
             ) : (
               <div 
-                className="w-24 h-24 rounded-full flex items-center justify-center text-white font-bold text-2xl border-4 border-white shadow-lg"
+                className="w-24 h-24 rounded-full flex items-center justify-center text-white border-4 border-white shadow-lg"
                 style={{ backgroundColor: currentColors.accent }}
               >
-                {author.name.charAt(0)}
+                <User size={32} />
               </div>
             )}
           </div>
@@ -98,8 +98,8 @@ export function Template7({
 
           {/* 별점 */}
           <div className="flex justify-center mb-6">
-            <div className="flex items-center space-x-2">
-              <div className="flex space-x-1">
+            <div className="flex items-center" style={{ gap: '8px' }}>
+              <div className="flex" style={{ gap: '4px' }}>
                 {[1, 2, 3, 4, 5].map((star) => (
                   <Star
                     key={star}
@@ -121,7 +121,7 @@ export function Template7({
           </div>
 
           {/* 리뷰 텍스트 */}
-          <div className="mb-6">
+          <div className="mb-6" style={{ height: '120px', display: 'flex', alignItems: 'center' }}>
             <p 
               className="text-lg leading-relaxed text-center italic"
               style={{ 
@@ -135,9 +135,9 @@ export function Template7({
 
           {/* 하단 메타 정보 */}
           <div className="flex justify-between items-center text-sm">
-            <div className="flex items-center space-x-4">
+            <div className="flex items-center" style={{ gap: '16px' }}>
               {dateISO && (
-                <div className="flex items-center space-x-1">
+                <div className="flex items-center" style={{ gap: '4px' }}>
                   <Calendar size={16} style={{ color: currentColors.secondary }} />
                   <span style={{ color: currentColors.secondary }}>
                     {formatDate(dateISO)}
@@ -145,7 +145,7 @@ export function Template7({
                 </div>
               )}
               {source?.name && (
-                <div className="flex items-center space-x-1">
+                <div className="flex items-center" style={{ gap: '4px' }}>
                   <MapPin size={16} style={{ color: currentColors.secondary }} />
                   <span style={{ color: currentColors.secondary }}>
                     {source.name}

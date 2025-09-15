@@ -1,6 +1,6 @@
 'use client';
 
-import { Star, CheckCircle } from 'lucide-react';
+import { Star, CheckCircle, User } from 'lucide-react';
 import { ExtendedTemplateProps, formatRating } from '../../types';
 
 export function Template6({ 
@@ -34,7 +34,7 @@ export function Template6({
   return (
     <div className="flex items-center justify-center w-full h-full">
       <div 
-        className="relative rounded-2xl shadow-xl overflow-hidden"
+        className="relative rounded-2xl shadow-xl"
         style={{
           backgroundColor: currentColors.card,
           width: 'clamp(500px, 80%, 800px)',
@@ -51,13 +51,13 @@ export function Template6({
         {/* 메인 콘텐츠 */}
         <div className="flex h-full">
           {/* 좌측 텍스트 영역 */}
-          <div className="flex-1 pr-16">
+          <div className="pr-16" style={{ width: '60%' }}>
             <div className="h-full flex flex-col">
               {/* 상단 여백 */}
-              <div className="flex-1"></div>
+              <div style={{ height: '40px' }}></div>
               
               {/* 리뷰 텍스트 - 중간 위치 */}
-              <div className="flex items-center mb-10">
+              <div className="flex items-center mb-10" style={{ height: '120px' }}>
                 <p 
                   className="text-lg leading-relaxed"
                   style={{ 
@@ -71,8 +71,8 @@ export function Template6({
               </div>
 
               {/* 하단 정보 */}
-              <div className="flex items-center justify-between">
-                <div className="flex items-center space-x-3">
+              <div className="flex items-center" style={{ justifyContent: 'space-between' }}>
+                <div className="flex items-center" style={{ gap: '12px' }}>
                   {/* 아바타 */}
                   {author.avatarUrl ? (
                     <img 
@@ -83,10 +83,10 @@ export function Template6({
                     />
                   ) : (
                     <div 
-                      className="w-12 h-12 rounded-full flex items-center justify-center text-white font-semibold"
+                      className="w-12 h-12 rounded-full flex items-center justify-center text-white"
                       style={{ backgroundColor: currentColors.accent }}
                     >
-                      {author.name.charAt(0)}
+                      <User size={24} />
                     </div>
                   )}
 
@@ -109,7 +109,7 @@ export function Template6({
 
                 {/* 인증 배지 */}
                 {verified && (
-                  <div className="flex items-center space-x-1">
+                  <div className="flex items-center" style={{ gap: '4px' }}>
                     <CheckCircle size={16} style={{ color: currentColors.accent }} />
                     <span 
                       className="text-sm font-medium"
@@ -141,7 +141,7 @@ export function Template6({
             </div>
 
             {/* 별점 */}
-            <div className="flex space-x-1">
+            <div className="flex" style={{ gap: '4px' }}>
               {[1, 2, 3, 4, 5].map((star) => (
                 <Star
                   key={star}

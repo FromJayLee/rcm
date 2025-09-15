@@ -5,12 +5,18 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { useEditor } from '../../context/EditorContext';
 import { FileText } from 'lucide-react';
 import { getAllTemplateMetas } from '../templates/registry';
+import { TEMPLATE_DEFAULT_QUOTES } from '../../constants';
 
 export function Step1Template() {
   const { state, dispatch } = useEditor();
 
   const handleTemplateChange = (templateId: 'T1' | 'T2' | 'T3' | 'T4' | 'T5' | 'T6' | 'T7' | 'T8' | 'T9') => {
     dispatch({ type: "SET_TEMPLATE", templateId });
+    // 템플릿 변경 시 해당 템플릿의 기본 리뷰 텍스트로 변경
+    const defaultQuote = TEMPLATE_DEFAULT_QUOTES[templateId];
+    if (defaultQuote) {
+      dispatch({ type: "SET_CONTENT", patch: { quote: defaultQuote } });
+    }
   };
 
   const templateMetas = getAllTemplateMetas();

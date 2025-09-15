@@ -1,6 +1,6 @@
 'use client';
 
-import { Star } from 'lucide-react';
+import { Star, User } from 'lucide-react';
 import { TemplateProps } from '../../types';
 
 export function Template2({ content, style }: TemplateProps) {
@@ -9,7 +9,7 @@ export function Template2({ content, style }: TemplateProps) {
 
   return (
     <div className="flex items-center justify-center w-full h-full">
-      <div className={`flex flex-col justify-between p-6 rounded-lg shadow-lg ${
+      <div className={`flex flex-col p-6 rounded-lg shadow-lg ${
         mode === 'dark' 
           ? 'bg-charcoal text-ivory' 
           : 'bg-white text-charcoal'
@@ -18,7 +18,7 @@ export function Template2({ content, style }: TemplateProps) {
         height: '280px'
       }}>
         {/* 상단 프로필 */}
-        <div className="flex items-center space-x-3 mb-6">
+        <div className="flex items-center mb-6" style={{ gap: '12px' }}>
           {avatarUrl ? (
             <img 
               src={avatarUrl} 
@@ -27,10 +27,10 @@ export function Template2({ content, style }: TemplateProps) {
               crossOrigin="anonymous"
             />
           ) : (
-            <div className={`w-10 h-10 rounded-full flex items-center justify-center font-semibold ${
+            <div className={`w-10 h-10 rounded-full flex items-center justify-center ${
               mode === 'dark' ? 'bg-ivory text-charcoal' : 'bg-gray-600 text-white'
             }`}>
-              {isAnonymous ? 'A' : authorName.charAt(0)}
+              <User size={20} />
             </div>
           )}
           <div>
@@ -47,8 +47,8 @@ export function Template2({ content, style }: TemplateProps) {
           </div>
         </div>
         
-        {/* 본문 */}
-        <div className="flex-1 mb-6">
+        {/* 본문 - 명시적 높이 사용 */}
+        <div className="mb-6" style={{ height: '120px', display: 'flex', alignItems: 'center' }}>
           <p className={`italic leading-relaxed text-left ${
             mode === 'dark' ? 'text-ivory/80' : 'text-gray-600'
           }`}>
@@ -57,7 +57,7 @@ export function Template2({ content, style }: TemplateProps) {
         </div>
         
         {/* 하단 별점 */}
-        <div className="flex justify-start space-x-1">
+        <div className="flex justify-start" style={{ gap: '4px' }}>
           {[1, 2, 3, 4, 5].map((star) => (
             <Star 
               key={star} 

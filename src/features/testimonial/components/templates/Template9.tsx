@@ -1,6 +1,6 @@
 'use client';
 
-import { Star, Heart, MessageCircle, ThumbsUp } from 'lucide-react';
+import { Star, Heart, MessageCircle, ThumbsUp, User } from 'lucide-react';
 import { ExtendedTemplateProps, formatRating } from '../../types';
 
 export function Template9({ 
@@ -45,7 +45,7 @@ export function Template9({
   return (
     <div className="flex items-center justify-center w-full h-full">
       <div 
-        className="relative rounded-3xl shadow-xl overflow-hidden"
+        className="relative rounded-3xl shadow-xl"
         style={{
           backgroundColor: currentColors.card,
           width: 'clamp(350px, 80%, 450px)',
@@ -59,7 +59,7 @@ export function Template9({
             background: `linear-gradient(90deg, ${currentColors.accent}, ${currentColors.accent}CC)`,
           }}
         >
-          <div className="flex items-center space-x-2">
+          <div className="flex items-center" style={{ gap: '8px' }}>
             <Heart size={20} style={{ color: 'white' }} />
             <span className="text-white font-bold text-lg">Review</span>
           </div>
@@ -78,7 +78,7 @@ export function Template9({
         <div className="p-6 h-full flex flex-col">
           {/* 별점과 평점 */}
           <div className="text-center mb-6">
-            <div className="flex justify-center space-x-1 mb-2">
+            <div className="flex justify-center mb-2" style={{ gap: '4px' }}>
               {[1, 2, 3, 4, 5].map((star) => (
                 <Star
                   key={star}
@@ -105,7 +105,7 @@ export function Template9({
           </div>
 
           {/* 리뷰 텍스트 */}
-          <div className="flex-1 flex items-center mb-6">
+          <div className="flex items-center mb-6" style={{ height: '120px' }}>
             <p 
               className="text-lg leading-relaxed text-center"
               style={{ 
@@ -119,7 +119,7 @@ export function Template9({
           </div>
 
           {/* 작성자 정보 */}
-          <div className="flex items-center space-x-4 mb-4">
+          <div className="flex items-center mb-4" style={{ gap: '16px' }}>
             {/* 아바타 */}
             {author.avatarUrl ? (
               <img 
@@ -130,14 +130,14 @@ export function Template9({
               />
             ) : (
               <div 
-                className="w-14 h-14 rounded-full flex items-center justify-center text-white font-bold text-lg"
+                className="w-14 h-14 rounded-full flex items-center justify-center text-white"
                 style={{ backgroundColor: currentColors.accent }}
               >
-                {author.name.charAt(0)}
+                <User size={28} />
               </div>
             )}
 
-            <div className="flex-1">
+            <div style={{ flex: '1' }}>
               <div 
                 className="font-bold text-lg"
                 style={{ color: currentColors.text }}
@@ -155,9 +155,9 @@ export function Template9({
 
           {/* 하단 메타 정보 */}
           <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-4">
+            <div className="flex items-center" style={{ gap: '16px' }}>
               {/* 소셜 액션 버튼들 */}
-              <div className="flex items-center space-x-2">
+              <div className="flex items-center" style={{ gap: '8px' }}>
                 <button 
                   className="p-2 rounded-full hover:opacity-80 transition-opacity"
                   style={{ backgroundColor: currentColors.social }}

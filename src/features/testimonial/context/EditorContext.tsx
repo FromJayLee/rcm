@@ -39,15 +39,15 @@ const initialState: EditorState = {
   aspectRatio: "1:1", // 기본 비율
   templateId: "T1",
   content: {
-    quote: "Wind-ui, is probably one of the best libraries I've came across. Good looking, easy to use and above all super accessible.",
-    authorName: "BILL GATES",
-    authorRole: "UI designer, Apple",
+    quote: "Great tool! Saves us hours of work. Highly recommend!",
+    authorName: "Sarah Chen",
+    authorRole: "Marketing Manager",
     rating: 5,
     avatarUrl: null,
     isAnonymous: false,
     theme: "light",
     // 새 필드들
-    company: "Apple Inc.",
+    company: "TechCorp",
     sourceName: "Google Reviews",
     sourceLogoUrl: null,
     dateISO: "2024-01-01T00:00:00.000Z", // 정적 초기값으로 hydration mismatch 방지

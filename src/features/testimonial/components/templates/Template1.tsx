@@ -1,6 +1,6 @@
 'use client';
 
-import { Star } from 'lucide-react';
+import { Star, User } from 'lucide-react';
 import { TemplateProps } from '../../types';
 
 export function Template1({ content, style }: TemplateProps) {
@@ -9,7 +9,7 @@ export function Template1({ content, style }: TemplateProps) {
 
   return (
     <div className="flex items-center justify-center w-full h-full">
-      <div className={`flex flex-col justify-between p-6 rounded-lg shadow-lg overflow-hidden ${
+      <div className={`flex flex-col p-6 rounded-lg shadow-lg ${
         mode === 'dark' 
           ? 'bg-charcoal text-ivory' 
           : 'bg-white text-charcoal'
@@ -18,7 +18,7 @@ export function Template1({ content, style }: TemplateProps) {
         height: '250px'
       }}>
         {/* 상단 별점 */}
-        <div className="flex justify-center space-x-1 mb-4">
+        <div className="flex justify-center mb-4" style={{ gap: '4px' }}>
           {[1, 2, 3, 4, 5].map((star) => (
             <Star 
               key={star} 
@@ -31,8 +31,8 @@ export function Template1({ content, style }: TemplateProps) {
           ))}
         </div>
         
-        {/* 본문 - 남는 높이에서 세로 중앙 정렬 */}
-        <div className="flex-1 flex items-center justify-center mb-4">
+        {/* 본문 - 명시적 높이 사용 */}
+        <div className="flex items-center justify-center mb-4" style={{ height: '100px' }}>
           <p className={`italic leading-relaxed text-center ${
             mode === 'dark' ? 'text-ivory/80' : 'text-gray-600'
           }`}>
@@ -41,7 +41,7 @@ export function Template1({ content, style }: TemplateProps) {
         </div>
         
         {/* 하단 프로필 */}
-        <div className="flex items-center justify-center space-x-3">
+        <div className="flex items-center justify-center" style={{ gap: '12px' }}>
           {avatarUrl ? (
             <img 
               src={avatarUrl} 
@@ -50,10 +50,10 @@ export function Template1({ content, style }: TemplateProps) {
               crossOrigin="anonymous"
             />
           ) : (
-            <div className={`w-12 h-12 rounded-full flex items-center justify-center font-semibold ${
+            <div className={`w-12 h-12 rounded-full flex items-center justify-center ${
               mode === 'dark' ? 'bg-ivory text-charcoal' : 'bg-charcoal text-white'
             }`}>
-              {isAnonymous ? 'A' : authorName.charAt(0)}
+              <User size={24} />
             </div>
           )}
           <div className="text-center">
