@@ -1,6 +1,6 @@
 'use client';
 
-import { Star, CheckCircle, Calendar, MapPin, User } from 'lucide-react';
+import { Star, CheckCircle, Calendar, MapPin } from 'lucide-react';
 import { TemplateProps } from '../../types';
 
 export function Template4({ content, style }: TemplateProps) {
@@ -40,13 +40,13 @@ export function Template4({ content, style }: TemplateProps) {
         style={{
           backgroundColor: currentColors.card,
           borderColor: currentColors.border,
-          width: 'clamp(450px, 75%, 700px)',
-          height: 'clamp(280px, 75%, 400px)',
+          width: '400px',
+          height: '300px',
         }}
       >
         {/* 상단 헤더 영역 */}
         <div 
-          className="px-12 py-8 border-b"
+          className="px-6 py-4 border-b"
           style={{ 
             backgroundColor: currentColors.background,
             borderColor: currentColors.border 
@@ -64,15 +64,10 @@ export function Template4({ content, style }: TemplateProps) {
                 />
               ) : (
                 <div 
-                  className="w-12 h-12 rounded-full flex items-center justify-center text-white"
+                  className="w-12 h-12 rounded-full flex items-center justify-center text-white font-bold text-lg"
                   style={{ backgroundColor: currentColors.accent }}
                 >
-                  <img 
-                    src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop&crop=face&auto=format&q=80"
-                    alt="Default avatar"
-                    className="w-6 h-6 rounded-full object-cover"
-                    crossOrigin="anonymous"
-                  />
+                  {isAnonymous ? 'A' : authorName.charAt(0)}
                 </div>
               )}
               
@@ -107,9 +102,9 @@ export function Template4({ content, style }: TemplateProps) {
         </div>
 
         {/* 메인 콘텐츠 영역 */}
-        <div className="px-12 py-10">
+        <div className="px-6 py-4" style={{ height: 'auto' }}>
           {/* 별점과 날짜 */}
-          <div className="flex items-center mb-6" style={{ justifyContent: 'space-between' }}>
+          <div className="flex items-center mb-4" style={{ justifyContent: 'space-between' }}>
             <div className="flex items-center" style={{ gap: '8px' }}>
               <div className="flex" style={{ gap: '4px' }}>
                 {[1, 2, 3, 4, 5].map((star) => (
@@ -141,51 +136,20 @@ export function Template4({ content, style }: TemplateProps) {
           </div>
 
           {/* 리뷰 텍스트 */}
-          <div className="mb-6">
+          <div>
             <p 
-              className="text-base leading-relaxed"
+              className="text-sm leading-tight"
               style={{ 
                 color: currentColors.text,
-                fontWeight: '400'
+                fontWeight: '400',
+                margin: 0,
+                padding: 0
               }}
             >
               {quote}
             </p>
           </div>
 
-          {/* 하단 액션 영역 */}
-          <div className="flex items-center pt-8 border-t px-12" style={{ borderColor: currentColors.border, justifyContent: 'space-between' }}>
-            <div className="flex items-center space-x-4">
-              <button 
-                className="flex items-center space-x-1 px-3 py-1 rounded-full text-sm font-medium transition-colors"
-                style={{ 
-                  backgroundColor: `${currentColors.accent}10`,
-                  color: currentColors.accent 
-                }}
-              >
-                <span>👍</span>
-                <span>Helpful (12)</span>
-              </button>
-              
-              <button 
-                className="flex items-center space-x-1 px-3 py-1 rounded-full text-sm font-medium transition-colors"
-                style={{ 
-                  backgroundColor: `${currentColors.accent}10`,
-                  color: currentColors.accent 
-                }}
-              >
-                <span>💬</span>
-                <span>Reply</span>
-              </button>
-            </div>
-
-            <div 
-              className="text-xs"
-              style={{ color: currentColors.secondary }}
-            >
-              Was this review helpful?
-            </div>
-          </div>
         </div>
       </div>
     </div>

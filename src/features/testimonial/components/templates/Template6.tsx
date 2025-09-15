@@ -1,6 +1,6 @@
 'use client';
 
-import { Star, CheckCircle, User } from 'lucide-react';
+import { Star, CheckCircle } from 'lucide-react';
 import { ExtendedTemplateProps, formatRating } from '../../types';
 
 export function Template6({ 
@@ -37,29 +37,22 @@ export function Template6({
         className="relative rounded-2xl shadow-xl"
         style={{
           backgroundColor: currentColors.card,
-          width: 'clamp(500px, 80%, 800px)',
-          height: 'clamp(200px, 60%, 300px)',
-          padding: '48px',
+          width: '400px',
+          height: '220px',
+          padding: '16px',
         }}
       >
-        {/* 상단 액센트 바 */}
-        <div 
-          className="absolute top-0 left-0 right-0 h-1"
-          style={{ backgroundColor: currentColors.accent }}
-        />
+        {/* 상단 액센트 바 제거 */}
 
         {/* 메인 콘텐츠 */}
         <div className="flex h-full">
           {/* 좌측 텍스트 영역 */}
-          <div className="pr-16" style={{ width: '60%' }}>
-            <div className="h-full flex flex-col">
-              {/* 상단 여백 */}
-              <div style={{ height: '40px' }}></div>
-              
-              {/* 리뷰 텍스트 - 중간 위치 */}
-              <div className="flex items-center mb-10" style={{ height: '120px' }}>
+          <div className="pr-8" style={{ width: '60%' }}>
+            <div className="h-full flex flex-col justify-center">
+              {/* 리뷰 텍스트 - 중간 정렬 */}
+              <div className="flex items-center" style={{ height: '100%' }}>
                 <p 
-                  className="text-lg leading-relaxed"
+                  className="text-sm leading-relaxed"
                   style={{ 
                     color: currentColors.text,
                     textAlign: align,
@@ -69,76 +62,20 @@ export function Template6({
                   "{quote}"
                 </p>
               </div>
-
-              {/* 하단 정보 */}
-              <div className="flex items-center" style={{ justifyContent: 'space-between' }}>
-                <div className="flex items-center" style={{ gap: '12px' }}>
-                  {/* 아바타 */}
-                  {author.avatarUrl ? (
-                    <img 
-                      src={author.avatarUrl} 
-                      alt={author.name}
-                      className="w-12 h-12 rounded-full object-cover"
-                      crossOrigin="anonymous"
-                    />
-                  ) : (
-                    <div 
-                      className="w-12 h-12 rounded-full flex items-center justify-center text-white"
-                      style={{ backgroundColor: currentColors.accent }}
-                    >
-                      <img 
-                        src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop&crop=face&auto=format&q=80"
-                        alt="Default avatar"
-                        className="w-6 h-6 rounded-full object-cover"
-                        crossOrigin="anonymous"
-                      />
-                    </div>
-                  )}
-
-                  {/* 작성자 정보 */}
-                  <div>
-                    <div 
-                      className="font-bold text-lg"
-                      style={{ color: currentColors.text }}
-                    >
-                      {author.name}
-                    </div>
-                    <div 
-                      className="text-sm"
-                      style={{ color: currentColors.secondary }}
-                    >
-                      {author.role} {author.company && `at ${author.company}`}
-                    </div>
-                  </div>
-                </div>
-
-                {/* 인증 배지 */}
-                {verified && (
-                  <div className="flex items-center" style={{ gap: '4px' }}>
-                    <CheckCircle size={16} style={{ color: currentColors.accent }} />
-                    <span 
-                      className="text-sm font-medium"
-                      style={{ color: currentColors.accent }}
-                    >
-                      Verified
-                    </span>
-                  </div>
-                )}
-              </div>
             </div>
           </div>
 
           {/* 우측 별점 영역 */}
-          <div className="flex flex-col items-center justify-center space-y-6">
+          <div className="flex flex-col items-center justify-center" style={{ gap: '16px' }}>
             <div className="text-center">
               <div 
-                className="text-4xl font-bold"
+                className="text-2xl font-bold"
                 style={{ color: currentColors.accent }}
               >
                 {roundedRating}
               </div>
               <div 
-                className="text-sm"
+                className="text-xs"
                 style={{ color: currentColors.secondary }}
               >
                 out of 5
@@ -146,11 +83,11 @@ export function Template6({
             </div>
 
             {/* 별점 */}
-            <div className="flex" style={{ gap: '4px' }}>
+            <div className="flex" style={{ gap: '2px' }}>
               {[1, 2, 3, 4, 5].map((star) => (
                 <Star
                   key={star}
-                  size={20}
+                  size={16}
                   className={star <= 5 ? 'fill-current' : ''}
                   style={{
                     color: star <= 5 ? '#F59E0B' : currentColors.secondary,

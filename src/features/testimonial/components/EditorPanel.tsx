@@ -269,14 +269,14 @@ export function EditorPanel({ currentStep }: EditorPanelProps) {
                       // 전체 설정 초기화
                       dispatch({ type: "SET_TEMPLATE", templateId: "T1" });
                       dispatch({ type: "SET_CONTENT", patch: {
-                        quote: "Great tool! Saves us hours of work. Highly recommend!",
-                        authorName: "Sarah Chen",
-                        authorRole: "Marketing Manager",
+                        quote: "Wind-ui, is probably one of the best libraries I've came across. Good looking, easy to use and above all super accessible.",
+                        authorName: "BILL GATES",
+                        authorRole: "UI designer, Apple",
                         rating: 5,
                         avatarUrl: null,
                         isAnonymous: false,
                         theme: "light",
-                        company: "TechCorp",
+                        company: "Apple Inc.",
                         sourceName: "Google Reviews",
                         sourceLogoUrl: null,
                         dateISO: "2024-01-15",

@@ -32,100 +32,122 @@ export function Template3({ content, style }: TemplateProps) {
   const currentColors = colors[mode];
 
   return (
-    <div 
-      className="flex items-center justify-center w-full h-full"
-      style={{ 
-        backgroundColor: currentColors.canvas,
-        aspectRatio: '2/1',
-        minHeight: '400px'
-      }}
-    >
-      {/* 카드 컨테이너 */}
+    <div className="flex items-center justify-center w-full h-full">
       <div 
-        className="relative rounded-[12px]"
+        className="relative rounded-xl shadow-md border"
         style={{
           backgroundColor: currentColors.card,
-          padding: '16px 32px 24px 32px',
-          boxShadow: `0 4px 12px ${currentColors.shadow}`,
-          width: 'clamp(400px, 50%, 600px)',
-          minHeight: '220px',
+          borderColor: currentColors.border,
+          width: '380px',
+          height: '280px',
+          padding: '0',
           display: 'flex',
           flexDirection: 'column',
-          alignItems: 'center',
-          textAlign: 'center',
         }}
       >
-        {/* 리뷰 텍스트 (중앙) - 명시적 높이 사용 */}
+        {/* 상단 프로필 영역 */}
         <div 
-          className="flex items-center justify-center"
-          style={{
-            marginTop: '8px',
-            marginBottom: '16px',
-            paddingLeft: '20px',
-            paddingRight: '20px',
-            paddingTop: '8px',
-            height: '120px', // 명시적 높이 설정
+          className="px-4 py-4 border-b"
+          style={{ 
+            backgroundColor: currentColors.background,
+            borderColor: currentColors.border 
           }}
         >
-          <p 
-            style={{
-              color: currentColors.text,
-              fontSize: 'clamp(16px, 18px, 20px)',
-              lineHeight: '1.6',
-              fontWeight: '400',
-              margin: 0,
-              textAlign: 'left',
-              maxWidth: '100%',
-            }}
-          >
-            {quote}
-          </p>
-        </div>
-        
-        {/* 별점 (중앙) */}
-        <div 
-          className="flex justify-center items-center"
-          style={{
-            marginBottom: '12px',
-            gap: '4px',
-          }}
-        >
-          {[1, 2, 3, 4, 5].map((star) => (
-            <Star
-              key={star}
-              size={20}
-              className={star <= (rating || 0) ? 'fill-current' : 'text-gray-300'}
-              style={{
-                color: star <= (rating || 0) ? currentColors.star : '#D1D5DB',
-              }}
-            />
-          ))}
-        </div>
-        
-        {/* 작성자 정보 (중앙) */}
-        <div>
-          <div 
-            className="font-bold"
-            style={{
-              color: currentColors.name,
-              fontSize: 'clamp(16px, 18px, 20px)',
-              fontWeight: '700',
-              marginBottom: '4px',
-            }}
-          >
-            {isAnonymous ? 'Anonymous' : authorName}
-          </div>
-          {authorRole && (
+          <div className="flex items-center" style={{ gap: '12px' }}>
+            {/* 아바타 */}
+            {avatarUrl ? (
+              <img 
+                src={avatarUrl} 
+                alt={authorName}
+                className="w-12 h-12 rounded-full object-cover"
+                crossOrigin="anonymous"
+              />
+            ) : (
+              <div 
+                className="w-12 h-12 rounded-full flex items-center justify-center text-white font-bold text-lg"
+                style={{ backgroundColor: currentColors.accent }}
+              >
+                {isAnonymous ? 'A' : authorName.charAt(0)}
+              </div>
+            )}
+            
+            <div className="flex-1">
+              <div 
+                className="font-bold text-base"
+                style={{
+                  color: currentColors.name,
+                  marginBottom: '2px',
+                }}
+              >
+                {isAnonymous ? 'Anonymous' : authorName}
+              </div>
+              {authorRole && (
+                <div 
+                  className="text-sm"
+                  style={{
+                    color: currentColors.secondary,
+                  }}
+                >
+                  {authorRole}
+                </div>
+              )}
+            </div>
+            
+            {/* 인증 배지 */}
             <div 
-              style={{
-                color: currentColors.secondary,
-                fontSize: 'clamp(14px, 15px, 16px)',
+              className="flex items-center px-2 py-1 rounded-full"
+              style={{ 
+                backgroundColor: `${currentColors.accent}10`,
+                color: currentColors.accent 
               }}
             >
-              {authorRole}
+              <div 
+                className="w-1.5 h-1.5 rounded-full mr-1"
+                style={{ backgroundColor: currentColors.accent }}
+              />
+              <span className="text-xs font-medium">Verified</span>
             </div>
-          )}
+          </div>
         </div>
+        
+        {/* 메인 리뷰 영역 */}
+        <div className="flex-1 px-4 py-4 flex flex-col justify-center">
+          {/* 별점 */}
+          <div className="flex items-center mb-3" style={{ gap: '2px' }}>
+            {[1, 2, 3, 4, 5].map((star) => (
+              <Star
+                key={star}
+                size={16}
+                className={star <= 5 ? 'fill-current' : ''}
+                style={{
+                  color: star <= 5 ? '#F59E0B' : currentColors.secondary,
+                }}
+              />
+            ))}
+            <span 
+              className="ml-2 text-sm font-medium"
+              style={{ color: currentColors.text }}
+            >
+              5.0
+            </span>
+          </div>
+          
+          {/* 리뷰 텍스트 */}
+          <div>
+            <p 
+              className="text-sm leading-relaxed"
+              style={{
+                color: currentColors.text,
+                fontWeight: '400',
+                margin: 0,
+                lineHeight: '1.5',
+              }}
+            >
+              "{quote}"
+            </p>
+          </div>
+        </div>
+        
       </div>
     </div>
   );

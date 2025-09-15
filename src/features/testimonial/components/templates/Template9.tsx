@@ -1,6 +1,6 @@
 'use client';
 
-import { Star, Heart, MessageCircle, ThumbsUp, User } from 'lucide-react';
+import { Star, Heart, MessageCircle, ThumbsUp } from 'lucide-react';
 import { ExtendedTemplateProps, formatRating } from '../../types';
 
 export function Template9({ 
@@ -48,70 +48,25 @@ export function Template9({
         className="relative rounded-3xl shadow-xl"
         style={{
           backgroundColor: currentColors.card,
-          width: 'clamp(350px, 80%, 450px)',
-          height: 'clamp(350px, 80%, 450px)',
+          width: '300px',
+          height: '300px',
         }}
       >
-        {/* 상단 헤더 */}
-        <div 
-          className="h-20 flex items-center justify-between px-6"
-          style={{
-            background: `linear-gradient(90deg, ${currentColors.accent}, ${currentColors.accent}CC)`,
-          }}
-        >
-          <div className="flex items-center" style={{ gap: '8px' }}>
-            <Heart size={20} style={{ color: 'white' }} />
-            <span className="text-white font-bold text-lg">Review</span>
-          </div>
-          
-          {source?.logoUrl && (
-            <img 
-              src={source.logoUrl} 
-              alt={source.name || 'Source'}
-              className="h-8 w-auto"
-              crossOrigin="anonymous"
-            />
-          )}
-        </div>
+        {/* 상단 헤더 제거 */}
 
         {/* 메인 콘텐츠 */}
-        <div className="p-6 h-full flex flex-col">
-          {/* 별점과 평점 */}
-          <div className="text-center mb-6">
-            <div className="flex justify-center mb-2" style={{ gap: '4px' }}>
-              {[1, 2, 3, 4, 5].map((star) => (
-                <Star
-                  key={star}
-                  size={24}
-                  className={star <= 5 ? 'fill-current' : ''}
-                  style={{
-                    color: star <= 5 ? '#F59E0B' : currentColors.secondary,
-                  }}
-                />
-              ))}
-            </div>
-            <div 
-              className="text-3xl font-bold"
-              style={{ color: currentColors.accent }}
-            >
-              {roundedRating}
-            </div>
-            <div 
-              className="text-sm"
-              style={{ color: currentColors.secondary }}
-            >
-              out of 5 stars
-            </div>
-          </div>
+        <div className="p-4 h-full flex flex-col" style={{ height: 'auto' }}>
 
           {/* 리뷰 텍스트 */}
-          <div className="flex items-center mb-6" style={{ height: '120px' }}>
+          <div className="flex items-center mb-2">
             <p 
-              className="text-lg leading-relaxed text-center"
+              className="text-sm leading-tight text-center"
               style={{ 
                 color: currentColors.text,
                 textAlign: align,
-                fontStyle: 'italic'
+                fontStyle: 'italic',
+                margin: 0,
+                padding: 0
               }}
             >
               "{quote}"
@@ -119,67 +74,62 @@ export function Template9({
           </div>
 
           {/* 작성자 정보 */}
-          <div className="flex items-center mb-4" style={{ gap: '16px' }}>
+          <div className="flex items-center mb-1" style={{ gap: '8px' }}>
             {/* 아바타 */}
             {author.avatarUrl ? (
               <img 
                 src={author.avatarUrl} 
                 alt={author.name}
-                className="w-14 h-14 rounded-full object-cover"
+                className="w-10 h-10 rounded-full object-cover"
                 crossOrigin="anonymous"
               />
             ) : (
               <div 
-                className="w-14 h-14 rounded-full flex items-center justify-center text-white"
+                className="w-10 h-10 rounded-full flex items-center justify-center text-white font-bold text-sm"
                 style={{ backgroundColor: currentColors.accent }}
               >
-                <img 
-                  src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop&crop=face&auto=format&q=80"
-                  alt="Default avatar"
-                  className="w-7 h-7 rounded-full object-cover"
-                  crossOrigin="anonymous"
-                />
+                {author.name.charAt(0)}
               </div>
             )}
 
             <div style={{ flex: '1' }}>
               <div 
-                className="font-bold text-lg"
+                className="font-bold text-sm"
                 style={{ color: currentColors.text }}
               >
                 {author.name}
               </div>
               <div 
-                className="text-sm"
+                className="text-xs"
                 style={{ color: currentColors.secondary }}
               >
-                {author.role} {author.company && `at ${author.company}`}
+                {author.role}
               </div>
             </div>
           </div>
 
           {/* 하단 메타 정보 */}
-          <div className="flex items-center justify-between">
-            <div className="flex items-center" style={{ gap: '16px' }}>
+          <div className="flex items-center justify-between mt-2">
+            <div className="flex items-center" style={{ gap: '8px' }}>
               {/* 소셜 액션 버튼들 */}
-              <div className="flex items-center" style={{ gap: '8px' }}>
+              <div className="flex items-center" style={{ gap: '4px' }}>
                 <button 
-                  className="p-2 rounded-full hover:opacity-80 transition-opacity"
+                  className="p-1 rounded-full hover:opacity-80 transition-opacity"
                   style={{ backgroundColor: currentColors.social }}
                 >
-                  <ThumbsUp size={16} style={{ color: currentColors.secondary }} />
+                  <ThumbsUp size={12} style={{ color: currentColors.secondary }} />
                 </button>
                 <button 
-                  className="p-2 rounded-full hover:opacity-80 transition-opacity"
+                  className="p-1 rounded-full hover:opacity-80 transition-opacity"
                   style={{ backgroundColor: currentColors.social }}
                 >
-                  <MessageCircle size={16} style={{ color: currentColors.secondary }} />
+                  <MessageCircle size={12} style={{ color: currentColors.secondary }} />
                 </button>
                 <button 
-                  className="p-2 rounded-full hover:opacity-80 transition-opacity"
+                  className="p-1 rounded-full hover:opacity-80 transition-opacity"
                   style={{ backgroundColor: currentColors.social }}
                 >
-                  <Heart size={16} style={{ color: currentColors.accent }} />
+                  <Heart size={12} style={{ color: currentColors.accent }} />
                 </button>
               </div>
             </div>
@@ -187,7 +137,7 @@ export function Template9({
             {/* 날짜 */}
             {dateISO && (
               <div 
-                className="text-sm"
+                className="text-xs"
                 style={{ color: currentColors.secondary }}
               >
                 {formatDate(dateISO)}
