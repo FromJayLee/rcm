@@ -57,14 +57,14 @@ export default function HeroSection({ ctaPrimaryLabel, ctaSecondaryLabel }: Hero
 
             {/* CTA Buttons */}
             <div className="flex flex-col sm:flex-row gap-4">
-              <Button asChild size="lg" className="bg-brand-black hover:bg-brand-black/90 text-brand-ivory">
-                <Link href="/app/editor">
+              <Button asChild size="lg" className="bg-brand-black hover:bg-white hover:text-brand-black hover:border-brand-black border-2 border-brand-black text-brand-ivory transition-all duration-300">
+                <Link href="/auth/login">
                   {ctaPrimaryLabel}
                   <ArrowRight className="w-4 h-4 ml-2" />
                 </Link>
               </Button>
               
-              <Button asChild variant="outline" size="lg" className="border-brand-charcoal text-brand-charcoal hover:bg-brand-charcoal/10">
+              <Button asChild variant="outline" size="lg" className="border-brand-charcoal text-brand-charcoal hover:bg-brand-charcoal hover:text-white transition-all duration-300">
                 <Link href="/templates">
                   {ctaSecondaryLabel}
                 </Link>

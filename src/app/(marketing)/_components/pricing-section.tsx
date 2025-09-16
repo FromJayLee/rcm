@@ -4,6 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Check, Zap, Star, ArrowRight } from 'lucide-react';
+import Link from 'next/link';
 
 interface PricingPlan {
   name: string;
@@ -88,23 +89,25 @@ export default function PricingSection({ plans }: PricingSectionProps) {
                   ))}
                 </div>
                 
-                <Button 
+                <Button asChild
                   className={`w-full ${
                     plan.popular
-                      ? 'bg-brand-black hover:bg-brand-black/90 text-brand-ivory'
-                      : 'bg-brand-charcoal hover:bg-brand-charcoal/90 text-brand-ivory'
-                  }`}
+                      ? 'bg-brand-black hover:bg-white hover:text-brand-black hover:border-brand-black border-2 border-brand-black text-brand-ivory'
+                      : 'bg-brand-charcoal hover:bg-white hover:text-brand-charcoal hover:border-brand-charcoal border-2 border-brand-charcoal text-brand-ivory'
+                  } transition-all duration-300`}
                   size="lg"
                 >
-                  {plan.popular ? (
-                    <>
-                      <Zap className="w-4 h-4 mr-2" />
-                      Get Started
-                    </>
-                  ) : (
-                    'Choose Plan'
-                  )}
-                  <ArrowRight className="w-4 h-4 ml-2" />
+                  <Link href="/auth/login">
+                    {plan.popular ? (
+                      <>
+                        <Zap className="w-4 h-4 mr-2" />
+                        Get Started
+                      </>
+                    ) : (
+                      'Choose Plan'
+                    )}
+                    <ArrowRight className="w-4 h-4 ml-2" />
+                  </Link>
                 </Button>
                 
                 <p className="text-center text-sm text-brand-charcoal mt-4">
@@ -125,11 +128,11 @@ export default function PricingSection({ plans }: PricingSectionProps) {
               Get 3 free testimonial cards to test our tool. No credit card required.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button variant="outline" size="lg" className="border-brand-charcoal text-brand-charcoal hover:bg-brand-charcoal/10">
-                Start Free Trial
+              <Button asChild variant="outline" size="lg" className="border-brand-charcoal text-brand-charcoal hover:bg-brand-charcoal hover:text-white transition-all duration-300">
+                <Link href="/auth/login">Start Free Trial</Link>
               </Button>
-              <Button size="lg" className="bg-brand-black hover:bg-brand-black/90 text-brand-ivory">
-                View All Features
+              <Button asChild size="lg" className="bg-brand-black hover:bg-white hover:text-brand-black hover:border-brand-black border-2 border-brand-black text-brand-ivory transition-all duration-300">
+                <Link href="/auth/login">View All Features</Link>
               </Button>
             </div>
           </div>

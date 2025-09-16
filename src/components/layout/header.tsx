@@ -2,9 +2,17 @@
 
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Menu, X, Sparkles } from 'lucide-react';
+import { Menu, X, Sparkles, User, LogOut } from 'lucide-react';
 import { useState } from 'react';
 import Link from 'next/link';
+import { useAuth } from '@/contexts/AuthContext';
+import { useTokenBalance } from '@/hooks/useTokenBalance';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
 
 interface HeaderProps {
   variant?: 'marketing' | 'app';
@@ -12,6 +20,8 @@ interface HeaderProps {
 
 export function Header({ variant = 'marketing' }: HeaderProps) {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const { user, signOut } = useAuth();
+  const { tokenBalance } = useTokenBalance();
 
   const navigationItems = [
     { name: '템플릿', href: '#templates' },
@@ -63,12 +73,47 @@ export function Header({ variant = 'marketing' }: HeaderProps) {
 
           {/* Desktop CTA */}
           <div className="hidden md:flex items-center space-x-4">
-            <Button asChild className="bg-brand-black hover:bg-brand-black/90 text-brand-ivory h-10 px-6">
-              <Link href="/app/editor">
-                <Sparkles className="w-4 h-4 mr-2" />
-                무료로 시작하기
-              </Link>
-            </Button>
+            {user ? (
+              <div className="flex items-center space-x-4">
+                <div className="flex items-center space-x-2 text-sm text-[#222222]">
+                  <Sparkles className="w-4 h-4" />
+                  <span>{tokenBalance} 토큰</span>
+                </div>
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button variant="outline" className="h-10 px-4">
+                      <User className="w-4 h-4 mr-2" />
+                      {user.email}
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end">
+                    <DropdownMenuItem asChild>
+                      <Link href="/checkout">토큰 구매</Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={signOut}>
+                      <LogOut className="w-4 h-4 mr-2" />
+                      로그아웃
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </div>
+            ) : variant === 'marketing' ? (
+              <>
+                <Button asChild variant="ghost" className="text-brand-charcoal hover:text-brand-black hover:bg-brand-charcoal/10 transition-all duration-300">
+                  <Link href="/auth/login">로그인</Link>
+                </Button>
+                <Button asChild variant="outline" className="border-brand-charcoal text-white hover:bg-white hover:text-brand-charcoal hover:border-black transition-all duration-300">
+                  <Link href="/auth/signup">회원가입</Link>
+                </Button>
+              </>
+            ) : (
+              <Button asChild className="bg-brand-black hover:bg-white hover:text-brand-black hover:border-brand-black border-2 border-brand-black text-brand-ivory h-10 px-6 transition-all duration-300">
+                <Link href="/app/editor">
+                  <Sparkles className="w-4 h-4 mr-2" />
+                  무료로 시작하기
+                </Link>
+              </Button>
+            )}
           </div>
 
           {/* Mobile menu button */}
@@ -104,12 +149,53 @@ export function Header({ variant = 'marketing' }: HeaderProps) {
                 </button>
               ))}
               <div className="pt-4 border-t border-brand-charcoal/20">
-                <Button asChild className="w-full bg-brand-black hover:bg-brand-black/90 text-brand-ivory h-12">
-                  <Link href="/app/editor" onClick={() => setIsMobileMenuOpen(false)}>
-                    <Sparkles className="w-4 h-4 mr-2" />
-                    무료로 시작하기
-                  </Link>
-                </Button>
+                {user ? (
+                  <div className="space-y-2">
+                    <div className="text-sm text-brand-charcoal px-2">
+                      {user.email}
+                    </div>
+                    <div className="flex items-center space-x-2 text-sm text-brand-charcoal px-2">
+                      <Sparkles className="w-4 h-4" />
+                      <span>{tokenBalance} 토큰</span>
+                    </div>
+                    <Button asChild variant="outline" className="w-full h-12">
+                      <Link href="/checkout" onClick={() => setIsMobileMenuOpen(false)}>
+                        토큰 구매
+                      </Link>
+                    </Button>
+                    <Button 
+                      onClick={() => {
+                        signOut();
+                        setIsMobileMenuOpen(false);
+                      }}
+                      variant="outline" 
+                      className="w-full h-12"
+                    >
+                      <LogOut className="w-4 h-4 mr-2" />
+                      로그아웃
+                    </Button>
+                  </div>
+                ) : variant === 'marketing' ? (
+                  <div className="space-y-3">
+                    <Button asChild variant="ghost" className="w-full h-12 text-brand-charcoal hover:text-brand-black hover:bg-brand-charcoal/10 transition-all duration-300">
+                      <Link href="/auth/login" onClick={() => setIsMobileMenuOpen(false)}>
+                        로그인
+                      </Link>
+                    </Button>
+                    <Button asChild variant="outline" className="w-full h-12 border-brand-charcoal text-white hover:bg-white hover:text-brand-charcoal hover:border-black transition-all duration-300">
+                      <Link href="/auth/signup" onClick={() => setIsMobileMenuOpen(false)}>
+                        회원가입
+                      </Link>
+                    </Button>
+                  </div>
+                ) : (
+                  <Button asChild className="w-full bg-brand-black hover:bg-white hover:text-brand-black hover:border-brand-black border-2 border-brand-black text-brand-ivory h-12 transition-all duration-300">
+                    <Link href="/app/editor" onClick={() => setIsMobileMenuOpen(false)}>
+                      <Sparkles className="w-4 h-4 mr-2" />
+                      무료로 시작하기
+                    </Link>
+                  </Button>
+                )}
               </div>
             </nav>
           </div>
