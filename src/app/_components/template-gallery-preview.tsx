@@ -60,24 +60,24 @@ export default function TemplateGalleryPreview() {
   ];
 
   return (
-    <section className="py-20 bg-brand-ivory">
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+    <section aria-labelledby="templates-title" className="py-20 bg-brand-ivory">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-6xl">
         <div className="text-center mb-16">
           <Badge variant="secondary" className="bg-brand-charcoal/10 text-brand-charcoal mb-4">
             Templates
           </Badge>
-          <h2 className="text-3xl lg:text-5xl font-bold text-brand-black mb-6">
+          <h2 id="templates-title" className="text-3xl sm:text-4xl lg:text-5xl font-bold text-brand-black mb-6">
             Choose from 9 Professional
             <br />
             <span className="text-brand-charcoal">Testimonial Templates</span>
           </h2>
-          <p className="text-lg text-brand-charcoal max-w-2xl mx-auto">
+          <p className="text-lg sm:text-xl text-brand-charcoal max-w-3xl mx-auto">
             Each template is carefully designed to showcase customer testimonials effectively. 
             All templates are fully customizable and optimized for different use cases.
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
           {templates.map((template) => (
             <Card key={template.id} className="group hover:shadow-xl transition-all duration-300 border-brand-charcoal/20 overflow-hidden">
               <div className="relative">
@@ -128,17 +128,17 @@ export default function TemplateGalleryPreview() {
 
         {/* Bottom CTA */}
         <div className="text-center">
-          <div className="bg-white rounded-2xl p-8 border border-brand-charcoal/20 max-w-2xl mx-auto">
-            <h3 className="text-2xl font-bold text-brand-black mb-4">
+          <div className="bg-white rounded-2xl p-8 border border-brand-charcoal/20 max-w-3xl mx-auto">
+            <h3 className="text-2xl sm:text-3xl font-bold text-brand-black mb-4">
               Ready to see all templates?
             </h3>
-            <p className="text-brand-charcoal mb-6">
+            <p className="text-lg text-brand-charcoal mb-8">
               Explore our complete template gallery and find the perfect design for your testimonials.
             </p>
-            <Button asChild size="lg" className="bg-brand-black hover:bg-brand-black/90 text-brand-ivory">
+            <Button asChild size="lg" className="bg-brand-black hover:bg-brand-black/90 text-brand-ivory h-12 px-8 text-base">
               <Link href="/templates">
                 View All Templates
-                <ArrowRight className="w-4 h-4 ml-2" />
+                <ArrowRight className="w-5 h-5 ml-2" />
               </Link>
             </Button>
           </div>

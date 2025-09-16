@@ -20,60 +20,58 @@ export default function HeroSection({ ctaPrimaryLabel, ctaSecondaryLabel }: Hero
   ];
 
   return (
-    <section className="py-20 lg:py-32">
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-          {/* Left Column - Content */}
-          <div className="space-y-8">
-            <div className="space-y-4">
-              <Badge variant="secondary" className="bg-brand-charcoal/10 text-brand-charcoal w-fit">
+    <section aria-labelledby="hero-title" className="py-20 lg:py-32">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-6xl">
+        <div className="flex flex-col items-center text-center space-y-12">
+          {/* Content */}
+          <div className="space-y-8 max-w-4xl">
+            <div className="space-y-6">
+              <Badge variant="secondary" className="bg-brand-charcoal/10 text-brand-charcoal w-fit mx-auto">
                 <Sparkles className="w-3 h-3 mr-1" />
                 New: 9 Professional Templates
               </Badge>
               
-              <h1 className="text-4xl lg:text-6xl font-bold text-brand-black leading-tight">
-                Create High-Quality
+              <h1 id="hero-title" className="text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-bold text-brand-black leading-tight tracking-tight">
+                Ship testimonial cards
                 <br />
-                <span className="text-brand-charcoal">Testimonial Cards</span>
-                <br />
-                in Under 60 Seconds
+                <span className="text-brand-charcoal">in under a minute</span>
               </h1>
               
-              <p className="text-lg text-brand-charcoal leading-relaxed max-w-lg">
-                Perfect for SaaS founders who need professional marketing materials fast. 
+              <p className="text-lg sm:text-xl text-brand-charcoal leading-relaxed max-w-3xl mx-auto">
+                Pixel-perfect, brand-consistent, export-ready testimonial cards for SaaS founders. 
                 No design skills required - just choose, customize, and export.
               </p>
             </div>
 
             {/* Features List */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-2xl mx-auto">
               {features.map((feature, index) => (
-                <div key={index} className="flex items-center space-x-2">
-                  <CheckCircle className="w-4 h-4 text-brand-charcoal flex-shrink-0" />
-                  <span className="text-brand-charcoal text-sm">{feature}</span>
+                <div key={index} className="flex items-center space-x-3">
+                  <CheckCircle className="w-5 h-5 text-brand-charcoal flex-shrink-0" />
+                  <span className="text-brand-charcoal text-base">{feature}</span>
                 </div>
               ))}
             </div>
 
             {/* CTA Buttons */}
-            <div className="flex flex-col sm:flex-row gap-4">
-              <Button asChild size="lg" className="bg-brand-black hover:bg-brand-black/90 text-brand-ivory">
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <Button asChild size="lg" className="bg-brand-black hover:bg-brand-black/90 text-brand-ivory h-12 px-8 text-base">
                 <Link href="/app/editor">
                   {ctaPrimaryLabel}
-                  <ArrowRight className="w-4 h-4 ml-2" />
+                  <ArrowRight className="w-5 h-5 ml-2" />
                 </Link>
               </Button>
               
-              <Button asChild variant="outline" size="lg" className="border-brand-charcoal text-brand-charcoal hover:bg-brand-charcoal/10">
-                <Link href="/templates">
+              <Button asChild variant="outline" size="lg" className="border-brand-charcoal text-brand-charcoal hover:bg-brand-charcoal/10 h-12 px-8 text-base">
+                <Link href="/pricing">
                   {ctaSecondaryLabel}
                 </Link>
               </Button>
             </div>
 
             {/* Social Proof */}
-            <div className="flex items-center space-x-6 text-sm text-brand-charcoal">
-              <div className="flex items-center space-x-1">
+            <div className="flex flex-col sm:flex-row items-center justify-center space-y-4 sm:space-y-0 sm:space-x-8 text-sm text-brand-charcoal">
+              <div className="flex items-center space-x-2">
                 <div className="flex -space-x-1">
                   {[1, 2, 3, 4].map((i) => (
                     <div
@@ -84,7 +82,7 @@ export default function HeroSection({ ctaPrimaryLabel, ctaSecondaryLabel }: Hero
                 </div>
                 <span>500+ creators</span>
               </div>
-              <div className="flex items-center space-x-1">
+              <div className="flex items-center space-x-2">
                 <div className="flex">
                   {[1, 2, 3, 4, 5].map((star) => (
                     <span key={star} className="text-yellow-400">★</span>
@@ -95,13 +93,13 @@ export default function HeroSection({ ctaPrimaryLabel, ctaSecondaryLabel }: Hero
             </div>
           </div>
 
-          {/* Right Column - Preview */}
-          <div className="relative">
+          {/* Preview Image */}
+          <div className="relative w-full max-w-4xl">
             <div className="relative bg-white rounded-2xl shadow-2xl p-8 border border-brand-charcoal/10">
               {/* Mock Editor Preview */}
-              <div className="space-y-4">
+              <div className="space-y-6">
                 <div className="flex items-center justify-between">
-                  <h3 className="font-semibold text-brand-black">Testimonial Preview</h3>
+                  <h3 className="font-semibold text-brand-black text-lg">Testimonial Preview</h3>
                   <Badge variant="secondary" className="bg-green-100 text-green-800">
                     Live Preview
                   </Badge>
@@ -109,7 +107,7 @@ export default function HeroSection({ ctaPrimaryLabel, ctaSecondaryLabel }: Hero
                 
                 {/* Mock Testimonial Card */}
                 <div className="bg-brand-ivory rounded-lg p-6 border border-brand-charcoal/20">
-                  <div className="flex items-center space-x-3 mb-4">
+                  <div className="flex items-center space-x-4 mb-4">
                     <div className="w-12 h-12 bg-brand-charcoal rounded-full flex items-center justify-center">
                       <span className="text-brand-ivory font-bold text-lg">S</span>
                     </div>
@@ -132,16 +130,16 @@ export default function HeroSection({ ctaPrimaryLabel, ctaSecondaryLabel }: Hero
                 </div>
                 
                 {/* Mock Controls */}
-                <div className="grid grid-cols-3 gap-2">
-                  <div className="bg-brand-charcoal/5 rounded p-2 text-center">
+                <div className="grid grid-cols-3 gap-3">
+                  <div className="bg-brand-charcoal/5 rounded p-3 text-center">
                     <div className="text-xs text-brand-charcoal">Template</div>
                     <div className="text-sm font-medium text-brand-black">Modern</div>
                   </div>
-                  <div className="bg-brand-charcoal/5 rounded p-2 text-center">
+                  <div className="bg-brand-charcoal/5 rounded p-3 text-center">
                     <div className="text-xs text-brand-charcoal">Background</div>
                     <div className="text-sm font-medium text-brand-black">Gradient</div>
                   </div>
-                  <div className="bg-brand-charcoal/5 rounded p-2 text-center">
+                  <div className="bg-brand-charcoal/5 rounded p-3 text-center">
                     <div className="text-xs text-brand-charcoal">Export</div>
                     <div className="text-sm font-medium text-brand-black">PNG 2x</div>
                   </div>

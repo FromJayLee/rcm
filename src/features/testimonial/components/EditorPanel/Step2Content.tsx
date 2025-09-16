@@ -134,14 +134,14 @@ export function Step2Content() {
             )}
             {showField('authorRole') && (
               <div className="space-y-2">
-                <Label className="text-sm font-medium text-charcoal flex items-center">
+                <Label className="text-sm font-medium text-charcoal flex items-center whitespace-nowrap">
                   Role & Company {isRequired('authorRole') && <span className="text-red-500 ml-1">*</span>}
                   <span className="ml-2 text-charcoal/60">
                     ({state.content.authorRole.length}/{characterLimits.authorRole})
                   </span>
                 </Label>
                 <Input
-                  placeholder="CEO, TechStart"
+                  placeholder="CEO & TechStart"
                   className="text-sm bg-ivory text-charcoal"
                   value={state.content.authorRole}
                   onChange={(e) => {
@@ -153,29 +153,6 @@ export function Step2Content() {
               </div>
             )}
           </div>
-
-          {/* Company Field */}
-          {showField('company') && (
-            <div className="space-y-2">
-              <Label className="text-sm font-medium text-charcoal flex items-center">
-                <Building className="w-4 h-4 mr-2" />
-                Company {isRequired('company') && <span className="text-red-500 ml-1">*</span>}
-                <span className="ml-2 text-charcoal/60">
-                  ({(state.content.company || '').length}/{characterLimits.company})
-                </span>
-              </Label>
-              <Input
-                placeholder="TechCorp Inc."
-                className="text-sm bg-ivory text-charcoal"
-                value={state.content.company || ''}
-                onChange={(e) => {
-                  if (e.target.value.length <= characterLimits.company) {
-                    handleContentChange('company', e.target.value);
-                  }
-                }}
-              />
-            </div>
-          )}
 
           {/* Quote Text */}
           {showField('quote') && (

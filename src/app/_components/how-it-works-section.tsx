@@ -15,75 +15,74 @@ interface HowItWorksSectionProps {
 
 export default function HowItWorksSection({ steps }: HowItWorksSectionProps) {
   const stepIcons = [MousePointer, Palette, Download];
-  const stepColors = ['bg-blue-100 text-blue-600', 'bg-purple-100 text-purple-600', 'bg-green-100 text-green-600'];
 
   return (
-    <section className="py-20 bg-white">
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+    <section aria-labelledby="how-it-works-title" className="py-20 bg-white">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-6xl">
         <div className="text-center mb-16">
           <Badge variant="secondary" className="bg-brand-charcoal/10 text-brand-charcoal mb-4">
             How it works
           </Badge>
-          <h2 className="text-3xl lg:text-5xl font-bold text-brand-black mb-6">
+          <h2 id="how-it-works-title" className="text-3xl sm:text-4xl lg:text-5xl font-bold text-brand-black mb-6">
             Create Professional Testimonials
             <br />
             in 3 Simple Steps
           </h2>
-          <p className="text-lg text-brand-charcoal max-w-2xl mx-auto">
+          <p className="text-lg sm:text-xl text-brand-charcoal max-w-3xl mx-auto">
             Our streamlined workflow makes it incredibly easy to create high-quality testimonial cards 
             that will make your landing page stand out.
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div className="flex flex-col space-y-12 max-w-4xl mx-auto">
           {steps.map((step, index) => {
             const Icon = stepIcons[index];
-            const colorClass = stepColors[index];
             
             return (
-              <Card key={index} className="relative border-brand-charcoal/20 hover:shadow-lg transition-shadow">
-                <CardContent className="p-8 text-center">
-                  {/* Step Number */}
-                  <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
-                    <div className={`w-8 h-8 rounded-full ${colorClass} flex items-center justify-center font-bold text-sm`}>
-                      {index + 1}
+              <div key={index} className="flex flex-col lg:flex-row items-center gap-8">
+                {/* Step Number & Icon */}
+                <div className="flex-shrink-0">
+                  <div className="w-20 h-20 rounded-full bg-brand-charcoal/10 flex items-center justify-center">
+                    <div className="w-16 h-16 rounded-full bg-brand-charcoal flex items-center justify-center">
+                      <Icon className="w-8 h-8 text-brand-ivory" />
                     </div>
                   </div>
-                  
-                  {/* Icon */}
-                  <div className={`w-16 h-16 rounded-full ${colorClass} flex items-center justify-center mx-auto mb-6`}>
-                    <Icon className="w-8 h-8" />
+                </div>
+                
+                {/* Content */}
+                <div className="flex-1 text-center lg:text-left">
+                  <div className="flex items-center justify-center lg:justify-start gap-3 mb-4">
+                    <span className="text-2xl font-bold text-brand-charcoal">Step {index + 1}</span>
+                    <div className="w-8 h-px bg-brand-charcoal/20"></div>
                   </div>
-                  
-                  {/* Content */}
-                  <h3 className="text-xl font-semibold text-brand-black mb-4">
+                  <h3 className="text-2xl font-semibold text-brand-black mb-4">
                     {step.title}
                   </h3>
-                  <p className="text-brand-charcoal leading-relaxed">
+                  <p className="text-lg text-brand-charcoal leading-relaxed">
                     {step.description}
                   </p>
-                </CardContent>
-              </Card>
+                </div>
+              </div>
             );
           })}
         </div>
 
         {/* Bottom CTA */}
-        <div className="text-center mt-16">
-          <p className="text-brand-charcoal mb-6">
+        <div className="text-center mt-20">
+          <p className="text-lg text-brand-charcoal mb-8">
             Ready to create your first testimonial card?
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Badge variant="outline" className="border-brand-charcoal text-brand-charcoal px-4 py-2">
-              <MousePointer className="w-4 h-4 mr-2" />
+            <Badge variant="outline" className="border-brand-charcoal text-brand-charcoal px-6 py-3 text-base">
+              <MousePointer className="w-5 h-5 mr-2" />
               No design skills required
             </Badge>
-            <Badge variant="outline" className="border-brand-charcoal text-brand-charcoal px-4 py-2">
-              <Download className="w-4 h-4 mr-2" />
+            <Badge variant="outline" className="border-brand-charcoal text-brand-charcoal px-6 py-3 text-base">
+              <Download className="w-5 h-5 mr-2" />
               Export in any resolution
             </Badge>
-            <Badge variant="outline" className="border-brand-charcoal text-brand-charcoal px-4 py-2">
-              <Palette className="w-4 h-4 mr-2" />
+            <Badge variant="outline" className="border-brand-charcoal text-brand-charcoal px-6 py-3 text-base">
+              <Palette className="w-5 h-5 mr-2" />
               Fully customizable
             </Badge>
           </div>

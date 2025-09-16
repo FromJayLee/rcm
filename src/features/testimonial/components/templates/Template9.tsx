@@ -43,7 +43,7 @@ export function Template9({
   return (
     <div className="flex items-center justify-center w-full h-full">
       <div 
-        className="relative rounded-3xl shadow-xl"
+        className="relative rounded-3xl shadow-xl overflow-hidden"
         style={{
           backgroundColor: currentColors.card,
           width: 'clamp(280px, 60%, 360px)',
@@ -52,7 +52,7 @@ export function Template9({
       >
         {/* 상단 헤더 */}
         <div 
-          className="h-12 flex items-center justify-between px-4"
+          className="h-12 flex items-center justify-between px-4 rounded-tr-3xl"
           style={{
             background: `linear-gradient(90deg, ${currentColors.accent}, ${currentColors.accent}CC)`,
           }}

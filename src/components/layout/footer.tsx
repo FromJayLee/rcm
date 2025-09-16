@@ -36,12 +36,12 @@ export function Footer() {
   ];
 
   return (
-    <footer className="bg-brand-ivory border-t border-brand-charcoal/20">
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8">
+    <footer className="bg-brand-ivory border-t border-brand-charcoal/20" role="contentinfo">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-12 max-w-6xl">
+        <div className="flex flex-col space-y-12">
           {/* Brand Section */}
-          <div className="lg:col-span-2">
-            <div className="flex items-center space-x-2 mb-4">
+          <div className="text-center">
+            <div className="flex items-center justify-center space-x-2 mb-4">
               <div className="w-8 h-8 bg-brand-black rounded-lg flex items-center justify-center">
                 <span className="text-brand-ivory font-bold text-sm">TC</span>
               </div>
@@ -49,18 +49,18 @@ export function Footer() {
                 Testimonial Creator
               </span>
             </div>
-            <p className="text-brand-charcoal text-sm leading-relaxed mb-6 max-w-md">
+            <p className="text-brand-charcoal text-base leading-relaxed mb-6 max-w-2xl mx-auto">
               Create high-quality testimonial cards for your landing pages in under 60 seconds. 
               Perfect for SaaS founders who need professional marketing materials fast.
             </p>
-            <div className="flex space-x-4">
+            <div className="flex justify-center space-x-6">
               {socialLinks.map((social) => {
                 const Icon = social.icon;
                 return (
                   <Link
                     key={social.name}
                     href={social.href}
-                    className="text-brand-charcoal hover:text-brand-black transition-colors"
+                    className="text-brand-charcoal hover:text-brand-black transition-colors focus:outline-none focus:ring-2 focus:ring-brand-charcoal/20 focus:ring-offset-2 rounded-md p-1"
                     aria-label={social.name}
                   >
                     <Icon className="h-5 w-5" />
@@ -70,79 +70,86 @@ export function Footer() {
             </div>
           </div>
 
-          {/* Product Links */}
-          <div>
-            <h3 className="font-semibold text-brand-black mb-4">Product</h3>
-            <ul className="space-y-3">
-              {footerLinks.product.map((link) => (
-                <li key={link.name}>
-                  <Link
-                    href={link.href}
-                    className="text-brand-charcoal hover:text-brand-black transition-colors text-sm"
-                  >
-                    {link.name}
-                  </Link>
-                </li>
-              ))}
-            </ul>
+          {/* Links Section */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+            {/* Product Links */}
+            <div>
+              <h3 className="font-semibold text-brand-black mb-4 text-center sm:text-left">Product</h3>
+              <ul className="space-y-3 text-center sm:text-left">
+                {footerLinks.product.map((link) => (
+                  <li key={link.name}>
+                    <Link
+                      href={link.href}
+                      className="text-brand-charcoal hover:text-brand-black transition-colors text-sm focus:outline-none focus:ring-2 focus:ring-brand-charcoal/20 focus:ring-offset-2 rounded-md px-1 py-0.5"
+                    >
+                      {link.name}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            {/* Resources Links */}
+            <div>
+              <h3 className="font-semibold text-brand-black mb-4 text-center sm:text-left">Resources</h3>
+              <ul className="space-y-3 text-center sm:text-left">
+                {footerLinks.resources.map((link) => (
+                  <li key={link.name}>
+                    <Link
+                      href={link.href}
+                      className="text-brand-charcoal hover:text-brand-black transition-colors text-sm focus:outline-none focus:ring-2 focus:ring-brand-charcoal/20 focus:ring-offset-2 rounded-md px-1 py-0.5"
+                    >
+                      {link.name}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            {/* Company Links */}
+            <div>
+              <h3 className="font-semibold text-brand-black mb-4 text-center sm:text-left">Company</h3>
+              <ul className="space-y-3 text-center sm:text-left">
+                {footerLinks.company.map((link) => (
+                  <li key={link.name}>
+                    <Link
+                      href={link.href}
+                      className="text-brand-charcoal hover:text-brand-black transition-colors text-sm focus:outline-none focus:ring-2 focus:ring-brand-charcoal/20 focus:ring-offset-2 rounded-md px-1 py-0.5"
+                    >
+                      {link.name}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            {/* Legal Links */}
+            <div>
+              <h3 className="font-semibold text-brand-black mb-4 text-center sm:text-left">Legal</h3>
+              <ul className="space-y-3 text-center sm:text-left">
+                {footerLinks.legal.map((link) => (
+                  <li key={link.name}>
+                    <Link
+                      href={link.href}
+                      className="text-brand-charcoal hover:text-brand-black transition-colors text-sm focus:outline-none focus:ring-2 focus:ring-brand-charcoal/20 focus:ring-offset-2 rounded-md px-1 py-0.5"
+                    >
+                      {link.name}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
           </div>
 
-          {/* Resources Links */}
-          <div>
-            <h3 className="font-semibold text-brand-black mb-4">Resources</h3>
-            <ul className="space-y-3">
-              {footerLinks.resources.map((link) => (
-                <li key={link.name}>
-                  <Link
-                    href={link.href}
-                    className="text-brand-charcoal hover:text-brand-black transition-colors text-sm"
-                  >
-                    {link.name}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          {/* Company Links */}
-          <div>
-            <h3 className="font-semibold text-brand-black mb-4">Company</h3>
-            <ul className="space-y-3">
-              {footerLinks.company.map((link) => (
-                <li key={link.name}>
-                  <Link
-                    href={link.href}
-                    className="text-brand-charcoal hover:text-brand-black transition-colors text-sm"
-                  >
-                    {link.name}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
-        </div>
-
-        {/* Bottom Section */}
-        <div className="mt-12 pt-8 border-t border-brand-charcoal/20">
-          <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
-            <div className="flex flex-col md:flex-row items-center space-y-2 md:space-y-0 md:space-x-6">
+          {/* Bottom Section */}
+          <div className="pt-8 border-t border-brand-charcoal/20">
+            <div className="flex flex-col items-center space-y-4 text-center">
               <p className="text-brand-charcoal text-sm">
                 © {currentYear} Testimonial Creator. All rights reserved.
               </p>
-              <div className="flex space-x-6">
-                {footerLinks.legal.map((link) => (
-                  <Link
-                    key={link.name}
-                    href={link.href}
-                    className="text-brand-charcoal hover:text-brand-black transition-colors text-sm"
-                  >
-                    {link.name}
-                  </Link>
-                ))}
-              </div>
-            </div>
-            <div className="text-brand-charcoal text-sm">
-              Made with ❤️ for SaaS founders
+              <p className="text-brand-charcoal text-sm">
+                Made with ❤️ for SaaS founders
+              </p>
             </div>
           </div>
         </div>

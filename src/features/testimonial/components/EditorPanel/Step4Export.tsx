@@ -22,6 +22,8 @@ export function Step4Export() {
   const [selectedFormat, setSelectedFormat] = useState<'PNG' | 'JPG'>('PNG');
   const [selectedResolution, setSelectedResolution] = useState({ width: 1200, height: 900 });
   const [isCustomResolution, setIsCustomResolution] = useState(false);
+  const [customWidthInput, setCustomWidthInput] = useState('');
+  const [widthError, setWidthError] = useState('');
   const [exportState, setExportState] = useState<ExportState>({
     isExporting: false,
     progress: 0,
@@ -134,6 +136,8 @@ export function Step4Export() {
                 variant="outline"
                 onClick={() => {
                   setSelectedResolution({ width: preset.width, height: preset.height });
+                  setCustomWidthInput(preset.width.toString());
+                  setWidthError('');
                   setIsCustomResolution(false);
                 }}
                 className={`justify-center text-xs border-charcoal/30 text-black h-8 ${
@@ -158,26 +162,51 @@ export function Step4Export() {
           <div className="space-y-1">
             <div className="flex items-center space-x-2">
               <input
-                type="number"
-                placeholder="1600"
-                min={MIN_WIDTH}
-                max={MAX_WIDTH}
-                value={selectedResolution.width || ''}
+                type="text"
+                placeholder="Enter width"
+                value={customWidthInput}
                 onChange={(e) => {
-                  const inputValue = parseInt(e.target.value);
-                  if (isNaN(inputValue)) return;
+                  const inputValue = e.target.value;
+                  setCustomWidthInput(inputValue);
                   
-                  const width = Math.min(MAX_WIDTH, Math.max(MIN_WIDTH, inputValue));
-                  const height = Math.round(width * 3 / 4);
-                  setSelectedResolution({ width, height });
-                  setIsCustomResolution(true);
+                  // 빈 문자열이면 에러 초기화
+                  if (inputValue === '') {
+                    setWidthError('');
+                    return;
+                  }
+                  
+                  const numericValue = parseInt(inputValue);
+                  
+                  // 숫자가 아닌 경우 에러 표시하지 않음 (사용자가 입력 중일 수 있음)
+                  if (isNaN(numericValue)) {
+                    return;
+                  }
+                  
+                  // 범위 체크
+                  if (numericValue < MIN_WIDTH || numericValue > MAX_WIDTH) {
+                    setWidthError('Value is outside the allowed range');
+                  } else {
+                    setWidthError('');
+                    const height = Math.round(numericValue * 3 / 4);
+                    setSelectedResolution({ width: numericValue, height });
+                    setIsCustomResolution(true);
+                  }
                 }}
                 onFocus={() => setIsCustomResolution(true)}
-                className="flex-1 px-2 py-1 border border-charcoal/30 rounded-md text-xs bg-ivory text-black h-8"
+                className={`flex-1 px-2 py-1 border rounded-md text-xs bg-ivory text-black h-8 ${
+                  widthError ? 'border-red-500' : 'border-charcoal/30'
+                }`}
               />
-              <span className="text-xs text-black">×</span>
-              <span className="text-xs text-black">{selectedResolution.height}</span>
+              {customWidthInput && (
+                <>
+                  <span className="text-xs text-black">×</span>
+                  <span className="text-xs text-black">{selectedResolution.height}</span>
+                </>
+              )}
             </div>
+            {widthError && (
+              <p className="text-xs text-red-500">{widthError}</p>
+            )}
             <p className="text-xs text-gray-600">Height will be automatically calculated.</p>
             <p className="text-xs text-gray-500">Size range: {MIN_WIDTH}px - {MAX_WIDTH}px</p>
           </div>
