@@ -3,146 +3,114 @@
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Eye, ArrowRight } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
+import { getAllTemplateMetas } from '@/features/testimonial/components/templates/registry';
+import { TemplateRenderer } from '@/features/testimonial/components/templates/registry';
 
 export default function TemplateGalleryPreview() {
-  const templates = [
-    {
-      id: 1,
-      name: 'Modern',
-      description: 'Clean and professional design',
-      category: 'Professional',
-      image: 'https://picsum.photos/300/200?random=1',
-      features: ['Minimalist', 'High contrast', 'Bold typography']
-    },
-    {
-      id: 2,
-      name: 'Classic',
-      description: 'Traditional testimonial layout',
-      category: 'Traditional',
-      image: 'https://picsum.photos/300/200?random=2',
-      features: ['Elegant', 'Readable', 'Timeless']
-    },
-    {
-      id: 3,
-      name: 'Creative',
-      description: 'Unique and eye-catching design',
-      category: 'Creative',
-      image: 'https://picsum.photos/300/200?random=3',
-      features: ['Unique', 'Colorful', 'Dynamic']
-    },
-    {
-      id: 4,
-      name: 'Minimal',
-      description: 'Simple and focused layout',
-      category: 'Minimal',
-      image: 'https://picsum.photos/300/200?random=4',
-      features: ['Simple', 'Clean', 'Focused']
-    },
-    {
-      id: 5,
-      name: 'Corporate',
-      description: 'Business-focused design',
-      category: 'Business',
-      image: 'https://picsum.photos/300/200?random=5',
-      features: ['Professional', 'Formal', 'Trustworthy']
-    },
-    {
-      id: 6,
-      name: 'Social',
-      description: 'Social media optimized',
-      category: 'Social',
-      image: 'https://picsum.photos/300/200?random=6',
-      features: ['Social-ready', 'Engaging', 'Shareable']
-    }
-  ];
+  const templateMetas = getAllTemplateMetas();
+  
+  const templates = templateMetas.map((template, index) => ({
+    id: template.id,
+    name: template.name,
+    description: getTemplateDescription(template.name),
+    category: getTemplateCategory(template.tags),
+    image: `https://picsum.photos/300/200?random=${index + 1}`,
+    features: template.tags.slice(0, 3)
+  }));
+
+  function getTemplateDescription(name: string): string {
+    const descriptions: { [key: string]: string } = {
+      'Classic Center': '중앙 정렬된 클래식한 디자인',
+      'Left Aligned': '좌측 정렬된 깔끔한 레이아웃',
+      'Wide Format': '와이드 포맷의 전문적인 스타일',
+      'Profile Focus': '프로필 중심의 모던한 디자인',
+      'Rating Distribution': '평점 분석이 포함된 데이터 중심',
+      'Quote Highlight': '인용구가 강조된 와이드 스타일',
+      'Profile Card': '프로필 카드 형태의 우아한 디자인',
+      'Badge Showcase': '배지와 성과를 보여주는 프리미엄 스타일',
+      'Social Style': '소셜 미디어에 최적화된 스퀘어 포맷'
+    };
+    return descriptions[name] || '전문적인 리뷰 카드 템플릿';
+  }
+
+  function getTemplateCategory(tags: string[]): string {
+    if (tags.includes('minimal') || tags.includes('clean')) return '미니멀';
+    if (tags.includes('professional') || tags.includes('elegant')) return '전문적';
+    if (tags.includes('social') || tags.includes('interactive')) return '소셜';
+    if (tags.includes('wide') || tags.includes('landscape')) return '와이드';
+    if (tags.includes('profile') || tags.includes('image')) return '프로필';
+    if (tags.includes('rating') || tags.includes('data')) return '데이터';
+    if (tags.includes('badges') || tags.includes('premium')) return '프리미엄';
+    return '일반';
+  }
 
   return (
     <section aria-labelledby="templates-title" className="py-20 bg-brand-ivory">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-6xl">
         <div className="text-center mb-16">
           <Badge variant="secondary" className="bg-brand-charcoal/10 text-brand-charcoal mb-4">
-            Templates
+            템플릿
           </Badge>
           <h2 id="templates-title" className="text-3xl sm:text-4xl lg:text-5xl font-bold text-brand-black mb-6">
-            Choose from 9 Professional
+            9개의 전문적인
             <br />
-            <span className="text-brand-charcoal">Testimonial Templates</span>
+            <span className="text-brand-charcoal">증언 템플릿 중에서 선택하세요</span>
           </h2>
           <p className="text-lg sm:text-xl text-brand-charcoal max-w-3xl mx-auto">
-            Each template is carefully designed to showcase customer testimonials effectively. 
-            All templates are fully customizable and optimized for different use cases.
+            각 템플릿은 고객 증언을 효과적으로 보여주도록 신중하게 디자인되었습니다. 
+            모든 템플릿은 완전히 커스터마이징 가능하며 다양한 사용 사례에 최적화되어 있습니다.
           </p>
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
-          {templates.map((template) => (
-            <Card key={template.id} className="group hover:shadow-xl transition-all duration-300 border-brand-charcoal/20 overflow-hidden">
-              <div className="relative">
-                <Image
-                  src={template.image}
-                  alt={template.name}
-                  width={300}
-                  height={200}
-                  className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300"
-                />
-                <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors duration-300 flex items-center justify-center">
-                  <Button
-                    size="sm"
-                    className="opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-brand-black hover:bg-brand-black/90 text-brand-ivory"
-                  >
-                    <Eye className="w-4 h-4 mr-2" />
-                    Preview
-                  </Button>
+          {templates.map((template) => {
+            const templateMeta = templateMetas.find(t => t.id === template.id);
+            return (
+              <Card key={template.id} className="group hover:shadow-xl transition-all duration-300 border-brand-charcoal/20 overflow-hidden">
+                <div className="relative">
+                  <div className="w-full h-48 bg-white flex items-center justify-center p-4 group-hover:scale-105 transition-transform duration-300">
+                    {templateMeta && (
+                      <div className={`w-full h-full ${template.id === 'template-5' ? 'scale-[0.8]' : 'scale-75'}`}>
+                        <TemplateRenderer 
+                          templateId={templateMeta.id} 
+                          data={templateMeta.defaultData} 
+                        />
+                      </div>
+                    )}
+                  </div>
+                  <Badge className="absolute top-3 left-3 bg-brand-black text-brand-ivory">
+                    {template.category}
+                  </Badge>
                 </div>
-                <Badge className="absolute top-3 left-3 bg-brand-black text-brand-ivory">
-                  {template.category}
-                </Badge>
-              </div>
-              
-              <CardContent className="p-6">
-                <h3 className="text-xl font-semibold text-brand-black mb-2">
-                  {template.name}
-                </h3>
-                <p className="text-brand-charcoal mb-4">
-                  {template.description}
-                </p>
                 
-                <div className="flex flex-wrap gap-2 mb-4">
-                  {template.features.map((feature, index) => (
-                    <Badge
-                      key={index}
-                      variant="outline"
-                      className="text-xs border-brand-charcoal/30 text-brand-charcoal"
-                    >
-                      {feature}
-                    </Badge>
-                  ))}
-                </div>
-              </CardContent>
-            </Card>
-          ))}
+                <CardContent className="p-6 bg-white">
+                  <h3 className="text-xl font-semibold text-brand-black mb-2">
+                    {template.name}
+                  </h3>
+                  <p className="text-brand-charcoal mb-4">
+                    {template.description}
+                  </p>
+                  
+                  <div className="flex flex-wrap gap-2 mb-4">
+                    {template.features.map((feature, index) => (
+                      <Badge
+                        key={index}
+                        variant="outline"
+                        className="text-xs border-brand-charcoal/30 text-brand-charcoal"
+                      >
+                        {feature}
+                      </Badge>
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
+            );
+          })}
         </div>
 
-        {/* Bottom CTA */}
-        <div className="text-center">
-          <div className="bg-white rounded-2xl p-8 border border-brand-charcoal/20 max-w-3xl mx-auto">
-            <h3 className="text-2xl sm:text-3xl font-bold text-brand-black mb-4">
-              Ready to see all templates?
-            </h3>
-            <p className="text-lg text-brand-charcoal mb-8">
-              Explore our complete template gallery and find the perfect design for your testimonials.
-            </p>
-            <Button asChild size="lg" className="bg-brand-black hover:bg-brand-black/90 text-brand-ivory h-12 px-8 text-base">
-              <Link href="/templates">
-                View All Templates
-                <ArrowRight className="w-5 h-5 ml-2" />
-              </Link>
-            </Button>
-          </div>
-        </div>
       </div>
     </section>
   );
