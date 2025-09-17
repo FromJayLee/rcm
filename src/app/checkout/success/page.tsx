@@ -64,17 +64,17 @@ export default function CheckoutSuccessPage() {
           <div className="space-y-3">
             <Button
               onClick={() => router.push('/app/editor')}
-              className="w-full bg-black hover:bg-[#111111] text-white transition-all duration-200"
+              className="w-full bg-black hover:bg-[#111111] text-white transition-all duration-200 hover:scale-[1.02] hover:shadow-lg active:scale-[0.98] group"
             >
               카드 생성하기
-              <ArrowRight className="w-4 h-4 ml-2" />
+              <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform duration-200" />
             </Button>
             <Button
-              variant="outline"
               onClick={() => router.push('/dashboard')}
-              className="w-full border-[#222222] text-[#222222] hover:bg-[#D9D7CF] transition-all duration-200"
+              className="w-full bg-black hover:bg-[#111111] text-white transition-all duration-200 hover:scale-[1.02] hover:shadow-lg active:scale-[0.98] group"
             >
               Dashboard로 이동
+              <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform duration-200" />
             </Button>
           </div>
         </CardContent>
