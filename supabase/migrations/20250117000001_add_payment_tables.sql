@@ -1,5 +1,23 @@
--- Add token_balance column to profiles table
-ALTER TABLE public.profiles ADD COLUMN IF NOT EXISTS token_balance integer NOT NULL DEFAULT 0;
+-- Create profiles table if it doesn't exist
+CREATE TABLE IF NOT EXISTS public.profiles (
+  id uuid PRIMARY KEY REFERENCES auth.users(id) ON DELETE CASCADE,
+  email text,
+  token_balance integer NOT NULL DEFAULT 3,
+  created_at timestamptz NOT NULL DEFAULT now(),
+  updated_at timestamptz NOT NULL DEFAULT now()
+);
+
+-- Add token_balance column to profiles table (if it already exists)
+DO $$ 
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1 FROM information_schema.columns 
+    WHERE table_name = 'profiles' 
+    AND column_name = 'token_balance'
+  ) THEN
+    ALTER TABLE public.profiles ADD COLUMN token_balance integer NOT NULL DEFAULT 3;
+  END IF;
+END $$;
 
 -- Create purchases table
 CREATE TABLE IF NOT EXISTS public.purchases (
@@ -67,6 +85,28 @@ BEGIN
   WHERE id = p_user_id;
 END; 
 $$;
+
+-- Enable RLS on profiles table
+ALTER TABLE public.profiles ENABLE ROW LEVEL SECURITY;
+
+-- Create RLS policies for profiles table
+DO $$ 
+BEGIN
+  -- Drop existing policies if they exist
+  DROP POLICY IF EXISTS "Users can view own profile" ON public.profiles;
+  DROP POLICY IF EXISTS "Users can insert own profile" ON public.profiles;
+  DROP POLICY IF EXISTS "Users can update own profile" ON public.profiles;
+  
+  -- Create new policies
+  CREATE POLICY "Users can view own profile" ON public.profiles
+    FOR SELECT USING (auth.uid() = id);
+
+  CREATE POLICY "Users can insert own profile" ON public.profiles
+    FOR INSERT WITH CHECK (auth.uid() = id);
+
+  CREATE POLICY "Users can update own profile" ON public.profiles
+    FOR UPDATE USING (auth.uid() = id);
+END $$;
 
 -- Enable RLS on purchases table
 ALTER TABLE public.purchases ENABLE ROW LEVEL SECURITY;

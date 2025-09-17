@@ -1,244 +1,241 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { useMutation } from '@tanstack/react-query';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Check, Zap, Star, ArrowRight, CreditCard } from 'lucide-react';
-import { useToast } from '@/hooks/use-toast';
-import { useAuth } from '@/contexts/AuthContext';
+import { ArrowLeft, Coins, Check, Zap, Star, Crown } from 'lucide-react';
+import { supabase } from '@/lib/supabaseClient';
+import { useTokenBalance } from '@/hooks/useTokenBalance';
+import { Header } from '@/components/layout/header';
 
-interface TokenPack {
+interface User {
+  id: string;
+  email: string;
+  user_metadata: {
+    full_name?: string;
+    avatar_url?: string;
+  };
+}
+
+interface TokenPlan {
   id: string;
   name: string;
   tokens: number;
   price: number;
-  priceDisplay: string;
-  popular: boolean;
+  pricePerToken: number;
+  popular?: boolean;
+  icon: React.ReactNode;
   description: string;
+  features: string[];
+  note?: string;
 }
 
-const tokenPacks: TokenPack[] = [
+const tokenPlans: TokenPlan[] = [
   {
-    id: 'VARIANT_ID_STARTER',
-    name: '스타터',
-    tokens: 20,
-    price: 10,
-    priceDisplay: '$10',
-    popular: false,
-    description: '개인 프로젝트에 적합',
+    id: 'free',
+    name: 'Free',
+    tokens: 25,
+    price: 0,
+    pricePerToken: 0,
+    icon: <Coins className="w-6 h-6" />,
+    description: '무료로 시작하기',
+    features: ['9개의 전문적인 템플릿', 'PNG & JPG 형식'],
+    note: '무료 플랜의 내보내기에는 워터마크가 포함됩니다.'
   },
   {
-    id: 'VARIANT_ID_PRO',
-    name: '프로페셔널',
-    tokens: 100,
-    price: 40,
-    priceDisplay: '$40',
+    id: 'basic',
+    name: 'Basic',
+    tokens: 50,
+    price: 9,
+    pricePerToken: 0.18,
     popular: true,
+    icon: <Zap className="w-6 h-6" />,
     description: '소규모 팀에 최적',
+    features: ['9개의 전문적인 템플릿', '워터마크 없음', '상업적 사용 가능', 'PNG & JPG 형식']
   },
   {
-    id: 'VARIANT_ID_BUSINESS',
-    name: '비즈니스',
-    tokens: 300,
-    price: 100,
-    priceDisplay: '$100',
-    popular: false,
-    description: '대규모 마케팅 캠페인',
-  },
+    id: 'premium',
+    name: 'Premium',
+    tokens: 110,
+    price: 19,
+    pricePerToken: 0.17,
+    icon: <Crown className="w-6 h-6" />,
+    description: '대규모 팀과 기업용',
+    features: ['9개의 전문적인 템플릿', '워터마크 없음', '상업적 사용 가능', 'PNG & JPG 형식', '이미지 배경 설정 가능']
+  }
 ];
 
 export default function CheckoutPage() {
-  const [selectedPack, setSelectedPack] = useState<string | null>(null);
-  const { user } = useAuth();
+  const [user, setUser] = useState<User | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [selectedPlan, setSelectedPlan] = useState<string>('basic');
+  const [isProcessing, setIsProcessing] = useState(false);
   const router = useRouter();
-  const { toast } = useToast();
+  const { tokenBalance, refetchTokenBalance } = useTokenBalance();
 
-  const checkoutMutation = useMutation({
-    mutationFn: async (variantId: string) => {
-      const response = await fetch('/api/lemonsqueezy/checkout', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ variantId }),
-      });
-
-      if (!response.ok) {
-        const error = await response.json();
-        throw new Error(error.error || 'Failed to create checkout');
+  useEffect(() => {
+    const getUser = async () => {
+      try {
+        const { data: { user } } = await supabase.auth.getUser();
+        if (user) {
+          setUser(user as User);
+        } else {
+          router.push('/auth/login');
+        }
+      } catch (error) {
+        console.error('Error getting user:', error);
+        router.push('/auth/login');
+      } finally {
+        setLoading(false);
       }
+    };
 
-      const data = await response.json();
-      return data.url;
-    },
-    onSuccess: (url) => {
-      window.location.href = url;
-    },
-    onError: (error) => {
-      toast({
-        title: '결제 오류',
-        description: error.message,
-        variant: 'destructive',
-      });
-    },
-  });
+    getUser();
+  }, [router]);
 
-  const handlePurchase = () => {
-    if (!selectedPack) {
-      toast({
-        title: '옵션 선택 필요',
-        description: '구매할 토큰 팩을 선택해주세요.',
-        variant: 'destructive',
-      });
-      return;
+  const handlePurchase = async (plan: TokenPlan) => {
+    setIsProcessing(true);
+    try {
+      // TODO: 실제 결제 처리 로직
+      console.log('Purchasing plan:', plan);
+      
+      // 임시로 토큰 잔액 업데이트 (실제로는 결제 완료 후 처리)
+      await new Promise(resolve => setTimeout(resolve, 2000)); // 2초 대기
+      
+      // 결제 성공 시 토큰 잔액 새로고침
+      refetchTokenBalance();
+      
+      // 성공 페이지로 이동
+      router.push('/checkout/success');
+    } catch (error) {
+      console.error('Purchase error:', error);
+      // 에러 처리
+    } finally {
+      setIsProcessing(false);
     }
-
-    checkoutMutation.mutate(selectedPack);
   };
 
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-[#F8F8F4] flex items-center justify-center">
+        <div className="animate-pulse bg-[#D9D7CF] h-8 w-8 rounded-full"></div>
+      </div>
+    );
+  }
+
   if (!user) {
-    router.push('/auth/login?next=/checkout');
     return null;
   }
 
   return (
-    <div className="min-h-screen bg-[#F8F8F4] py-12">
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-6xl">
-        <div className="text-center mb-12">
-          <h1 className="text-4xl lg:text-5xl font-bold text-black mb-4">
-            토큰 구매
-          </h1>
-          <p className="text-lg text-[#222222] max-w-2xl mx-auto">
-            증언 카드를 내보낼 때마다 1토큰이 소모됩니다. 
-            원하는 만큼 구매하여 언제든지 사용하세요.
-          </p>
+    <div className="min-h-screen bg-[#F8F8F4]">
+      <Header variant="app" />
+      <div className="p-4">
+        <div className="max-w-5xl mx-auto">
+        {/* Page Title */}
+        <div className="mb-8 ml-16">
+          <h1 className="text-3xl font-bold text-black">토큰 구입</h1>
+          <p className="text-[#222222]">더 많은 증언카드를 생성하세요</p>
         </div>
 
+        {/* Pricing Cards */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
-          {tokenPacks.map((pack) => (
-            <Card
-              key={pack.id}
-              className={`relative border-2 transition-all duration-300 hover:shadow-xl cursor-pointer ${
-                selectedPack === pack.id
-                  ? 'border-black shadow-lg scale-105'
-                  : pack.popular
-                  ? 'border-[#222222] shadow-lg hover:border-black hover:bg-black hover:text-white'
-                  : 'border-[#222222]/20 hover:border-black hover:bg-black hover:text-white'
+          {tokenPlans.map((plan) => (
+            <Card 
+              key={plan.id} 
+              className={`relative border-2 transition-all duration-300 hover:shadow-xl bg-[#F8F8F4] flex flex-col ${
+                plan.popular 
+                  ? 'border-black shadow-lg scale-105' 
+                  : 'border-[#222222]/20 hover:border-[#222222]/40'
               }`}
-              onClick={() => setSelectedPack(pack.id)}
             >
-              {pack.popular && (
+              {plan.popular && (
                 <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
                   <Badge className="bg-black text-white px-4 py-1">
                     <Star className="w-3 h-3 mr-1" />
-                    인기
+                    추천
                   </Badge>
                 </div>
               )}
               
               <CardHeader className="text-center pb-4">
                 <CardTitle className="text-2xl font-bold text-black">
-                  {pack.name}
+                  {plan.name}
                 </CardTitle>
                 <div className="mt-4">
                   <div className="flex items-baseline justify-center">
-                    <span className="text-5xl font-bold text-black">
-                      {pack.priceDisplay}
+                    <span className="text-5xl font-bold text-black">${plan.price}</span>
+                    <span className="text-[#222222] ml-2">
+                      {plan.price === 0 ? '무료' : '일회성'}
                     </span>
-                    <span className="text-[#222222] ml-2">일회성</span>
                   </div>
                   <p className="text-[#222222] mt-2">
-                    {pack.tokens}개 증언 카드
-                  </p>
-                  <p className="text-sm text-[#222222] mt-1">
-                    {pack.description}
+                    {plan.tokens}개 토큰 제공
                   </p>
                 </div>
               </CardHeader>
               
-              <CardContent className="pt-0">
-                <div className="space-y-3 mb-8">
-                  <div className="flex items-center space-x-3">
-                    <Check className="w-5 h-5 text-green-600 flex-shrink-0" />
-                    <span className="text-[#222222]">9개 전문 템플릿</span>
-                  </div>
-                  <div className="flex items-center space-x-3">
-                    <Check className="w-5 h-5 text-green-600 flex-shrink-0" />
-                    <span className="text-[#222222]">모든 해상도 지원</span>
-                  </div>
-                  <div className="flex items-center space-x-3">
-                    <Check className="w-5 h-5 text-green-600 flex-shrink-0" />
-                    <span className="text-[#222222]">PNG & JPG 형식</span>
-                  </div>
-                  <div className="flex items-center space-x-3">
-                    <Check className="w-5 h-5 text-green-600 flex-shrink-0" />
-                    <span className="text-[#222222]">워터마크 없음</span>
-                  </div>
-                  <div className="flex items-center space-x-3">
-                    <Check className="w-5 h-5 text-green-600 flex-shrink-0" />
-                    <span className="text-[#222222]">상업적 사용 가능</span>
-                  </div>
+              <CardContent className="pt-0 flex flex-col flex-grow">
+                <div className="space-y-4 mb-6">
+                  {plan.features.map((feature, index) => (
+                    <div key={index} className="flex items-center space-x-3">
+                      <Check className="w-5 h-5 text-green-600 flex-shrink-0" />
+                      <span className="text-[#222222]">{feature}</span>
+                    </div>
+                  ))}
                 </div>
                 
-                <div className="text-center text-sm text-[#222222] mb-4">
-                  ${(pack.price / pack.tokens).toFixed(2)} per testimonial
-                </div>
+                {plan.note && (
+                  <div className="mb-6">
+                    <p className="text-sm text-[#222222]/70 text-center">
+                      {plan.note}
+                    </p>
+                  </div>
+                )}
               </CardContent>
+              
+              <div className="p-6 pt-0 mt-auto">
+                <Button
+                  onClick={() => handlePurchase(plan)}
+                  disabled={isProcessing}
+                  className={`w-full ${
+                    plan.popular
+                      ? 'bg-black hover:bg-white hover:text-black hover:border-black border-2 border-black text-white'
+                      : 'bg-[#222222] hover:bg-white hover:text-[#222222] hover:border-[#222222] border-2 border-[#222222] text-white'
+                  } transition-all duration-300`}
+                  size="lg"
+                >
+                  {isProcessing ? '처리 중...' : (
+                    plan.id === 'free' ? '무료로 시작하기' : plan.name
+                  )}
+                </Button>
+              </div>
             </Card>
           ))}
         </div>
 
-        {/* Purchase Button */}
-        <div className="mt-12 text-center">
-            <Button
-              onClick={handlePurchase}
-              disabled={!selectedPack || checkoutMutation.isPending}
-              size="lg"
-              className="bg-black hover:bg-white hover:text-black hover:border-black border-2 border-black text-white px-8 py-4 text-lg transition-all duration-300"
-            >
-            {checkoutMutation.isPending ? (
-              <>
-                <div className="w-4 h-4 mr-2 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                처리 중...
-              </>
-            ) : (
-              <>
-                <CreditCard className="w-5 h-5 mr-2" />
-                {selectedPack ? '구매하기' : '토큰 팩을 선택하세요'}
-                <ArrowRight className="w-5 h-5 ml-2" />
-              </>
-            )}
-          </Button>
-        </div>
-
-        {/* Additional Info */}
-        <div className="mt-12 text-center">
-          <div className="bg-white rounded-2xl p-8 border border-[#222222]/20 max-w-2xl mx-auto">
-            <h3 className="text-2xl font-bold text-black mb-4">
-              안전한 결제
-            </h3>
-            <p className="text-[#222222] mb-6">
-              Lemonsqueezy를 통해 안전하게 결제하세요. 
-              모든 결제는 암호화되어 처리됩니다.
-            </p>
-            <div className="flex items-center justify-center space-x-6 text-sm text-[#222222]">
-              <div className="flex items-center space-x-2">
-                <Check className="w-4 h-4 text-green-600" />
-                <span>SSL 암호화</span>
+        {/* Purchase History */}
+        <div className="mt-16 max-w-5xl mx-auto">
+          <Card className="bg-[#F8F8F4] border-[#D9D7CF]">
+          <CardHeader>
+            <CardTitle className="text-xl font-semibold text-black">결제 내역</CardTitle>
+            <CardDescription className="text-[#222222]">
+              최근 구매한 토큰 내역을 확인하세요
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="text-center py-12">
+              <div className="w-16 h-16 bg-[#D9D7CF] rounded-full flex items-center justify-center mx-auto mb-4">
+                <Coins className="w-8 h-8 text-[#222222]" />
               </div>
-              <div className="flex items-center space-x-2">
-                <Check className="w-4 h-4 text-green-600" />
-                <span>PCI 준수</span>
-              </div>
-              <div className="flex items-center space-x-2">
-                <Check className="w-4 h-4 text-green-600" />
-                <span>환불 보장</span>
-              </div>
+              <h3 className="text-lg font-semibold text-black mb-2">아직 결제 내역이 없습니다</h3>
+              <p className="text-[#222222]/70">첫 번째 토큰을 구매해보세요!</p>
             </div>
-          </div>
+          </CardContent>
+          </Card>
+        </div>
         </div>
       </div>
     </div>

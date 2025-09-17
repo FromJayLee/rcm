@@ -2,22 +2,15 @@
 
 import { useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
 import Link from 'next/link';
-import { Eye, EyeOff, Github, Mail } from 'lucide-react';
+import { Github, Mail } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Separator } from '@/components/ui/separator';
 import { useToast } from '@/hooks/use-toast';
-import { loginSchema, type LoginFormData } from '@/lib/auth/schemas';
-import { getBrowserSupabase } from '@/lib/supabase/client';
+import { supabase } from '@/lib/supabaseClient';
 
 export default function LoginPage() {
-  const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -25,84 +18,66 @@ export default function LoginPage() {
 
   const next = searchParams.get('next') || '/app/editor';
 
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<LoginFormData>({
-    resolver: zodResolver(loginSchema),
-  });
-
-  const onSubmit = async (data: LoginFormData) => {
+  const loginWithGoogle = async () => {
     setIsLoading(true);
     try {
-      const supabase = getBrowserSupabase();
-      const { error } = await supabase.auth.signInWithPassword({
-        email: data.email,
-        password: data.password,
+      // Supabase OAuth 사용 (원래 방식)
+      const { data, error } = await supabase.auth.signInWithOAuth({
+        provider: 'google',
+        options: { 
+          redirectTo: `${window.location.origin}/auth/callback`,
+          queryParams: {
+            access_type: 'offline',
+            prompt: 'consent',
+          }
+        }
       });
-
+      
       if (error) {
+        console.error('Google OAuth error:', error);
         toast({
-          title: '로그인 실패',
-          description: error.message,
-          variant: 'destructive',
-        });
-      } else {
-        toast({
-          title: '로그인 성공',
-          description: '에디터로 이동합니다',
-        });
-        router.push(next);
-      }
-    } catch (error) {
-      toast({
-        title: '오류 발생',
-        description: '로그인 중 오류가 발생했습니다',
-        variant: 'destructive',
-      });
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const handleOAuth = async (provider: 'google' | 'github') => {
-    setIsLoading(true);
-    try {
-      const supabase = getBrowserSupabase();
-      const { error } = await supabase.auth.signInWithOAuth({
-        provider,
-        options: {
-          redirectTo: `${window.location.origin}/auth/callback?next=${encodeURIComponent(next)}`,
-        },
-      });
-
-      if (error) {
-        toast({
-          title: 'OAuth 로그인 실패',
-          description: error.message,
+          title: '오류 발생',
+          description: 'Google 로그인 중 오류가 발생했습니다',
           variant: 'destructive',
         });
         setIsLoading(false);
       }
     } catch (error) {
+      console.error('Google OAuth exception:', error);
       toast({
         title: '오류 발생',
-        description: 'OAuth 로그인 중 오류가 발생했습니다',
+        description: 'Google 로그인 중 오류가 발생했습니다',
         variant: 'destructive',
       });
       setIsLoading(false);
     }
   };
 
-  const continueAsGuest = () => {
-    document.cookie = 'guest=true; path=/; max-age=86400';
-    router.push('/app/editor');
+  const loginWithGithub = async () => {
+    setIsLoading(true);
+    try {
+      // 직접 OAuth URL 생성
+      const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+      const redirectTo = encodeURIComponent(`${window.location.origin}/auth/callback`);
+      const oauthUrl = `${supabaseUrl}/auth/v1/authorize?provider=github&redirect_to=${redirectTo}`;
+      
+      console.log('Direct OAuth URL:', oauthUrl);
+      window.location.href = oauthUrl;
+    } catch (error) {
+      console.error('GitHub OAuth error:', error);
+      toast({
+        title: '오류 발생',
+        description: 'GitHub 로그인 중 오류가 발생했습니다',
+        variant: 'destructive',
+      });
+      setIsLoading(false);
+    }
   };
+
 
   return (
     <div className="min-h-screen bg-[#F8F8F4] flex items-center justify-center p-4">
-      <Card className="w-full max-w-md">
+      <Card className="w-full max-w-md bg-[#F8F8F4] border-[#D9D7CF]">
         <CardHeader className="text-center">
           <CardTitle className="text-2xl font-semibold text-black">
             로그인
@@ -116,98 +91,21 @@ export default function LoginPage() {
           <div className="space-y-3">
             <Button
               type="button"
-              variant="outline"
-              className="w-full border-[#222222] text-[#222222] hover:bg-[#222222] hover:text-white transition-all duration-300"
-              onClick={() => handleOAuth('google')}
+              className="w-full bg-black hover:bg-[#111111] text-white transition-all duration-200"
+              onClick={loginWithGoogle}
               disabled={isLoading}
             >
               <Mail className="w-4 h-4 mr-2" />
-              Google로 계속하기
+              구글로 로그인하기
             </Button>
             <Button
               type="button"
-              variant="outline"
-              className="w-full border-[#222222] text-[#222222] hover:bg-[#222222] hover:text-white transition-all duration-300"
-              onClick={() => handleOAuth('github')}
+              className="w-full bg-black hover:bg-[#111111] text-white transition-all duration-200"
+              onClick={loginWithGithub}
               disabled={isLoading}
             >
               <Github className="w-4 h-4 mr-2" />
-              GitHub로 계속하기
-            </Button>
-          </div>
-
-          <div className="relative">
-            <div className="absolute inset-0 flex items-center">
-              <Separator className="w-full" />
-            </div>
-            <div className="relative flex justify-center text-xs uppercase">
-              <span className="bg-white px-2 text-[#222222]">또는</span>
-            </div>
-          </div>
-
-          {/* Email/Password Form */}
-          <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-            <div className="space-y-2">
-              <Label htmlFor="email">이메일</Label>
-              <Input
-                id="email"
-                type="email"
-                placeholder="your@email.com"
-                {...register('email')}
-                className="bg-[#D9D7CF] border-[#222222] focus:border-black"
-              />
-              {errors.email && (
-                <p className="text-sm text-red-600">{errors.email.message}</p>
-              )}
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="password">비밀번호</Label>
-              <div className="relative">
-                <Input
-                  id="password"
-                  type={showPassword ? 'text' : 'password'}
-                  placeholder="비밀번호를 입력하세요"
-                  {...register('password')}
-                  className="bg-[#D9D7CF] border-[#222222] focus:border-black pr-10"
-                />
-                <Button
-                  type="button"
-                  variant="ghost"
-                  size="sm"
-                  className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
-                  onClick={() => setShowPassword(!showPassword)}
-                >
-                  {showPassword ? (
-                    <EyeOff className="h-4 w-4 text-[#222222]" />
-                  ) : (
-                    <Eye className="h-4 w-4 text-[#222222]" />
-                  )}
-                </Button>
-              </div>
-              {errors.password && (
-                <p className="text-sm text-red-600">{errors.password.message}</p>
-              )}
-            </div>
-
-            <Button
-              type="submit"
-              className="w-full bg-black hover:bg-white hover:text-black hover:border-black border-2 border-black text-white transition-all duration-300"
-              disabled={isLoading}
-            >
-              {isLoading ? '로그인 중...' : '로그인'}
-            </Button>
-          </form>
-
-          {/* Guest Mode */}
-          <div className="text-center">
-            <Button
-              type="button"
-              variant="ghost"
-              onClick={continueAsGuest}
-              className="text-[#222222] hover:text-black hover:bg-[#222222]/10 transition-all duration-300"
-            >
-              게스트로 계속하기
+              깃허브로 로그인하기
             </Button>
           </div>
 

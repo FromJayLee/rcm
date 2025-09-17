@@ -1,7 +1,7 @@
 'use client';
 
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { getBrowserSupabase } from '@/lib/supabase/client';
+import { supabase } from '@/lib/supabaseClient';
 import { useAuth } from '@/contexts/AuthContext';
 
 export function useTokenBalance() {
@@ -13,7 +13,7 @@ export function useTokenBalance() {
     queryFn: async () => {
       if (!user) return 0;
       
-      const supabase = getBrowserSupabase();
+      // First, try to get existing profile
       const { data, error } = await supabase
         .from('profiles')
         .select('token_balance')
@@ -21,7 +21,39 @@ export function useTokenBalance() {
         .single();
 
       if (error) {
-        console.error('Error fetching token balance:', error);
+        // If profile doesn't exist, create one
+        if (error.code === 'PGRST116') {
+          console.log('Profile not found, creating new profile for user:', user.id);
+          
+          const { data: newProfile, error: createError } = await supabase
+            .from('profiles')
+        .insert({
+          id: user.id,
+          email: user.email,
+          token_balance: 25 // Default free tokens for new users
+        })
+            .select('token_balance')
+            .single();
+
+          if (createError) {
+            console.error('Error creating profile:', {
+              message: createError.message,
+              details: createError.details,
+              hint: createError.hint,
+              code: createError.code
+            });
+            return 0;
+          }
+
+          return newProfile?.token_balance || 25;
+        }
+
+        console.error('Error fetching token balance:', {
+          message: error.message,
+          details: error.details,
+          hint: error.hint,
+          code: error.code
+        });
         return 0;
       }
 
