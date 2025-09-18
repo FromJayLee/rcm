@@ -42,7 +42,9 @@ const initialState: EditorState = {
     quote: "This product has completely transformed our workflow. Highly recommended!",
     authorName: "Alex Chen",
     authorRole: "Product Manager, TechFlow",
+    rating: 5,
     avatarUrl: null,
+    isAnonymous: false,
     theme: "light",
     // 새 필드들
     company: "TechFlow Inc.",

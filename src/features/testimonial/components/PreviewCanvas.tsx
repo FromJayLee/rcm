@@ -6,7 +6,8 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { useEditor } from '../context/EditorContext';
 import { Template1, Template2, Template3, Template4, Template5 } from './templates';
-import { TemplateRenderer, mapEditorStateToTemplateProps } from './templates/registry';
+import { TemplateRenderer } from './templates/registry';
+import { mapEditorStateToTemplateProps } from '../types';
 import { CANVAS_RATIO, CANVAS_CLASS } from '../constants';
 
 export function PreviewCanvas() {

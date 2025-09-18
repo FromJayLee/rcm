@@ -5,7 +5,7 @@ import { TemplateProps } from '../../types';
 import { DefaultAvatar } from '@/components/ui/default-avatar';
 
 export function Template1({ content, style }: TemplateProps) {
-  const { quote, authorName, authorRole, avatarUrl, company } = content;
+  const { quote, authorName, authorRole, avatarUrl } = content;
   const { mode } = style;
 
   return (
@@ -52,8 +52,8 @@ export function Template1({ content, style }: TemplateProps) {
             </div>
             <div className={`text-sm truncate max-w-[200px] ${
               mode === 'dark' ? 'text-ivory/70' : 'text-gray-600'
-            }`} title={[authorRole, company].filter(Boolean).join(', ')}>
-              {[authorRole, company].filter(Boolean).join(', ')}
+            }`} title={authorRole}>
+              {authorRole}
             </div>
           </div>
         </div>

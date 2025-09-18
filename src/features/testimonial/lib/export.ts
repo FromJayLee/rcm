@@ -52,17 +52,21 @@ export async function waitForImages(root: HTMLElement): Promise<void> {
   
   // img 태그와 CSS background-image 모두 로딩 대기
   const imagePromises = [
-    ...imgs.map(async (img) => {
+    ...imgs.map(async (img: HTMLImageElement) => {
       try {
-        if ('decode' in img) {
+        // decode 메서드가 있는 경우 (최신 브라우저)
+        if ('decode' in img && typeof img.decode === 'function') {
           await img.decode();
-        } else if (!img.complete) {
-          await new Promise<void>((resolve, reject) => {
-            img.onload = () => resolve();
-            img.onerror = () => resolve(); // 에러가 발생해도 계속 진행
-            // 타임아웃 설정
-            setTimeout(() => resolve(), 5000);
-          });
+        } else {
+          // img.complete가 false인 경우에만 로딩 대기
+          if (!img.complete) {
+            await new Promise<void>((resolve, reject) => {
+              img.onload = () => resolve();
+              img.onerror = () => resolve(); // 에러가 발생해도 계속 진행
+              // 타임아웃 설정
+              setTimeout(() => resolve(), 5000);
+            });
+          }
         }
       } catch (error) {
         console.warn('이미지 로딩 실패:', img.src, error);

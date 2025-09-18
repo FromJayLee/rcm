@@ -85,8 +85,7 @@ export function Template8({
             {/* 인증 배지 */}
             {verified && (
               <div className="flex items-center px-2 py-1 rounded-full"
-                style={{ gap: '4px' }}
-                style={{ backgroundColor: `${currentColors.accent}15` }}>
+                style={{ gap: '4px', backgroundColor: `${currentColors.accent}15` }}>
                 <Shield size={14} style={{ color: currentColors.accent }} />
                 <span 
                   className="text-xs font-medium"
@@ -143,8 +142,8 @@ export function Template8({
                   <div
                     key={index}
                     className="flex items-center px-2 py-1 rounded-full"
-                    style={{ gap: '4px' }}
                     style={{
+                      gap: '4px',
                       backgroundColor: `${currentColors.accent}15`,
                       border: `1px solid ${currentColors.accent}30`,
                     }}

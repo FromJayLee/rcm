@@ -18,6 +18,9 @@ export function Template3({ content, style }: TemplateProps) {
       secondary: '#6B7280',
       star: '#FCD34D', // bright yellow
       shadow: 'rgba(0, 0, 0, 0.1)',
+      border: '#E5E7EB',
+      background: '#F9FAFB',
+      accent: '#3B82F6',
     },
     dark: {
       canvas: '#0F1419',
@@ -27,6 +30,9 @@ export function Template3({ content, style }: TemplateProps) {
       secondary: '#9CA3AF',
       star: '#FCD34D',
       shadow: 'rgba(0, 0, 0, 0.3)',
+      border: '#374151',
+      background: '#1F2937',
+      accent: '#60A5FA',
     }
   };
 

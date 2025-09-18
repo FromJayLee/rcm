@@ -1,9 +1,85 @@
 import React from 'react';
-import { TemplateMeta, ExtendedTemplateProps } from '../../types';
+import { TemplateMeta, ExtendedTemplateProps, TemplateProps } from '../../types';
 import { 
   Template1, Template2, Template3, Template4, Template5,
   Template6, Template7, Template8, Template9 
 } from './index';
+
+// 기존 템플릿들을 ExtendedTemplateProps로 변환하는 래퍼
+const Template1Wrapper = (props: ExtendedTemplateProps) => {
+  const content = {
+    quote: props.quote,
+    authorName: props.author.name,
+    authorRole: props.author.role || '',
+    avatarUrl: props.author.avatarUrl || null,
+    rating: 5,
+    isAnonymous: false,
+  };
+  const style = {
+    mode: (props.dark ? 'dark' : 'light') as 'light' | 'dark',
+  };
+  return React.createElement(Template1, { content, style });
+};
+
+const Template2Wrapper = (props: ExtendedTemplateProps) => {
+  const content = {
+    quote: props.quote,
+    authorName: props.author.name,
+    authorRole: props.author.role || '',
+    avatarUrl: props.author.avatarUrl || null,
+    rating: 5,
+    isAnonymous: false,
+  };
+  const style = {
+    mode: (props.dark ? 'dark' : 'light') as 'light' | 'dark',
+  };
+  return React.createElement(Template2, { content, style });
+};
+
+const Template3Wrapper = (props: ExtendedTemplateProps) => {
+  const content = {
+    quote: props.quote,
+    authorName: props.author.name,
+    authorRole: props.author.role || '',
+    avatarUrl: props.author.avatarUrl || null,
+    rating: 5,
+    isAnonymous: false,
+  };
+  const style = {
+    mode: (props.dark ? 'dark' : 'light') as 'light' | 'dark',
+  };
+  return React.createElement(Template3, { content, style });
+};
+
+const Template4Wrapper = (props: ExtendedTemplateProps) => {
+  const content = {
+    quote: props.quote,
+    authorName: props.author.name,
+    authorRole: props.author.role || '',
+    avatarUrl: props.author.avatarUrl || null,
+    rating: 5,
+    isAnonymous: false,
+  };
+  const style = {
+    mode: (props.dark ? 'dark' : 'light') as 'light' | 'dark',
+  };
+  return React.createElement(Template4, { content, style });
+};
+
+const Template5Wrapper = (props: ExtendedTemplateProps) => {
+  const content = {
+    quote: props.quote,
+    authorName: props.author.name,
+    authorRole: props.author.role || '',
+    avatarUrl: props.author.avatarUrl || null,
+    rating: 5,
+    isAnonymous: false,
+  };
+  const style = {
+    mode: (props.dark ? 'dark' : 'light') as 'light' | 'dark',
+  };
+  return React.createElement(Template5, { content, style });
+};
 
 // 기본 데이터 정의 - 익명성이 보장되는 가상의 이름과 회사
 const defaultData1: ExtendedTemplateProps = {
@@ -137,35 +213,35 @@ export const templateRegistry: TemplateMeta[] = [
   {
     id: 'T1',
     name: 'Classic Center',
-    component: Template1,
+    component: Template1Wrapper,
     defaultData: defaultData1,
     tags: ['minimal', 'center', 'classic']
   },
   {
     id: 'T2',
     name: 'Left Aligned',
-    component: Template2,
+    component: Template2Wrapper,
     defaultData: defaultData2,
     tags: ['left', 'simple', 'clean']
   },
   {
     id: 'T3',
     name: 'Wide Format',
-    component: Template3,
+    component: Template3Wrapper,
     defaultData: defaultData3,
     tags: ['wide', 'landscape', 'professional']
   },
   {
     id: 'T4',
     name: 'Profile Focus',
-    component: Template4,
+    component: Template4Wrapper,
     defaultData: defaultData4,
     tags: ['profile', 'image', 'modern']
   },
   {
     id: 'T5',
     name: 'Rating Distribution',
-    component: Template5,
+    component: Template5Wrapper,
     defaultData: defaultData5,
     tags: ['rating', 'analytics', 'data']
   },

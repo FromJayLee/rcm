@@ -43,6 +43,10 @@ export function EditorPanel({ currentStep }: EditorPanelProps) {
     dispatch({ type: "SET_BACKGROUND", patch: { [field]: value } });
   };
 
+  const handleStyleChange = (field: keyof typeof state.content, value: any) => {
+    dispatch({ type: "SET_CONTENT", patch: { [field]: value } });
+  };
+
   return (
     <div className="h-full overflow-y-auto">
       <Tabs value={currentStep.toString()} className="h-full">
@@ -76,10 +80,10 @@ export function EditorPanel({ currentStep }: EditorPanelProps) {
                 {['T1', 'T2', 'T3', 'T4', 'T5'].map((template) => (
                   <Button
                     key={template}
-                    variant={cardConfig.templateId === template ? "default" : "outline"}
+                    variant={state.templateId === template ? "default" : "outline"}
                     size="sm"
                     className="h-16 text-xs"
-                    onClick={() => handleTemplateChange(template as CardConfig['templateId'])}
+                    onClick={() => handleTemplateChange(template as 'T1' | 'T2' | 'T3' | 'T4' | 'T5' | 'T6' | 'T7' | 'T8' | 'T9')}
                   >
                     {template}
                   </Button>
@@ -123,7 +127,7 @@ export function EditorPanel({ currentStep }: EditorPanelProps) {
                   id="quote"
                   placeholder="Enter testimonial quote..."
                   className="min-h-[100px] text-sm"
-                  value={cardConfig.content.quote}
+                  value={state.content.quote}
                   onChange={(e) => handleContentChange('quote', e.target.value)}
                 />
               </div>
@@ -137,7 +141,7 @@ export function EditorPanel({ currentStep }: EditorPanelProps) {
                   id="author"
                   placeholder="John Doe"
                   className="text-sm"
-                  value={cardConfig.content.authorName}
+                  value={state.content.authorName}
                   onChange={(e) => handleContentChange('authorName', e.target.value)}
                 />
               </div>
@@ -151,7 +155,7 @@ export function EditorPanel({ currentStep }: EditorPanelProps) {
                   id="role"
                   placeholder="CEO, TechStart"
                   className="text-sm"
-                  value={cardConfig.content.authorRole}
+                  value={state.content.authorRole}
                   onChange={(e) => handleContentChange('authorRole', e.target.value)}
                 />
               </div>
@@ -174,7 +178,7 @@ export function EditorPanel({ currentStep }: EditorPanelProps) {
                 </Label>
                 <Switch
                   id="anonymous"
-                  checked={cardConfig.content.isAnonymous}
+                  checked={state.content.isAnonymous}
                   onCheckedChange={(checked) => handleContentChange('isAnonymous', checked)}
                 />
               </div>
@@ -186,8 +190,8 @@ export function EditorPanel({ currentStep }: EditorPanelProps) {
                 </Label>
                 <Switch
                   id="mode"
-                  checked={cardConfig.style.mode === 'dark'}
-                  onCheckedChange={(checked) => handleStyleChange('mode', checked ? 'dark' : 'light')}
+                  checked={state.content.theme === 'dark'}
+                  onCheckedChange={(checked) => handleStyleChange('theme', checked ? 'dark' : 'light')}
                 />
               </div>
             </CardContent>
