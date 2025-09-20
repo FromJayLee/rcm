@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { supabase } from '@/lib/supabaseClient';
+import { createSupabaseBrowserClient } from '@/lib/supabase/client';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 
 export default function AuthCallback() {
@@ -37,6 +37,7 @@ export default function AuthCallback() {
             setStatus('세션 설정 중...');
             
             // access_token으로 세션 설정
+            const supabase = createSupabaseBrowserClient();
             const { data, error } = await supabase.auth.setSession({
               access_token: accessToken,
               refresh_token: refreshToken || '',
@@ -68,6 +69,7 @@ export default function AuthCallback() {
           if (code) {
             setStatus('코드 교환 중...');
             
+            const supabase = createSupabaseBrowserClient();
             const { data, error } = await supabase.auth.exchangeCodeForSession(code);
             
             console.log('Code exchange result:', { data, error });

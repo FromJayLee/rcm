@@ -8,7 +8,7 @@ import { Github, Mail } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { useToast } from '@/hooks/use-toast';
-import { supabase } from '@/lib/supabaseClient';
+import { createSupabaseBrowserClient } from '@/lib/supabase/client';
 
 export default function SignupPage() {
   const [isLoading, setIsLoading] = useState(false);
@@ -21,6 +21,7 @@ export default function SignupPage() {
   const signupWithGoogle = async () => {
     setIsLoading(true);
     try {
+      const supabase = createSupabaseBrowserClient();
       await supabase.auth.signInWithOAuth({
         provider: 'google',
         options: { 
@@ -40,6 +41,7 @@ export default function SignupPage() {
   const signupWithGithub = async () => {
     setIsLoading(true);
     try {
+      const supabase = createSupabaseBrowserClient();
       await supabase.auth.signInWithOAuth({
         provider: 'github',
         options: { 

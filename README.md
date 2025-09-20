@@ -55,7 +55,31 @@ yarn add -g @easynext/cli@latest
 pnpm add -g @easynext/cli@latest
 ```
 
-Supabase 설정
+## 환경변수 설정
+
+### Supabase 환경변수
+
+프로젝트를 실행하기 전에 다음 환경변수를 설정해야 합니다:
+
+#### 로컬 개발 환경 (.env.local)
+```bash
+# Supabase Configuration
+NEXT_PUBLIC_SUPABASE_URL=your_supabase_project_url
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
+SUPABASE_SERVICE_ROLE_KEY=your_supabase_service_role_key
+```
+
+#### Vercel 배포 환경
+1. Vercel 대시보드 → 프로젝트 선택 → Settings → Environment Variables
+2. 각 환경별로 (Development, Preview, Production) 설정
+3. `NEXT_PUBLIC_` 접두사가 있는 키는 브라우저에서 접근 가능
+4. 서비스 롤 키는 서버에서만 사용되며 브라우저에 노출되지 않음
+
+#### 환경변수 검증
+- 누락된 필수 환경변수가 있으면 빌드/런타임에서 명확한 오류 메시지 표시
+- 클라이언트/서버 경계를 준수하여 보안 유지
+
+### EasyNext Supabase 설정
 
 ```sh
 easynext supabase

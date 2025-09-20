@@ -8,7 +8,7 @@ import { Github, Mail } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { useToast } from '@/hooks/use-toast';
-import { supabase } from '@/lib/supabaseClient';
+import { createSupabaseBrowserClient } from '@/lib/supabase/client';
 
 export default function LoginPage() {
   const [isLoading, setIsLoading] = useState(false);
@@ -22,6 +22,7 @@ export default function LoginPage() {
     setIsLoading(true);
     try {
       // Supabase OAuth 사용 (원래 방식)
+      const supabase = createSupabaseBrowserClient();
       const { data, error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
         options: { 
@@ -56,13 +57,24 @@ export default function LoginPage() {
   const loginWithGithub = async () => {
     setIsLoading(true);
     try {
-      // 직접 OAuth URL 생성
-      const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-      const redirectTo = encodeURIComponent(`${window.location.origin}/auth/callback`);
-      const oauthUrl = `${supabaseUrl}/auth/v1/authorize?provider=github&redirect_to=${redirectTo}`;
+      // Supabase OAuth 사용
+      const supabase = createSupabaseBrowserClient();
+      const { data, error } = await supabase.auth.signInWithOAuth({
+        provider: 'github',
+        options: { 
+          redirectTo: `${window.location.origin}/auth/callback`
+        }
+      });
       
-      console.log('Direct OAuth URL:', oauthUrl);
-      window.location.href = oauthUrl;
+      if (error) {
+        console.error('GitHub OAuth error:', error);
+        toast({
+          title: '오류 발생',
+          description: 'GitHub 로그인 중 오류가 발생했습니다',
+          variant: 'destructive',
+        });
+        setIsLoading(false);
+      }
     } catch (error) {
       console.error('GitHub OAuth error:', error);
       toast({

@@ -14,7 +14,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { Badge } from '@/components/ui/badge';
 import { Coins, User, Settings, LogOut } from 'lucide-react';
-import { supabase } from '@/lib/supabaseClient';
+import { createSupabaseBrowserClient } from '@/lib/supabase/client';
 import { useTokenBalance } from '@/hooks/useTokenBalance';
 
 interface User {

@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { Coins, User, ArrowLeft, Plus, Download, Trash2, Eye } from 'lucide-react';
-import { supabase } from '@/lib/supabaseClient';
+import { createSupabaseBrowserClient } from '@/lib/supabase/client';
 import { useTokenBalance } from '@/hooks/useTokenBalance';
 import { Header } from '@/components/layout/header';
 
@@ -55,6 +55,7 @@ export default function DashboardPage() {
   useEffect(() => {
     const getUser = async () => {
       try {
+        const supabase = createSupabaseBrowserClient();
         const { data: { user } } = await supabase.auth.getUser();
         if (user) {
           setUser(user as User);
@@ -77,6 +78,7 @@ export default function DashboardPage() {
 
   const handleSignOut = async () => {
     try {
+      const supabase = createSupabaseBrowserClient();
       await supabase.auth.signOut();
       router.push('/');
     } catch (error) {

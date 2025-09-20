@@ -6,7 +6,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { ArrowLeft, Coins, Check, Zap, Star, Crown } from 'lucide-react';
-import { supabase } from '@/lib/supabaseClient';
+import { createSupabaseBrowserClient } from '@/lib/supabase/client';
 import { useTokenBalance } from '@/hooks/useTokenBalance';
 import { Header } from '@/components/layout/header';
 
@@ -78,6 +78,7 @@ export default function CheckoutPage() {
   useEffect(() => {
     const getUser = async () => {
       try {
+        const supabase = createSupabaseBrowserClient();
         const { data: { user } } = await supabase.auth.getUser();
         if (user) {
           setUser(user as User);

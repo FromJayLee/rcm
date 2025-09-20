@@ -1,7 +1,7 @@
 'use client';
 
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { supabase } from '@/lib/supabaseClient';
+import { createSupabaseBrowserClient } from '@/lib/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 
 export function useTokenBalance() {
@@ -12,6 +12,8 @@ export function useTokenBalance() {
     queryKey: ['tokenBalance', user?.id],
     queryFn: async () => {
       if (!user) return 0;
+      
+      const supabase = createSupabaseBrowserClient();
       
       // First, try to get existing profile
       const { data, error } = await supabase
