@@ -7,9 +7,21 @@ import { validateSupabaseEnv } from "../env";
  * @returns Supabase 브라우저 클라이언트
  */
 export function createSupabaseBrowserClient() {
-  const { url, anonKey } = validateSupabaseEnv(false);
-  
-  return createBrowserClient(url, anonKey);
+  try {
+    const { url, anonKey } = validateSupabaseEnv(false);
+    
+    // URL과 키가 유효한지 추가 검증
+    if (!url || url === 'https://placeholder.supabase.co' || !anonKey || anonKey === 'placeholder_anon_key') {
+      console.warn('[Supabase] Using placeholder values. Supabase features will not work properly.');
+      console.warn('[Supabase] Please set NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY in your environment variables.');
+    }
+    
+    return createBrowserClient(url, anonKey);
+  } catch (error) {
+    console.error('[Supabase] Failed to create browser client:', error);
+    // 환경변수 오류 시에도 기본 클라이언트 반환 (오류 방지)
+    return createBrowserClient('https://placeholder.supabase.co', 'placeholder_anon_key');
+  }
 }
 
 /**

@@ -36,6 +36,15 @@ export const requireEnv = (key: string): string => {
       }
     }
     
+    // 프로덕션 환경에서는 더 명확한 오류 메시지
+    if (process.env.NODE_ENV === 'production') {
+      console.error(`[Production Error] ${key} is required but not set in Vercel environment variables.`);
+      console.error('Please add this environment variable in Vercel dashboard:');
+      console.error(`- Go to Vercel Dashboard → Project → Settings → Environment Variables`);
+      console.error(`- Add ${key} with the correct value`);
+      console.error(`- Redeploy the project`);
+    }
+    
     throw new Error(
       `[EnvMissing] ${key} is required. ${hint} 설정 후 재배포하세요.`
     );
