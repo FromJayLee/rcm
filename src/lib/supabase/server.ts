@@ -2,15 +2,20 @@ import "server-only";
 
 import { createServerClient } from "@supabase/ssr";
 import { cookies } from "next/headers";
-import { validateSupabaseEnv } from "../env";
+import { getServerEnv } from "../env";
 
 /**
  * 서버 환경에서 사용할 Supabase 클라이언트 생성 (쿠키 기반)
  * Server Component, Server Actions에서 사용
- * @returns Supabase 서버 클라이언트 (쿠키 지원)
+ * @returns Supabase 서버 클라이언트 (쿠키 지원) 또는 null
  */
 export async function createSupabaseServerClient() {
-  const { url, anonKey } = validateSupabaseEnv(true);
+  const { url, anonKey } = getServerEnv();
+  
+  if (!url || !anonKey) {
+    return null;
+  }
+  
   const cookieStore = await cookies();
 
   return createServerClient(url, anonKey, {
@@ -36,16 +41,13 @@ export async function createSupabaseServerClient() {
 /**
  * 서버 환경에서 사용할 순수 Supabase 클라이언트 생성 (쿠키 없음)
  * 서비스 롤 키를 사용하여 관리자 권한으로 작업할 때 사용
- * @returns Supabase 서버 클라이언트 (쿠키 없음, 서비스 롤 키 사용)
+ * @returns Supabase 서버 클라이언트 (쿠키 없음, 서비스 롤 키 사용) 또는 null
  */
 export async function createSupabaseServiceClient() {
-  const { url, serviceRoleKey } = validateSupabaseEnv(true);
+  const { url, serviceRoleKey } = getServerEnv();
   
-  if (!serviceRoleKey) {
-    throw new Error(
-      '[SupabaseError] SUPABASE_SERVICE_ROLE_KEY is required for service client. ' +
-      'Set SUPABASE_SERVICE_ROLE_KEY in your environment variables.'
-    );
+  if (!url || !serviceRoleKey) {
+    return null;
   }
 
   return createServerClient(url, serviceRoleKey, {

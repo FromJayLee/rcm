@@ -36,6 +36,12 @@ export function TopBar() {
     const getUser = async () => {
       try {
         const supabase = createSupabaseBrowserClient();
+        if (!supabase) {
+          console.warn('[TopBar] Supabase client not available. Environment variables may be missing.');
+          setLoading(false);
+          return;
+        }
+        
         const { data: { user } } = await supabase.auth.getUser();
         if (user) {
           setUser(user as User);
@@ -51,20 +57,27 @@ export function TopBar() {
 
     // Listen for auth changes
     const supabase = createSupabaseBrowserClient();
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
-      if (session?.user) {
-        setUser(session.user as User);
-      } else {
-        setUser(null);
-      }
-    });
+    if (supabase) {
+      const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+        if (session?.user) {
+          setUser(session.user as User);
+        } else {
+          setUser(null);
+        }
+      });
 
-    return () => subscription.unsubscribe();
+      return () => subscription.unsubscribe();
+    }
   }, []);
 
   const handleSignOut = async () => {
     try {
       const supabase = createSupabaseBrowserClient();
+      if (!supabase) {
+        console.warn('[TopBar] Supabase client not available for sign out.');
+        return;
+      }
+      
       await supabase.auth.signOut();
       router.push('/');
     } catch (error) {

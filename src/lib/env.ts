@@ -1,77 +1,48 @@
 /**
  * 환경변수 검증 및 관리 유틸리티
- * 클라이언트/서버 경계를 명확히 하고 누락 시 명확한 오류 메시지 제공
+ * 지연 가드 방식으로 모듈 로드 시 throw하지 않음
  */
 
 /**
- * 환경변수가 존재하고 비어있지 않은지 검증
- * @param key 환경변수 키
- * @returns 환경변수 값
- * @throws Error 환경변수가 누락되거나 비어있는 경우
+ * 공개 환경변수 읽기 함수 (모듈 로드 시 throw하지 않음)
+ * @returns 공개 환경변수 객체
  */
-export const requireEnv = (key: string): string => {
-  const value = process.env[key];
-  
-  if (!value || value.trim() === '') {
-    const isPublic = key.startsWith('NEXT_PUBLIC_');
-    const hint = isPublic 
-      ? 'Vercel의 Environment Variables에서 Client(브라우저) 접근이 필요한 키입니다.'
-      : '서버 전용 키입니다(브라우저에 노출 금지).';
-    
-    // 개발 환경에서는 더 친화적인 오류 메시지
-    if (process.env.NODE_ENV === 'development') {
-      console.error(`[EnvError] ${key} is not set. Please check your .env.local file.`);
-      console.error(`Required: ${key}=your_${key.toLowerCase().replace('next_public_', '')}_value`);
-      console.error('Make sure to restart the dev server after adding environment variables.');
-      console.error('This will cause Supabase features to not work properly.');
-    }
-    
-    // 프로덕션 환경에서는 더 명확한 오류 메시지
-    if (process.env.NODE_ENV === 'production') {
-      console.error(`[Production Error] ${key} is required but not set in Vercel environment variables.`);
-      console.error('Please add this environment variable in Vercel dashboard:');
-      console.error(`- Go to Vercel Dashboard → Project → Settings → Environment Variables`);
-      console.error(`- Add ${key} with the correct value`);
-      console.error(`- Redeploy the project`);
-    }
-    
-    throw new Error(
-      `[EnvMissing] ${key} is required. ${hint} 설정 후 재배포하세요.`
-    );
-  }
-  
-  return value;
-};
+export function getPublicEnv() {
+  return {
+    url: process.env.NEXT_PUBLIC_SUPABASE_URL,
+    anonKey: process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
+  };
+}
 
 /**
- * 클라이언트에서 접근 가능한 환경변수 검증
- * @param key NEXT_PUBLIC_ 접두사가 있는 환경변수 키
- * @returns 환경변수 값
+ * 공개 환경변수 존재 여부 확인
+ * @returns 환경변수가 모두 존재하는지 여부
  */
-export const requirePublicEnv = (key: string): string => {
-  if (!key.startsWith('NEXT_PUBLIC_')) {
-    throw new Error(
-      `[EnvError] ${key} must start with NEXT_PUBLIC_ for client access`
-    );
-  }
-  
-  return requireEnv(key);
-};
+export function hasPublicEnv() {
+  const { url, anonKey } = getPublicEnv();
+  return Boolean(url && anonKey);
+}
 
 /**
- * 서버에서만 접근 가능한 환경변수 검증
- * @param key 서버 전용 환경변수 키
- * @returns 환경변수 값
+ * 서버 환경변수 읽기 함수
+ * @returns 서버 환경변수 객체
  */
-export const requireServerEnv = (key: string): string => {
-  if (key.startsWith('NEXT_PUBLIC_')) {
-    throw new Error(
-      `[EnvError] ${key} should not start with NEXT_PUBLIC_ for server-only access`
-    );
-  }
-  
-  return requireEnv(key);
-};
+export function getServerEnv() {
+  return {
+    url: process.env.NEXT_PUBLIC_SUPABASE_URL,
+    anonKey: process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
+    serviceRoleKey: process.env.SUPABASE_SERVICE_ROLE_KEY,
+  };
+}
+
+/**
+ * 서버 환경변수 존재 여부 확인
+ * @returns 서버 환경변수가 모두 존재하는지 여부
+ */
+export function hasServerEnv() {
+  const { url, anonKey, serviceRoleKey } = getServerEnv();
+  return Boolean(url && anonKey && serviceRoleKey);
+}
 
 /**
  * 환경변수 존재 여부 확인 (오류 없이)
@@ -84,13 +55,24 @@ export const hasEnv = (key: string): boolean => {
 };
 
 /**
- * Supabase 관련 필수 환경변수 검증
+ * Supabase 관련 필수 환경변수 검증 (지연 가드)
  * @param isServer 서버 환경인지 여부
  * @returns Supabase 설정 객체
+ * @throws 환경변수가 없을 때만 오류
  */
 export const validateSupabaseEnv = (isServer: boolean = false) => {
-  const url = requirePublicEnv('NEXT_PUBLIC_SUPABASE_URL');
-  const anonKey = requirePublicEnv('NEXT_PUBLIC_SUPABASE_ANON_KEY');
+  const { url, anonKey } = getPublicEnv();
+  
+  if (!url || !anonKey) {
+    const missing = [];
+    if (!url) missing.push('NEXT_PUBLIC_SUPABASE_URL');
+    if (!anonKey) missing.push('NEXT_PUBLIC_SUPABASE_ANON_KEY');
+    
+    throw new Error(
+      `[SupabaseError] Missing required environment variables: ${missing.join(', ')}. ` +
+      'Please set these in Vercel Environment Variables and redeploy.'
+    );
+  }
   
   const result = {
     url,
@@ -100,11 +82,9 @@ export const validateSupabaseEnv = (isServer: boolean = false) => {
   
   // 서버 환경에서만 서비스 롤 키 확인
   if (isServer) {
-    if (hasEnv('SUPABASE_SERVICE_ROLE_KEY')) {
-      result.serviceRoleKey = requireServerEnv('SUPABASE_SERVICE_ROLE_KEY');
-    } else if (hasEnv('SUPABASE_ANON_KEY')) {
-      // 서비스 롤 키가 없으면 anon 키 사용 (권한 제한됨)
-      result.serviceRoleKey = requireServerEnv('SUPABASE_ANON_KEY');
+    const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+    if (serviceRoleKey) {
+      result.serviceRoleKey = serviceRoleKey;
     }
   }
   

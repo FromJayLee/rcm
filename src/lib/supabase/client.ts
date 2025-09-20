@@ -1,17 +1,16 @@
 import { createBrowserClient } from "@supabase/ssr";
-import { validateSupabaseEnv } from "../env";
+import { getPublicEnv } from "../env";
 
 /**
  * 브라우저 환경에서 사용할 Supabase 클라이언트 생성
  * 클라이언트 컴포넌트에서 사용
- * @returns Supabase 브라우저 클라이언트
+ * @returns Supabase 브라우저 클라이언트 또는 null (환경변수 없을 때)
  */
 export function createSupabaseBrowserClient() {
-  const { url, anonKey } = validateSupabaseEnv(false);
+  const { url, anonKey } = getPublicEnv();
   
-  // URL과 키가 유효한지 추가 검증
   if (!url || !anonKey) {
-    throw new Error('[Supabase] Invalid environment variables. Please check NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY.');
+    return null;
   }
   
   return createBrowserClient(url, anonKey);
