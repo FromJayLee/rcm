@@ -18,6 +18,24 @@ export const requireEnv = (key: string): string => {
       ? 'Vercel의 Environment Variables에서 Client(브라우저) 접근이 필요한 키입니다.'
       : '서버 전용 키입니다(브라우저에 노출 금지).';
     
+    // 개발 환경에서는 더 친화적인 오류 메시지
+    if (process.env.NODE_ENV === 'development') {
+      console.warn(`[EnvWarning] ${key} is not set. Please create .env.local file with Supabase configuration.`);
+      console.warn(`Required: ${key}=your_${key.toLowerCase().replace('next_public_', '')}_value`);
+      console.warn('For now, using placeholder values. This will cause authentication to fail.');
+      
+      // 개발 환경에서는 플레이스홀더 값 반환
+      if (key === 'NEXT_PUBLIC_SUPABASE_URL') {
+        return 'https://placeholder.supabase.co';
+      }
+      if (key === 'NEXT_PUBLIC_SUPABASE_ANON_KEY') {
+        return 'placeholder_anon_key';
+      }
+      if (key === 'SUPABASE_SERVICE_ROLE_KEY') {
+        return 'placeholder_service_role_key';
+      }
+    }
+    
     throw new Error(
       `[EnvMissing] ${key} is required. ${hint} 설정 후 재배포하세요.`
     );
