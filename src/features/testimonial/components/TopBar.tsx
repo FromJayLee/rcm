@@ -35,6 +35,7 @@ export function TopBar() {
   useEffect(() => {
     const getUser = async () => {
       try {
+        const supabase = createSupabaseBrowserClient();
         const { data: { user } } = await supabase.auth.getUser();
         if (user) {
           setUser(user as User);
@@ -49,6 +50,7 @@ export function TopBar() {
     getUser();
 
     // Listen for auth changes
+    const supabase = createSupabaseBrowserClient();
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
       if (session?.user) {
         setUser(session.user as User);
@@ -62,6 +64,7 @@ export function TopBar() {
 
   const handleSignOut = async () => {
     try {
+      const supabase = createSupabaseBrowserClient();
       await supabase.auth.signOut();
       router.push('/');
     } catch (error) {

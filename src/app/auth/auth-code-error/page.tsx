@@ -2,10 +2,11 @@
 
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
+import { Suspense } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 
-export default function AuthCodeErrorPage() {
+function AuthCodeErrorContent() {
   const searchParams = useSearchParams();
   const error = searchParams.get('error');
 
@@ -70,5 +71,28 @@ export default function AuthCodeErrorPage() {
         </CardContent>
       </Card>
     </div>
+  );
+}
+
+export default function AuthCodeErrorPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen bg-[#F8F8F4] flex items-center justify-center p-4">
+        <Card className="w-full max-w-md bg-[#F8F8F4] border-[#D9D7CF]">
+          <CardHeader className="text-center">
+            <CardTitle className="text-2xl font-semibold text-black">
+              로딩 중...
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="animate-pulse bg-[#D9D7CF] h-4 rounded"></div>
+            <div className="animate-pulse bg-[#D9D7CF] h-4 rounded"></div>
+            <div className="animate-pulse bg-[#D9D7CF] h-4 rounded"></div>
+          </CardContent>
+        </Card>
+      </div>
+    }>
+      <AuthCodeErrorContent />
+    </Suspense>
   );
 }
