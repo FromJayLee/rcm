@@ -20,11 +20,11 @@ export const requireEnv = (key: string): string => {
     
     // 개발 환경에서는 더 친화적인 오류 메시지
     if (process.env.NODE_ENV === 'development') {
-      console.warn(`[EnvWarning] ${key} is not set. Please create .env.local file with Supabase configuration.`);
+      console.warn(`[EnvWarning] ${key} is not set. Please check your .env.local file.`);
       console.warn(`Required: ${key}=your_${key.toLowerCase().replace('next_public_', '')}_value`);
-      console.warn('For now, using placeholder values. This will cause authentication to fail.');
+      console.warn('Make sure to restart the dev server after adding environment variables.');
       
-      // 개발 환경에서는 플레이스홀더 값 반환
+      // 개발 환경에서는 플레이스홀더 값 반환 (실제 환경변수가 없을 때만)
       if (key === 'NEXT_PUBLIC_SUPABASE_URL') {
         return 'https://placeholder.supabase.co';
       }
